@@ -50,7 +50,7 @@ public class Users {
 	@OneToMany(mappedBy = "user")
 	private List<Comments> comments;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "receiver")
 	private List<Notifications> notifications;
 
 	@OneToMany(mappedBy = "follower")

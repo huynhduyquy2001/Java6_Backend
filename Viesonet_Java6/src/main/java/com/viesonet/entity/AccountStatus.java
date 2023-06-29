@@ -29,6 +29,6 @@ public class AccountStatus {
 	private int statusId;
 	private String statusName;
 	@OneToMany(mappedBy = "accountStatus")
-	List<AccountStatus> accountStatusList;
+	List<Accounts> accountStatusList;
 	
 }
