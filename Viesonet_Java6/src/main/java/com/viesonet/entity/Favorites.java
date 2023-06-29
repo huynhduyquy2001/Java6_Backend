@@ -35,7 +35,7 @@ public class Favorites {
 
 	@ManyToOne
 	@JoinColumn(name = "postId")
-	Posts post;
+	private Posts post;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date likeDate;
