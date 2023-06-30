@@ -51,7 +51,6 @@ header {
 }
 
 label {
-    
     font-weight: bolder;
 }
 
@@ -659,7 +658,7 @@ a {
 }
 
 .write-post-container {
-    color: #626262;
+    color: #5d5d5d;
     background-color: var(--bg-color);
     width: 100%;
     padding: 10px;
