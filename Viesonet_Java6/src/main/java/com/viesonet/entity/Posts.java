@@ -3,7 +3,10 @@ package com.viesonet.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -46,18 +49,20 @@ public class Posts {
 
 	private Integer commentCount;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "post")
 	List<Comments> comments;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy = "post")
 	List<Favorites> favorites;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy = "post")
 	List<Notifications> notifications;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "post")
 	private List<Violations> violations;
 	
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
 	private List<Images> images;
 }

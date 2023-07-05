@@ -2,6 +2,8 @@ package com.viesonet.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ public class ViolationTypes {
     private Integer violationTypeId;
     
     private String violationDescription;
+    @JsonIgnore
     @OneToMany(mappedBy = "violationType")
     private List<Violations> violations;
 }

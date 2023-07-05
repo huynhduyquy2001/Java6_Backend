@@ -38,7 +38,7 @@ public class Violations {
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name= "violationType")
+    @JoinColumn(name= "violationTypeId")
     private ViolationTypes violationType;
     
     @Temporal(TemporalType.TIMESTAMP)

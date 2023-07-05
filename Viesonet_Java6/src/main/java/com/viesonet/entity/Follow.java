@@ -2,6 +2,8 @@ package com.viesonet.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,11 +30,13 @@ public class Follow {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int followId;
-
+	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "followerId")
 	private Users follower;
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "followingId")
 	private Users following;
 

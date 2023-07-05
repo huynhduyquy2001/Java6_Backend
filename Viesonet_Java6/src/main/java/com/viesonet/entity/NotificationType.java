@@ -3,6 +3,8 @@ package com.viesonet.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +29,7 @@ public class NotificationType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer typeId;
     private String typeName;
-    
+    @JsonIgnore
     @OneToMany(mappedBy = "notificationType")
     List<Notifications> notifications;
 }
