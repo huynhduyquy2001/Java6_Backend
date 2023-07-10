@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin</title>
+<link rel="stylesheet" href="/css/styles.min.css" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap">
+<script src="https://kit.fontawesome.com/f737751420.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+</head>
+<style>
+body {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.circle {
+	width: 7px;
+	height: 7px;
+	background-color: rgb(225, 15, 15);
+	border-radius: 50%;
+}
+
+.image-link {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: #A59565;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	margin-left: 10px;
+}
+
+.name {
+	margin-bottom: 5px;
+}
+</style>
+<body>
+	<!--  Body Wrapper -->
+	<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
+		data-navbarbg="skin6" data-sidebartype="full"
+		data-sidebar-position="fixed" data-header-position="fixed">
+		<!-- Sidebar Start -->
+		<aside class="left-sidebar">
+			<!-- Sidebar scroll-->
+			<div>
+				<div
+					class="brand-logo d-flex align-items-center justify-content-between">
+					<a href="/admin/report" class="text-nowrap logo-img"
+						style="color: #222; font-weight: bolder; font-family: 'robo';">
+						<img src="/images/chimLac.png" height="30px" alt="">
+						VIE_SONET
+					</a>
+				</div>
+				<!-- Sidebar navigation-->
+				<nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+          <ul id="sidebarnav">
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Thống kê</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link active" href="/admin/report" aria-expanded="false">
+                <span>
+                  <i class="fa-regular fa-chart-tree-map"></i>
+                </span>
+                <span class="hide-menu">&nbsp; Chung</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Quản Lý</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/admin/usermanager" aria-expanded="false">
+                <span>
+                  <i class="fa-regular fa-users"></i>
+                </span>
+                <span class="hide-menu">Người dùng</span>
+              </a>
+              <a class="sidebar-link" href="/admin/postsviolations" aria-expanded="false">
+                <span>
+                  <i class="fa-regular fa-memo-circle-info"></i>
+                </span>
+                <span class="hide-menu"> &nbsp; Bài viết vi phạm</span>
+              </a>
+            </li>
+          </ul>
+          
+        </nav>
+				<!-- End Sidebar navigation -->
+			</div>
+			<!-- End Sidebar scroll-->
+		</aside>
+		<!--  Sidebar End -->
+		<!--  Main wrapper -->
+		<div class="body-wrapper">
+			<!--  Header Start -->
+			<header class="app-header">
+				<nav class="navbar navbar-expand-lg navbar-light">
+					<div class="navbar-collapse justify-content-end px-0"
+						id="navbarNav">
+						<ul
+							class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+							<li class="nav-item dropdown"><a
+								class="nav-link nav-icon-hover" href="#" id="drop2"
+								data-bs-toggle="dropdown" aria-expanded="false"> <i
+									class="fa-regular fa-bell"></i>
+									<div class="circle mb-2"></div>
+							</a>
+								<div style="background: whitesmoke;"
+									class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+									aria-labelledby="drop2">
+									<div class="message-body">
+										<a href="#"
+											class="d-flex align-items-center gap-2 dropdown-item"> <i
+											class="ti ti-user fs-6"></i>
+											<p class="mb-0 fs-3">Thông báo 1</p>
+										</a> <a href="#"
+											class="d-flex align-items-center gap-2 dropdown-item"> <i
+											class="ti ti-user fs-6"></i>
+											<p class="mb-0 fs-3">Thông báo 2</p>
+										</a> <a href="#"
+											class="d-flex align-items-center gap-2 dropdown-item"> <i
+											class="ti ti-user fs-6"></i>
+											<p class="mb-0 fs-3">Thông báo 3</p>
+										</a>
+									</div>
+								</div></li>
+							<li class="nav-item dropdown"><a
+								class="nav-link nav-icon-hover" href="#" id="drop2"
+								data-bs-toggle="dropdown" aria-expanded="false"> <img
+									th:src="@{'/images/' + ${acc.avatar}}" alt="" width="35"
+									height="35" class="rounded-circle">
+							</a>
+								<div style="background: whitesmoke;"
+									class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+									aria-labelledby="drop2">
+									<div class="message-body">
+										<div class="py-3 px-7 pb-0">
+											<h5 class="mb-0 fs-5 fw-semibold">Cá nhân</h5>
+										</div>
+										<a href="#"
+											class="d-flex align-items-center gap-2 dropdown-item">
+											<div
+												class="d-flex align-items-center py-9 mx-7 border-bottom">
+												<img th:src="@{'/images/' + ${acc.avatar}}"
+													class="rounded-circle" width="80" height="80" alt="">
+												<div class="ms-3">
+													<h5 class="mb-1 fs-3" th:text="${acc.username}"></h5>
+													<span class="mb-1 d-block text-dark" th:text="${acc.account.role.roleName}"></span>
+													<p class="mb-0 d-flex text-dark align-items-center gap-2">
+														 <i class="fa-thin fa-envelope"></i> <span th:text="${acc.account.email}"></span>
+													</p>
+												</div>
+											</div>
+										</a>
+										 <a href="#"
+											class="d-flex align-items-center gap-2 dropdown-item text-center"> 
+											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-thin fa-house me-2"></i>
+											<p class="mb-0 fs-3">Trang chủ</p>
+										</a> 
+										 <a href="#" class="btn btn-outline-primary mx-3 mt-2 d-block">
+										 Đăng xuất</a>
+									</div>
+								</div></li>
+						</ul>
+					</div>
+				</nav>
+			</header>
+			<!--  Header End -->
+			<div class="container-fluid">
+				<!--  Row 1 -->
+				<div class="row">
+					<div class="col-lg-8 d-flex align-items-strech">
+						<div class="card w-100">
+							<div class="card-body">
+								<div
+									class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+									<div class="mb-3 mb-sm-0">
+										<h5 class="card-title fw-semibold">Số lượt tố cáo & vi
+											phạm</h5>
+									</div>
+									<div>
+										<select class="form-select" id="mySelect">
+											<option selected="selected" th:value="${yearNow}"
+												th:text="${yearNow}"></option>
+											<option th:if="${year.years != yearNow}"
+												th:each="year : ${listYear}" th:value="${year.years}"
+												th:text="${year.years}"></option>
+										</select>
+									</div>
+								</div>
+								<div id="chart"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="row">
+							<div class="col-lg-12">
+								<!-- Yearly Breakup -->
+								<div class="card overflow-hidden">
+									<div class="card-body p-4">
+										<h5 class="card-title mb-9 fw-semibold">Độ tuổi sử dụng</h5>
+										<div class="row align-items-center">
+											<div class="col-2"></div>
+											<div class="col-6">
+												<div class="d-flex justify-content-center">
+													<div id="breakup"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12">
+								<!-- Monthly Earnings -->
+								<div class="card">
+									<div class="card-body">
+										<div class="row alig n-items-start">
+											<div class="col-9">
+												<div class="d-flex align-items-center pb-1">
+													<b>Số lượng tài khoản mới tạo</b>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="earning"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4 d-flex align-items-stretch">
+						<div class="card w-100">
+							<div class="card-body p-4">
+								<div class="mb-4">
+									<h5 class="card-title fw-semibold">Tài khoản có bài viết
+										nhiều nhất</h5>
+								</div>
+								<ul class="timeline-widget mb-0 position-relative mb-n5">
+									<li th:each="i : ${TotalPosts}"
+										class="timeline-item d-flex position-relative overflow-hidden">
+										<a href="#"> <img th:src="@{'/images/' + ${i.Avatar}}"
+											alt="" width="35" height="35" class="rounded-circle"
+											style="object-fit: cover;">
+									</a>
+										<div class="timeline-desc fs-4 text-dark mt-n1"
+											style="max-width: 170px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+											<a href="#" th:text="${i.Username}"></a>
+										</div>
+										<div class="timeline-time text-dark flex-shrink-0 mt-n1 justify-content-end">
+											<i class="fa-regular fa-memo-pad"></i> <span
+												th:text="${i.TotalPosts}"></span>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-8 d-flex align-items-stretch">
+						<div class="card w-100">
+							<div class="card-body p-4">
+								<h5 class="card-title fw-semibold mb-4">Top 5 bài viết có
+									lượt thích nhiều nhất</h5>
+								<div class="table-responsive">
+									<table class="table text-nowrap mb-0 align-middle">
+										<thead class="text-dark fs-4">
+											<tr>
+												<th class="border-bottom-0">
+													<h6 class="fw-semibold mb-0">Top</h6>
+												</th>
+												<th class="border-bottom-0">
+													<h6 class="fw-semibold mb-0">Tiêu đề bài viết</h6>
+												</th>
+												<th class="border-bottom-0">
+													<h6 class="fw-semibold mb-0">Người đăng</h6>
+												</th>
+												<th class="border-bottom-0">
+													<h6 class="fw-semibold mb-0">Ngày đăng</h6>
+												</th>
+												<th class="border-bottom-0">
+													<h6 class="fw-semibold mb-0">Số lượt thích</h6>
+												</th>
+												<th class="border-bottom-0">
+													<h6 class="fw-semibold mb-0">Chi tiết</h6>
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="item : ${topLike}">
+												<td class="border-bottom-0">
+													<p th:text="${item.stt}" class="mb-0 fw-normal text-center"></p>
+												</td>
+												<td class="border-bottom-0">
+													<h6 th:text="${item.content}" class="fw-semibold mb-0"
+														style="max-width: 140px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+													</h6>
+												</td>
+												<td th:text="${item.userPost}" class="border-bottom-0"
+													style="max-width: 150px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+													<span class="fw-normal"></span>
+												</td>
+												<td class="border-bottom-0">
+													<p th:text="${#dates.format(item.postDate, 'dd/MM/yyyy')}"
+														class="mb-0 fw-normal"></p>
+												</td>
+												<td class="border-bottom-0 text-center"><b
+													th:text="${item.likeCount}"></b> <i
+													class="fas fa-thumbs-up" style="color: #5d87ff"></i></td>
+												<td class="border-bottom-0 text-center">
+													<button th:onclick="'detail(\'' + ${item.postId} + '\')'"
+														data-bs-placement="top" title="Xem chi tiết bài viết"
+														class="btn btn-danger btn-sm">
+														<i class="fa-solid fa-eye"></i>
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div
+			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content" style="background-color: aliceblue">
+				<div class="modal-header">
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div
+						style="margin-bottom: 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
+						<a href="#" target="_blank" class="image-link" id="avatar"> 
+							
+						</a>
+						<div id="detailContent"
+							style="margin-top: 15px; margin-left: 25px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<script src="/js/apexcharts.min.js"></script>
+	<script src="/js/report.js"></script>
+	<script th:inline="javascript">
+		//Biều đồ 1
+		var Data = /*[[${soluotBaoCao}]]*/null;
+		var Data2 = /*[[${soBaiViet}]]*/null;
+		var soLuotBaoCao = []
+		var soBaiViet = []
+		for (var i = 0; i < Data.length; i++) {
+			soLuotBaoCao.push(Data[i].violationPosts)
+		}
+		for (var i = 0; i < Data2.length; i++) {
+			soBaiViet.push(Data2[i].numberReport)
+		}
+		var chart = {
+			series : [ {
+				name : "Số lượt tố cáo",
+				data : soLuotBaoCao
+			}, {
+				name : "Số lượt vi phạm",
+				data : soBaiViet
+			}, ],
+			chart : {
+				type : "bar",
+				height : 440,
+				offsetX : -15,
+				toolbar : {
+					show : true
+				},
+				foreColor : "#adb0bb",
+				fontFamily : 'inherit',
+				sparkline : {
+					enabled : false
+				},
+			},
+			colors : [ "#5D87FF", "#49BEFF" ],
+			plotOptions : {
+				bar : {
+					horizontal : false,
+					columnWidth : "75%",
+					borderRadius : [ 6 ],
+					borderRadiusApplication : 'end',
+					borderRadiusWhenStacked : 'all'
+				},
+			},
+			markers : {
+				size : 0
+			},
+
+			dataLabels : {
+				enabled : false,
+			},
+			legend : {
+				show : false,
+			},
+			grid : {
+				borderColor : "rgba(0,0,0,0.1)",
+				strokeDashArray : 3,
+				xaxis : {
+					lines : {
+						show : false,
+					},
+				},
+			},
+
+			xaxis : {
+				type : "category",
+				categories : [ "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
+						" Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9",
+						"Tháng 10", "Tháng 11", "Tháng 12", ],
+				labels : {
+					style : {
+						cssClass : "grey--text lighten-2--text fill-color"
+					},
+				},
+			},
+
+			yaxis : {
+				show : true,
+				min : 0,
+				max : 20,
+				tickAmount : 4,
+				labels : {
+					style : {
+						cssClass : "grey--text lighten-2--text fill-color",
+					},
+				},
+			},
+			stroke : {
+				show : true,
+				width : 3,
+				lineCap : "butt",
+				colors : [ "transparent" ],
+			},
+			tooltip : {
+				theme : "light"
+			},
+			responsive : [ {
+				breakpoint : 600,
+				options : {
+					plotOptions : {
+						bar : {
+							borderRadius : 3,
+						}
+					},
+				}
+			} ]
+		};
+		var chart = new ApexCharts(document.querySelector("#chart"), chart);
+		chart.render();
+
+		//Biểu đồ 2
+		var nhom1 = /*[[${nhom1}]]*/null;
+		var nhom2 = /*[[${nhom2}]]*/null;
+		var nhom3 = /*[[${nhom3}]]*/null;
+		var breakup = {
+			color : "#adb5bd",
+			series : [ nhom1, nhom2, nhom3 ],
+			labels : [ "18 - 25 tuổi", "25 - 35 tuổi", "Trên 35 tuổi" ],
+			chart : {
+				width : 345,
+				type : "donut",
+				fontFamily : "Plus Jakarta Sans', sans-serif",
+				foreColor : "#adb0bb",
+			},
+			plotOptions : {
+				pie : {
+					startAngle : 0,
+					endAngle : 360,
+					donut : {
+						size : '5%',
+					},
+				},
+			},
+			stroke : {
+				show : true,
+			},
+
+			dataLabels : {
+				enabled : true,
+			},
+
+			legend : {
+				show : true,
+			},
+			colors : [ "#439DF6", "#A2BD37", "#EF5D31" ],
+
+			responsive : [ {
+				breakpoint : 991,
+				options : {
+					chart : {
+						width : 150,
+					},
+				},
+			}, ],
+			tooltip : {
+				theme : "dark",
+				fillSeriesColor : false,
+			},
+		};
+
+		var chart = new ApexCharts(document.querySelector("#breakup"), breakup);
+		chart.render();
+
+		//Biểu đồ 3
+		var listData = /*[[${listAcc}]]*/null;
+		var ds = []
+		var ds2 = []
+		for (var i = 0; i < listData.length; i++) {
+			ds.push(listData[i].accountCount)
+		}
+		for (var i = 0; i < listData.length; i++) {
+			ds2.push(listData[i].day)
+		}
+
+		var earning = {
+			chart : {
+				id : "sparkline3",
+				type : "area",
+				height : 180,
+				sparkline : {
+					enabled : true,
+				},
+				group : "sparklines",
+				fontFamily : "Plus Jakarta Sans', sans-serif",
+				foreColor : "#adb0bb",
+			},
+			series : [ {
+				name : "Số lượng",
+				color : "#49BEFF",
+				data : ds,
+			} ],
+			stroke : {
+				curve : "smooth",
+				width : 3,
+			},
+			fill : {
+				colors : [ "#f3feff" ],
+				type : "solid",
+				opacity : 0.05,
+			},
+			markers : {
+				size : 4,
+			},
+			tooltip : {
+				theme : "dark",
+				fixed : {
+					enabled : true,
+					position : "right",
+				},
+				x : {
+					show : true,
+				},
+			},
+			xaxis : {
+				categories : ds2,
+			},
+		};
+		new ApexCharts(document.querySelector("#earning"), earning).render();
+	</script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
+</body>
+
+</html>

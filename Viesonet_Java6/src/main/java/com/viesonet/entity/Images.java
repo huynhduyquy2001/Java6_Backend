@@ -1,6 +1,5 @@
 package com.viesonet.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,12 +21,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Images {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private int imageId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int imageId;
 
-@ManyToOne
-@JoinColumn(name = "postId")
-private Posts post;
-private String ImageUrl;
+	@ManyToOne
+	@JoinColumn(name = "postId")
+	private Posts post;
+	
+	private String ImageUrl;
 }

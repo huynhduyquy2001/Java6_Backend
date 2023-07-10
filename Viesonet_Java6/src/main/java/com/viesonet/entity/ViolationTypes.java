@@ -25,8 +25,8 @@ public class ViolationTypes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer violationTypeId;
-    
     private String violationDescription;
+    
     @OneToMany(mappedBy = "violationType")
     private List<Violations> violations;
 }
