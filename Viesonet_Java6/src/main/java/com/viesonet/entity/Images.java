@@ -1,5 +1,8 @@
 package com.viesonet.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,13 +24,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Images {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int imageId;
-
-	@ManyToOne
-	@JoinColumn(name = "postId")
-	private Posts post;
-	
-	private String ImageUrl;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private int imageId;
+@JsonIgnore
+@ManyToOne
+@JoinColumn(name = "postId")
+private Posts post;
+private String ImageUrl;
 }

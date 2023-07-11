@@ -3,6 +3,8 @@ package com.viesonet.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -37,19 +39,19 @@ public class Users {
 
 	@OneToOne(mappedBy = "user")
 	private Accounts account;
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Posts> posts;
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Reply> reply;
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Favorites> favorites;
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Comments> comments;
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "receiver")
 	private List<Notifications> notifications;
 
@@ -58,7 +60,7 @@ public class Users {
 
 	@OneToMany(mappedBy = "following")
 	private List<Follow> followings;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Violations> violations;
 

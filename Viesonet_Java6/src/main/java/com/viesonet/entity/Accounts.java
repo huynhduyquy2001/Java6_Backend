@@ -1,5 +1,7 @@
 package com.viesonet.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -24,7 +26,7 @@ public class Accounts {
     private String phoneNumber;
     private String password;
     private String email;
-    
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "userId")
     private Users user;

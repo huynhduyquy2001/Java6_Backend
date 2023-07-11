@@ -4,6 +4,8 @@ package com.viesonet.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,7 @@ public class AccountStatus {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int statusId;
 	private String statusName;
+	@JsonIgnore
 	@OneToMany(mappedBy = "accountStatus")
 	List<Accounts> accountStatusList;
 	

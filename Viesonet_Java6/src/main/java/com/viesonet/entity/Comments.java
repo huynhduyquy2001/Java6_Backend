@@ -3,6 +3,8 @@ package com.viesonet.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,6 +46,7 @@ public class Comments {
 	@JoinColumn(name = "postId")
 	private Posts post;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "comment")
 	private List<Reply> reply;
 }
