@@ -22,31 +22,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Comments")
+@Table(name = "Message")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class Comments {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Message {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int commentId;
-
-	private String content;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date commentDate;
+	private int messId;
+	@ManyToOne
+	@JoinColumn(name = "senderId")
+	private Users sender;
 	
 	@ManyToOne
-	@JoinColumn(name = "userId")
-	private Users user;
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "postId")
-	private Posts post;
-
-
-	@OneToMany(mappedBy = "comment")
-	private List<Reply> reply;
+	@JoinColumn(name = "receiverId")
+	private Users receiver;
+	
+	private String content;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date sendDate;
 }
