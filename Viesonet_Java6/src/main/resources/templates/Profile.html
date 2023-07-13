@@ -1,0 +1,710 @@
+<!doctype html>
+<html ng-app="myApp">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+	crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/f737751420.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Inline+One&family=Bangers&family=Chakra+Petch:ital,wght@0,400;1,300;1,400;1,700&family=Grenze&family=Patrick+Hand&family=Playfair+Display+SC&family=Road+Rage&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Inline+One&family=Bangers&family=Chakra+Petch:ital,wght@0,400;1,300;1,400;1,700&family=Grenze&family=Patrick+Hand&family=Roboto&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+<title>Trang chủ</title>
+<style type="text/css">
+.dropdown-item {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.red-heart {
+	color: red;
+	/* Màu đỏ cho trái tim đã thích */
+}
+
+.gray-heart {
+	color: gray;
+	/* Màu xám cho trái tim chưa thích */
+}
+
+div.dropdown-menu.baoCao {
+	transform: translate(-80%, 39px);
+}
+
+.container, .container-lg, .container-md, .container-sm, .container-xl {
+	max-width: 100%;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-content {
+	display: none;
+	opacity: 0;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	padding-right: 10px;
+	border-radius: 3px;
+	transition: 0.5s ease-in-out;
+}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+	transition: 0.5s ease-in-out;
+	opacity: 1;
+}
+
+.uploaded-image {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	margin-bottom: 7px;
+}
+</style>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="/js/thoiTiet.js"></script>
+</head>
+
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .circle {
+    width: 7px;
+    height: 7px;
+    background-color: rgb(225, 15, 15);
+    border-radius: 50%;
+  }
+
+  .image-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #989692;
+    margin-left: 30px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+  }
+
+  /* CSS */
+  .sidebar-scrollable {
+    max-height: 440px;
+    /* Đặt chiều cao tối đa của vùng cuộn */
+    overflow-y: auto;
+    /* Tạo thanh cuộn dọc */
+  }
+
+  .sidebar-scrollable::-webkit-scrollbar {
+    width: 5px;
+    /* Độ rộng của thanh cuộn */
+  }
+
+  .sidebar-scrollable::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Màu sắc của thanh cuộn */
+    border-radius: 4px;
+    /* Bo tròn viền thanh cuộn */
+  }
+
+  .sidebar-scrollable::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    /* Màu sắc của vùng di chuyển thanh cuộn */
+  }
+  .follow{
+    color: #222;
+  }
+  .follow:hover{
+    color: #222;
+  }
+  
+</style>
+<body>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <aside class="left-sidebar animate__animated animate__backInRight"
+				style="z-index: 100; position: fixed; top: 0;">
+				<div>
+					<div
+						class="brand-logo d-flex align-items-center justify-content-between">
+						<a href="./index.html" class="text-nowrap logo-img"
+							style="color: #222; font-weight: bolder; font-family: 'robo';">
+							<img src="images/chimLac.png" height="30px" alt="">
+							VIE_SONET
+						</a>
+					</div>
+					<nav class="sidebar-nav scroll-sidebar" data-simplebar="init">
+						<div class="simplebar-wrapper" style="margin: 0px -24px;">
+							<div class="simplebar-height-auto-observer-wrapper">
+								<div class="simplebar-height-auto-observer"></div>
+							</div>
+							<div class="simplebar-mask">
+								<div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+									<div class="simplebar-content-wrapper"
+										style="height: 100%; overflow: hidden;">
+										<div class="simplebar-content" style="padding: 0px 24px;">
+											<ul id="sidebarnav">
+												<li class="nav-small-cap"><i
+													class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
+													class="hide-menu">Chung</span></li>
+												<li class="sidebar-item"><a class="sidebar-link"
+													href="#" aria-expanded="false"> <span> <i
+															class="fa-sharp fa-regular fa-house"></i>
+													</span> <span class="hide-menu">&nbsp; Trang chủ</span>
+												</a></li>
+												<li class="sidebar-item"><a class="sidebar-link"
+													href="#" aria-expanded="false"> <span> <i
+															class="fa-regular fa-magnifying-glass"></i>
+													</span> <span class="hide-menu">&nbsp; Tìm kiếm</span>
+												</a></li>
+												<li class="sidebar-item"><a class="sidebar-link"
+													href="#" aria-expanded="false"> <span> <i
+															class="fa-light fa-handshake"></i>
+													</span> <span class="hide-menu">&nbsp; Gợi ý</span>
+												</a></li>
+												<li class="sidebar-item"><a class="sidebar-link"
+													href="#" aria-expanded="false"> <span> <i
+															class="fa-regular fa-messages"></i>
+													</span> <span class="hide-menu">&nbsp; Tin nhắn</span>
+												</a></li>
+												<li class="nav-small-cap"><i
+													class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
+													class="hide-menu">Quản Lý</span></li>
+												<li class="sidebar-item"><a class="sidebar-link active"
+													href="#" aria-expanded="false"> <span> <svg
+																class="svg-inline--fa fa-users" aria-hidden="true"
+																focusable="false" data-prefix="far" data-icon="users"
+																role="img" xmlns="http://www.w3.org/2000/svg"
+																viewBox="0 0 640 512" data-fa-i2svg="">
+                                                                <path
+																	fill="currentColor"
+																	d="M144 160A80 80 0 1 0 144 0a80 80 0 1 0 0 160zm368 0A80 80 0 1 0 512 0a80 80 0 1 0 0 160zM0 298.7C0 310.4 9.6 320 21.3 320H234.7c.2 0 .4 0 .7 0c-26.6-23.5-43.3-57.8-43.3-96c0-7.6 .7-15 1.9-22.3c-13.6-6.3-28.7-9.7-44.6-9.7H106.7C47.8 192 0 239.8 0 298.7zM405.3 320H618.7c11.8 0 21.3-9.6 21.3-21.3C640 239.8 592.2 192 533.3 192H490.7c-15.9 0-31 3.5-44.6 9.7c1.3 7.2 1.9 14.7 1.9 22.3c0 38.2-16.8 72.5-43.3 96c.2 0 .4 0 .7 0zM320 176a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm0 144a96 96 0 1 0 0-192 96 96 0 1 0 0 192zm-58.7 80H378.7c39.8 0 73.2 27.2 82.6 64H178.7c9.5-36.8 42.9-64 82.6-64zm0-48C187.7 352 128 411.7 128 485.3c0 14.7 11.9 26.7 26.7 26.7H485.3c14.7 0 26.7-11.9 26.7-26.7C512 411.7 452.3 352 378.7 352H261.3z">
+                                                                </path>
+                                                            </svg> <!-- <i class="fa-regular fa-users"></i> -->
+													</span> <span class="hide-menu">Người dùng</span>
+												</a> <a class="sidebar-link" href="#" aria-expanded="false">
+														<span> <svg class="svg-inline--fa fa-memo-pad"
+																aria-hidden="true" focusable="false" data-prefix="far"
+																data-icon="memo-pad" role="img"
+																xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+																data-fa-i2svg="">
+                                                                <path
+																	fill="currentColor"
+																	d="M400 128V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V128H400zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 200c0 13.3 10.7 24 24 24H328c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-13.3 0-24 10.7-24 24zm0 96c0 13.3 10.7 24 24 24H328c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-13.3 0-24 10.7-24 24zm0 96c0 13.3 10.7 24 24 24H232c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-13.3 0-24 10.7-24 24z">
+                                                                </path>
+                                                            </svg> <!-- <i class="fa-regular fa-memo-pad"></i> -->
+													</span> <span class="hide-menu"> &nbsp; &nbsp;Bài viết</span>
+												</a> <a class="sidebar-link" href="#" aria-expanded="false">
+														<span> <svg
+																class="svg-inline--fa fa-memo-circle-info"
+																aria-hidden="true" focusable="false" data-prefix="far"
+																data-icon="memo-circle-info" role="img"
+																xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+																data-fa-i2svg="">
+                                                                <path
+																	fill="currentColor"
+																	d="M320 48H64c-8.8 0-16 7.2-16 16V448c0 8.8 7.2 16 16 16H284.5c12 18.4 27.4 34.5 45.3 47.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64C0 28.7 28.7 0 64 0H320c35.3 0 64 28.7 64 64V198.6c-17.2 4.9-33.4 12.3-48 21.8V64c0-8.8-7.2-16-16-16zM96 152c0-13.3 10.7-24 24-24H264c13.3 0 24 10.7 24 24s-10.7 24-24 24H120c-13.3 0-24-10.7-24-24zm24 72H264c13.3 0 24 10.7 24 24s-10.7 24-24 24H120c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 96h48c13.3 0 24 10.7 24 24s-10.7 24-24 24H120c-13.3 0-24-10.7-24-24s10.7-24 24-24zm312-96a144 144 0 1 1 0 288 144 144 0 1 1 0-288zm0 96a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm-32 48c0 8.8 7.2 16 16 16h0v48h0c-8.8 0-16 7.2-16 16s7.2 16 16 16h16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16V368c0-8.8-7.2-16-16-16H416c-8.8 0-16 7.2-16 16z">
+                                                                </path>
+                                                            </svg> <!-- <i class="fa-regular fa-memo-circle-info"></i> -->
+													</span> <span class="hide-menu"> &nbsp; Bài viết vi phạm</span>
+												</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="simplebar-placeholder"
+								style="width: auto; height: 312px;"></div>
+						</div>
+						<div class="simplebar-track simplebar-horizontal"
+							style="visibility: hidden;">
+							<div class="simplebar-scrollbar"
+								style="width: 0px; display: none;"></div>
+						</div>
+						<div class="simplebar-track simplebar-vertical"
+							style="visibility: hidden;">
+							<div class="simplebar-scrollbar"
+								style="height: 0px; display: none;"></div>
+						</div>
+					</nav>
+				</div>
+			</aside>
+    <div class="body-wrapper">
+      <div class="container">
+        <div class="row">
+          <!--Giữa-->
+          <div class="col-md-11"
+            style=" margin-left: 50px;">
+            <div class="row" style="position: relative;">
+              <div class="video-overlay"></div>
+              <img src="images/duyQuyBia.jpg" alt="" class="img-thumbnail"
+                style="max-height: 300px; width: 100%; object-fit: cover; overflow: hidden; z-index: -10; padding: 0">
+              <div class="col-md-10 " style="position: absolute; transform: translateY(-50%); top: 100%; left: 20px;">
+                <div class="row" style="width: 118%">
+                <div class="col-md-4" style="margin-top: 160px;">
+                  	<div style="margin-left: 550px;">
+	                  	<button type="button" class="btn btn-outline-primary">Follow</button>
+	                    <button type="button" class="btn btn-outline-danger">Unfollow</button>
+	                    <button type="button" class="btn btn-outline-primary">Edit Profile</button>
+                  	</div>
+                    
+                  </div>
+                  <div class="col-sm-3">
+                    <img src="images/duyQuy.jpg" width="100%" style="border-radius: 50%;border: 3px solid white;object-fit: cover;"
+                      alt="">
+                  </div>
+                   
+                </div>            
+              </div>
+            </div>
+            <br><br>
+            <div class="col-12" style="margin-top: 100px;margin-left: 20px;">
+              <h3>Huỳnh Duy Quý</h3>
+              <p style="color: #888;">@duyquy</p>
+              <p>毎日 70,000 個のゲームをロードすると、間違いなくトップ 1 サーバーに入ることができます。…！！！</p>
+              <a href="#" class="follow"><span style="font-weight: bold;">100</span> <span style="color: #888;">Following</span></a>
+              <a href="#" class="follow"><span style="font-weight: bold;">100</span> <span style="color: #888;">Followers</span></a>
+            </div>
+            <br> <br>
+            <ul class="nav nav-tabs" id="myTabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Bài Đăng</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="images-tab" data-bs-toggle="tab" href="#images" role="tab" aria-controls="images" aria-selected="false">Hình ảnh</a>
+              </li>
+            </ul>
+            
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                <!-- Nội dung của tab "Bài Đăng" -->
+                
+                <center>
+					<div ng-repeat="post in Posts">
+						<div
+							class="write-post-container   animate__animated animate__backInLeft"
+							style="margin-bottom: 20px; border-radius: 2px; padding: 0; padding-top: 10px; padding-bottom: 10px; width: 85%; text-align: left; background: white;">
+							<div style="margin: 0;">
+								<div
+									style="display: flex; align-items: center; justify-content: space-between; padding-left: 10px">
+									<div class="dropdown">
+										<span class="dropbtn"><div class="user-profile ">
+												<a href="/nguoiDung/0111111118"><img
+													ng-src="/images/{{ post.user.avatar }}"
+													style="border-radius: 100%;" alt=""></a>
+												<div>
+
+													<label>{{ post.user.username }}</label>
+													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
+													<br> <small style="font-size: 12px; color: #65676b">
+														{{ getFormattedTimeAgo(post.postDate) }} </small>
+												</div>
+											</div></span>
+										<div class="dropdown-content">
+											<div class="user-profile ">
+												<a href="/nguoiDung/0111111118"><img
+													ng-src="/images/{{ post.user.avatar }}"
+													style="border-radius: 100%;" alt=""></a>
+												<div>
+													<label>{{ post.user.username }}</label>
+													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
+													<br> <small style="font-size: 12px; color: #65676b">
+														<b>Sống tại:</b> {{ post.user.address }}
+													</small> <br> <small style="font-size: 12px; color: #65676b">
+														<b>Mối quan hệ:</b> {{ post.user.relationship }}
+													</small>
+
+												</div>
+											</div>
+										</div>
+									</div>
+
+
+									<div>
+										<div class="btn-group" style="margin-right: 10px;">
+											<div class="dropdown">
+												<span class="  dropdown-toggle" id="triggerId"
+													data-bs-toggle="dropdown" aria-haspopup="true"
+													aria-expanded="false"> </span>
+												<div class="dropdown-menu" aria-labelledby="triggerId">
+													<a class="dropdown-item" href="#" style="color: #E53F31;">Báo
+														cáo vi phạm</a>
+													<div class="dropdown-divider"></div>
+													<a class="dropdown-item" href="#">Xem trang cá nhân</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div style="margin-top: 10px;">
+									<div>
+										<div
+											style="box-sizing: border-box; padding-left: 5px; padding-right: 5px; font-size: 12px; color: black">
+											{{ post.content }}</div>
+										<center>
+											<div ng-if="post.images.length > 1">
+												<!-- Carousel HTML code -->
+												<div id="carouselId" class="carousel slide"
+													data-bs-ride="carousel">
+													<!-- Carousel indicators -->
+													<ol class="carousel-indicators">
+														<li data-bs-target="#carouselId"
+															ng-repeat="image in post.images track by $index"
+															ng-class="{ 'active': $index === 0 }"
+															data-bs-slide-to="{{$index}}"
+															aria-current="{{$index === 0}}"
+															aria-label="Slide {{$index + 1}}"></li>
+													</ol>
+													<!-- Carousel items -->
+													<div ng-click="getPostDetails(post.postId)"
+														class="carousel-inner" role="listbox">
+														<div class="carousel-item"
+															style="background-color: #313131; height: 90vh;"
+															ng-repeat="image in post.images track by $index"
+															ng-class="{ 'active': $index === 0 }">
+															<img ng-src="/images/{{ image.imageUrl }}"
+																class="w-100 d-block" alt="Slide {{$index + 1}}"
+																style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
+														</div>
+													</div>
+													<!-- Carousel controls -->
+													<button class="carousel-control-prev" type="button"
+														data-bs-target="#carouselId" data-bs-slide="prev">
+														<span class="carousel-control-prev-icon"
+															aria-hidden="true"></span> <span class="visually-hidden">Previous</span>
+													</button>
+													<button class="carousel-control-next" type="button"
+														data-bs-target="#carouselId" data-bs-slide="next">
+														<span class="carousel-control-next-icon"
+															aria-hidden="true"></span> <span class="visually-hidden">Next</span>
+													</button>
+												</div>
+											</div>
+											<div ng-if="post.images.length === 1">
+												<!-- Single image HTML code -->
+												<img ng-click="getPostDetails(post.postId)"
+													ng-src="/images/{{ post.images[0].imageUrl }}"
+													class="w-100" alt="Single image">
+											</div>
+
+
+										</center>
+									</div>
+
+									<div class="post-reaction"
+										style="padding-left: 10px; margin-top: 8px;">
+										<div class="activity-icons">
+											<div>
+												<span ng-click="likePost(post.postId);"
+													ng-if="likedPosts.indexOf(post.postId.toString()) !== -1"
+													style="color: #f50000;">❤️&nbsp;{{ post.likeCount }}</span>
+												<span ng-click="likePost(post.postId)"
+													ng-if="likedPosts.indexOf(post.postId.toString()) === -1">🤍&nbsp;{{
+													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
+													class="fa-light fa-comments"></i>&nbsp;{{ post.commentCount
+													}}</span>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</center>
+                
+              </div>
+              <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                <!-- Nội dung của tab "Hình ảnh" -->
+                <div class="lightbox" style="margin-top: 30px;">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <img
+                        src="https://mdbcdn.b-cdn.net/img/Photos/Thumbnails/Slides/1.webp"
+                        data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Slides/1.webp"
+                        alt="Table Full of Spices"
+                        class="w-100 mb-2 mb-md-4 shadow-1-strong rounded"
+                      />
+                      <img
+                        src="https://mdbcdn.b-cdn.net/img/Photos/Thumbnails/Square/1.webp"
+                        data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Square/1.webp"
+                        alt="Coconut with Strawberries"
+                        class="w-100 shadow-1-strong rounded"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <img
+                        src="https://mdbcdn.b-cdn.net/img/Photos/Thumbnails/Vertical/1.webp"
+                        data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Vertical/1.webp"
+                        alt="Dark Roast Iced Coffee"
+                        class="w-100 shadow-1-strong rounded"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          
+          <!-- <div class="col-3" style="border: 1px solid red;">
+            
+          </div> -->
+          
+
+        </div>
+
+
+      </div>
+      <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	 
+	<script>
+  let input = document.getElementById('inputGroupFile01');
+  let imageList = document.getElementById('imageList');
+
+  input.onchange = (e) => {
+    imageList.innerHTML = ''; // Xóa danh sách hình ảnh hiện tại
+
+    for (let i = 0; i < input.files.length; i++) {
+      let img = document.createElement('img');
+      img.src = URL.createObjectURL(input.files[i]);
+      img.className = 'uploaded-image';
+      imageList.appendChild(img);
+    }
+  };
+</script>
+	<script>
+        angular.module('myApp', [])
+            .controller('myCtrl', function ($scope, $http) {
+                $scope.Posts = [];
+                $scope.likedPosts = [];
+                $scope.myAccount = {};
+                $scope.postData = {};
+                $scope.postDetails = {};
+                $scope.postComments =[];
+                
+                $http.get('/findfollowing')
+                    .then(function (response) {
+                        var Posts = response.data;
+                        $scope.Posts = Posts;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                $http.get('/findlikedposts')
+                    .then(function (response) {
+                        var likedPosts = response.data;
+                        $scope.likedPosts = likedPosts;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                $http.get('/findmyaccount')
+                    .then(function (response) {
+                        var myAccount = response.data;
+                        $scope.myAccount = myAccount;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+				
+                $scope.saveImages = function() {
+					
+				}
+                $scope.likePost = function (postId) {
+                    var likedIndex = $scope.likedPosts.indexOf(postId.toString());
+                    var likeEndpoint = '/likepost/' + postId;
+                    var dislikeEndpoint = '/didlikepost/' + postId;
+
+                    // Nếu postId chưa tồn tại trong mảng likedPosts
+                    if (likedIndex === -1) {
+                        // Thêm postId vào mảng likedPosts
+                        $scope.likedPosts.push(postId.toString());
+
+                        // Gửi yêu cầu POST để like bài viết và cập nhật likeCount+1
+                        $http.post(likeEndpoint)
+                            .then(function (response) {
+                                
+                                // Cập nhật thuộc tính likeCount+1 trong đối tượng post
+                                var post = $scope.Posts.find(function (item) {
+                                    return item.postId === postId;
+                                });
+                                if (post) {
+                                    post.likeCount++;
+                                    
+                                }
+                            })
+                            .catch(function (error) {
+                                // Xử lý lỗi
+                                console.log(error);
+                            });
+                    } else {
+                    	
+                        // Xóa postId khỏi mảng likedPosts
+                        $scope.likedPosts.splice(likedIndex, 1);
+                        
+                        // Gửi yêu cầu POST để dislike bài viết và cập nhật likeCount-1
+                        $http.post(dislikeEndpoint)
+                            .then(function (response) {                            	
+                                // Xử lý thành công
+                                //console.log(response.data);
+
+                                // Cập nhật thuộc tính likeCount-1 trong đối tượng post
+                                var post = $scope.Posts.find(function (item) {
+                                    return item.postId === postId;
+                                });
+                                if (post) {
+                                    post.likeCount--;
+                                    
+                                }
+                            })
+                            .catch(function (error) {
+                                // Xử lý lỗi
+                                console.log(error);
+                            });
+                    }
+                };
+                $scope.getFormattedTimeAgo = function(date) {
+              	  var currentTime = new Date();
+              	  var activityTime = new Date(date);
+              	  var timeDiff = currentTime.getTime() - activityTime.getTime();
+              	  var seconds = Math.floor(timeDiff / 1000);
+              	  var minutes = Math.floor(timeDiff / (1000 * 60));
+              	  var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+              	  var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+              	  if (days === 0) {
+              	    if (hours === 0 && minutes < 60) {
+              	      return minutes + ' phút trước';
+              	    } else if (hours < 24) {
+              	      return hours + ' giờ trước';
+              	    }
+              	  } else if (days === 1) {
+              	    return 'hôm qua';
+              	  } else {
+              	    return days + ' ngày trước';
+              	  }
+              	};
+              	$scope.post = function() {
+              	  var content = $scope.postData.text;
+              	
+              	  var formData = new FormData();
+              	  var fileInput = document.getElementById('inputGroupFile01');
+
+              	  for (var i = 0; i < fileInput.files.length; i++) {
+              	    formData.append('photoFiles', fileInput.files[i]);
+              	    alert(fileInput.files[i])
+              	  }
+              	  formData.append('content', content.content);
+
+              	  $http.post('/post', formData, {
+              	    transformRequest: angular.identity,
+              	    headers: { 'Content-Type': undefined }
+              	  }).then(function(response) {
+              		  alert("ok")
+              	    // Xử lý phản hồi thành công từ máy chủ
+              	    console.log(response.data);
+              	  }, function(error) {
+              	    // Xử lý lỗi
+              	    console.log(error);
+              	  });
+              	};
+              	
+              	$scope.getPostDetails = function(postId) {            
+                	
+              		$http.get('/findpostcomments/'+ postId)
+              	  .then(function(response) {
+              		  var postComments = response.data;
+              		  $scope.postComments = postComments;                		  
+              	    
+              	    
+              	    console.log(response.data);
+              	  }, function(error) {
+              	    // Xử lý lỗi
+              	    console.log(error);
+              	  });
+              		
+              		$http.get('/postdetails/'+ postId)
+                	  .then(function(response) {
+                		  var postDetails = response.data;
+                		  $scope.postDetails = postDetails;                		  
+                	    // Xử lý phản hồi thành công từ máy chủ
+                	    $('#chiTietBaiViet').modal('show');
+                	    console.log(response.data);
+                	  }, function(error) {
+                	    // Xử lý lỗi
+                	    console.log(error);
+                	  });  
+                	};
+                
+                	
+                	$scope.addComment = function(postId) {
+                		  var myComment = $scope.myComment;
+                		  $http.post('/addcomment/' + postId + '?myComment=' + myComment)
+                		    .then(function(response) {
+                		    	$scope.postComments.unshift(response.data);
+                		      $scope.myComment = '';
+                		      
+                		    }, function(error) {
+                		      console.log(error);
+                		    });
+                		};
+
+
+
+
+            });            
+    </script>
+    </div>
+  </div>
+</body>
+
+</html>
+
+</html>
