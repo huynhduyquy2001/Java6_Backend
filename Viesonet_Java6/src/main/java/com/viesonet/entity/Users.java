@@ -41,7 +41,7 @@ public class Users {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date accessTime;
-
+	@JsonIgnore
 	@OneToOne(mappedBy = "user")
 	private Accounts account;
 	
@@ -50,8 +50,12 @@ public class Users {
 	private List<Posts> posts;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private List<Reply> reply;
+	@OneToMany(mappedBy = "responder")
+	private List<Reply> replyResponder;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "receiver")
+	private List<Reply> replyReceiver;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")

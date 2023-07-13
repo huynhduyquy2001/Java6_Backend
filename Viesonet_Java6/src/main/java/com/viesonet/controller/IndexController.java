@@ -40,6 +40,7 @@ import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
 import com.viesonet.service.PostsService;
+import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
 
 import jakarta.servlet.ServletContext;
@@ -71,6 +72,9 @@ public class IndexController {
 	
 	@Autowired
 	private ServletContext servletContext;
+	
+	@Autowired
+	SessionService session;
 	
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
@@ -161,6 +165,7 @@ public class IndexController {
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 	}
 
+	
 	@GetMapping("/")
 	public ModelAndView getHomePage() {
         ModelAndView modelAndView = new ModelAndView("Index");
