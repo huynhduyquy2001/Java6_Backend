@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.*;
@@ -20,8 +21,8 @@ import com.viesonet.report.*;
 import jakarta.transaction.Transactional;
 
 @Transactional
-@Controller
-public class ReportController {
+@RestController
+public class Report {
 	
 	@Autowired
 	UsersDao userDAO;
