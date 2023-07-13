@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.Posts;
@@ -28,7 +29,7 @@ import com.viesonet.service.UsersService;
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
 
-@Controller
+@RestController
 public class ProfileController {
 	
 	@Autowired
@@ -65,11 +66,11 @@ public class ProfileController {
 //		return favoritesService.findLikedPosts("UI011");
 //	}
 //
-//	@ResponseBody
-//	@GetMapping("/findmyaccount")
-//	public Users findMyAccount() {
-//		return usersService.findUserById("UI011");
-//	}
+	@ResponseBody
+	@GetMapping("/findcurrentuser")
+	public Users findCurrentUser() {
+		return usersService.findUserById("UI011");
+	}
 //
 //	@ResponseBody
 //	@PostMapping("/likepost/{postId}")
@@ -120,7 +121,8 @@ public class ProfileController {
 //	}
 	
 	@GetMapping("/profile")
-	public String profile() {
-		return "Profile";
+	public ModelAndView profile() {
+		ModelAndView modelAndView = new ModelAndView("Profile");
+        return modelAndView;
 	}
 }
