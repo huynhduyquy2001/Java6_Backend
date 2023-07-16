@@ -10,8 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -38,53 +36,32 @@ public class Users {
 	private String background;
 	private int violationCount;
 	private Date createDate;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date accessTime;
 
 	@OneToOne(mappedBy = "user")
 	private Accounts account;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Posts> posts;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Reply> reply;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Favorites> favorites;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Comments> comments;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "receiver")
 	private List<Notifications> notifications;
-	
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "follower")
 	private List<Follow> followers;
-	
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "following")
 	private List<Follow> followings;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Violations> violations;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "receiver")
-	private List<Message> messageReceiver;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "sender")
-	private List<Message> messageSender;
-	
-	
 
 }

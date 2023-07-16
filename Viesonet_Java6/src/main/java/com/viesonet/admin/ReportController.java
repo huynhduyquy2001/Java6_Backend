@@ -12,62 +12,69 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.*;
-import com.viesonet.report.*;
+import com.viesonet.service.UsersService;
+import com.viesonet.service.sp_FilterPostLikeService;
+import com.viesonet.service.sp_Last7DaySumAccountsService;
+import com.viesonet.service.sp_ListAccService;
+import com.viesonet.service.sp_ListYearService;
+import com.viesonet.service.sp_NumberReportService;
+import com.viesonet.service.sp_SumAccountsByDayService;
+import com.viesonet.service.sp_TopPostLikeService;
+import com.viesonet.service.sp_TotalPostsService;
+import com.viesonet.service.sp_ViolationsPostsService;
 
 import jakarta.transaction.Transactional;
 
 @Transactional
-@RestController
-public class Report {
+@Controller
+public class ReportController {
 	
 	@Autowired
-	UsersDao userDAO;
+	UsersService userService;
 	
 	@Autowired
-	sp_FilterPostLike filterPostsLike;
+	sp_FilterPostLikeService filterPostsLike;
 	
 	@Autowired
-	sp_ListYear EXEC1;
+	sp_ListYearService EXEC1;
 	
 	@Autowired
-	sp_TopPostLike topLike;
+	sp_TopPostLikeService topLike;
 	
 	@Autowired
-	sp_ListAcc listCountAcc;
+	sp_ListAccService listCountAcc;
 	
 	@Autowired
-	sp_ViolationsPosts EXEC;
+	sp_ViolationsPostsService EXEC;
 	
 	@Autowired
-	sp_NumberReport EXEC2;
+	sp_NumberReportService EXEC2;
 	
 	@Autowired
-	sp_TotalPosts totalPosts;
+	sp_TotalPostsService totalPosts;
 	
 	@Autowired
-	sp_Last7DaySumAccounts last7DaySumAccounts;
+	sp_Last7DaySumAccountsService last7DaySumAccounts;
 	
 	
 	@Autowired
-	sp_SumAccountsByDay sumAccountsByDay;
+	sp_SumAccountsByDayService sumAccountsByDay;
 	
 	
 	//Load dữ liệu khi mở lên
 	@GetMapping("/admin/report")
 	public String thongKe(Model m) {
 		//Tìm người dùng vai trò là admin
-		m.addAttribute("acc", userDAO.findByuserId("UI001"));
+		m.addAttribute("acc", userService.findUserById("UI001"));
 		
 		//Thực hiện gọi stored procedure
-		List<ViolationsPosts> rs = EXEC.executeReportViolationPosts(LocalDate.now().getYear());
-		List<NumberReport> rs2 = EXEC2.executeNumberReport(LocalDate.now().getYear());
+		List<ViolationsPosts> rs = EXEC.violationsPosts(LocalDate.now().getYear());
+		List<NumberReport> rs2 = EXEC2.numberReports(LocalDate.now().getYear());
 		
 		//Lấy năm
-		List<ListYear> list = EXEC1.executeListYear();
+		List<ListYear> list = EXEC1.listYears();
 		
 		//Truyền dữ liệu
 		m.addAttribute("yearNow", LocalDate.now().getYear());
@@ -76,7 +83,7 @@ public class Report {
 		m.addAttribute("soBaiViet", rs2);
 		
 		// Lấy danh sách các người dùng
-		List<Users> usersList = userDAO.findAll();
+		List<Users> usersList = userService.findAll();
 		
 		//Tạo danh sách nhóm tuổi
 		List<Users> age18to25 = new ArrayList<>();
@@ -111,19 +118,19 @@ public class Report {
         m.addAttribute("nhom3", Math.round(tu35troLen * 10 + 0.05) / 10.0);
         
         //Thống kê số accounts mới tham gia trong 7 ngày qua
-        List<ListAcc> listAc = listCountAcc.executeListAcc();
+        List<ListAcc> listAc = listCountAcc.listAccs();
         
         //Truyền dữ liệu
         m.addAttribute("listAcc", listAc);
         
         //Thống kê top 5 bài viết được yêu thích
-        List<TopPostLike> listTopLike = topLike.executeTopLike();
+        List<TopPostLike> listTopLike = topLike.topPostLikes();
         
         //Truyền dữ liệu
         m.addAttribute("topLike", listTopLike);
         
         //Thống kê tài khoản có nhiều bài viết nhất
-        List<TotalPosts> tPosts = totalPosts.executeTotalPosts();
+        List<TotalPosts> tPosts = totalPosts.totalPosts();
         //Truyền dữ liệu
         m.addAttribute("TotalPosts", tPosts); 
 		return "/admin/report";
@@ -135,8 +142,8 @@ public class Report {
 	@RequestMapping("/admin/report/filterYear/{year}")
 	public ReportAndViolations filterYear(@PathVariable int year){
 		//Nhận tham số và thực hiện theo năm đã chọn
-		List<ViolationsPosts> rs = EXEC.executeReportViolationPosts(year);
-		List<NumberReport> rs2 = EXEC2.executeNumberReport(year);
+		List<ViolationsPosts> rs = EXEC.violationsPosts(year);
+		List<NumberReport> rs2 = EXEC2.numberReports(year);
 		
 		//Trả về list chứa 2 danh sách
 		return new ReportAndViolations(rs,rs2);
@@ -146,7 +153,7 @@ public class Report {
 	@ResponseBody
 	@RequestMapping("/admin/report/detail/{postId}")
 	public TopPostLike detailPosts(Model m, @PathVariable int postId) {
-		return filterPostsLike.executeFilterPostLike(postId);
+		return filterPostsLike.topPostsLike(postId);
 	}
 	
 	 //Phương thức để tính độ tuổi

@@ -1,10 +1,6 @@
 package com.viesonet.dao;
 
 import java.util.List;
-
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,10 +8,11 @@ import com.viesonet.entity.Posts;
 import com.viesonet.entity.Users;
 
 public interface UsersDao extends JpaRepository<Users, String> {
+	
 	Users findByuserId(String userId);
 	
 	@Query("SELECT u FROM Users u WHERE u.userId <> :userId")
-	List<Users> findByUserAndStaff(String userId);
+	List<Users> findByUserAndStaff(@Param("userId") String userId);
 	
 	@Query("SELECT u.userId, u.avatar, u.username, u.account.email, u.violationCount FROM Users u WHERE u.username LIKE %:userId%")
 	List<Object> findByUserSearch(@Param("userId") String userId);

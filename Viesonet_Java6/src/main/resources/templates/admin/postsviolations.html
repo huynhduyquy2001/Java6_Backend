@@ -67,270 +67,314 @@ body {
 </style>
 <body>
 	<!--  Body Wrapper -->
-	<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
-		data-navbarbg="skin6" data-sidebartype="full"
-		data-sidebar-position="fixed" data-header-position="fixed">
-		<!-- Sidebar Start -->
-		<aside class="left-sidebar">
-			<!-- Sidebar scroll-->
-			<div>
-				<div
-					class="brand-logo d-flex align-items-center justify-content-between">
-					<a href="/admin/postsviolations" class="text-nowrap logo-img"
-						style="color: #222; font-weight: bolder; font-family: 'robo';">
-						<img src="/images/chimLac.png" height="30px" alt="">
-						VIE_SONET
-					</a>
-				</div>
-				<!-- Sidebar navigation-->
-				<nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-					<ul id="sidebarnav">
-						<li class="nav-small-cap"><i
-							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
-							class="hide-menu">Thống kê</span></li>
-						<li class="sidebar-item"><a class="sidebar-link"
-							href="/admin/report" aria-expanded="false"> <span> <i
-									class="fa-regular fa-chart-tree-map"></i>
-							</span> <span class="hide-menu">&nbsp; Chung</span>
-						</a></li>
-						<li class="nav-small-cap"><i
-							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
-							class="hide-menu">Quản Lý</span></li>
-						<li class="sidebar-item"><a class="sidebar-link"
-							href="/admin/usermanager" aria-expanded="false"> <span>
-									<i class="fa-regular fa-users"></i>
-							</span> <span class="hide-menu">Người dùng</span>
-						</a> <a class="sidebar-link active" href="/admin/postsviolations"
-							aria-expanded="false"> <span> <i
-									class="fa-regular fa-memo-circle-info"></i>
-							</span> <span class="hide-menu"> &nbsp; Bài viết vi phạm</span>
-						</a></li>
-					</ul>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+      <!-- Sidebar scroll-->
+      <div>
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <a href="/admin/postsviolation" class="text-nowrap logo-img"
+            style="color: #222; font-weight: bolder; font-family: 'robo';">
+            <img src="/images/chimLac.png" height="30px" alt=""> VIE_SONET
+          </a>
+        </div>
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+          <ul id="sidebarnav">
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Thống kê</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/admin/report" aria-expanded="false">
+                <span>
+                  <i class="fa-regular fa-chart-tree-map"></i>
+                </span>
+                <span class="hide-menu">&nbsp; Chung</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Quản Lý</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/admin/usermanager" aria-expanded="false">
+                <span>
+                  <i class="fa-regular fa-users"></i>
+                </span>
+                <span class="hide-menu">Người dùng</span>
+              </a>
+              <a class="sidebar-link active" href="/admin/postsviolation" aria-expanded="false">
+                <span>
+                  <i class="fa-regular fa-memo-circle-info"></i>
+                </span>
+                <span class="hide-menu"> &nbsp; Bài viết vi phạm</span>
+              </a>
+            </li>
+          </ul>
 
-				</nav>
-				<!-- End Sidebar navigation -->
-			</div>
-			<!-- End Sidebar scroll-->
-		</aside>
-		<!--  Sidebar End -->
-		<!--  Main wrapper -->
-		<div class="body-wrapper">
-			<!--  Header Start -->
-			<header class="app-header">
-				<nav class="navbar navbar-expand-lg navbar-light">
-					<ul class="navbar-nav">
-						<div class="">
-							<form class="position-relative">
-								<input type="search" class="form-control search-chat py-2 ps-5"
-									id="text-srh" placeholder="Nhập mã bài viết"
-									style="border: 1px solid #ccc;"> <i
-									class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-							</form>
-						</div>
-					</ul>
-					<div class="navbar-collapse justify-content-end px-0"
-						id="navbarNav">
-						<ul
-							class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-							<li class="nav-item dropdown"><a
-								class="nav-link nav-icon-hover" href="#" id="drop2"
-								data-bs-toggle="dropdown" aria-expanded="false"> <i
-									class="fa-regular fa-bell"></i>
-									<div class="circle mb-2"></div>
-							</a>
-								<div style="background: whitesmoke;"
-									class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
-									aria-labelledby="drop2">
-									<div class="message-body">
-										<a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item"> <i
-											class="ti ti-user fs-6"></i>
-											<p class="mb-0 fs-3">Thông báo 1</p>
-										</a> <a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item"> <i
-											class="ti ti-user fs-6"></i>
-											<p class="mb-0 fs-3">Thông báo 2</p>
-										</a> <a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item"> <i
-											class="ti ti-user fs-6"></i>
-											<p class="mb-0 fs-3">Thông báo 3</p>
-										</a>
-									</div>
-								</div></li>
-							<li class="nav-item dropdown"><a
-								class="nav-link nav-icon-hover" href="#" id="drop2"
-								data-bs-toggle="dropdown" aria-expanded="false"> <img
-									th:src="@{'/images/' + ${acc.avatar}}" alt="" width="35"
-									height="35" class="rounded-circle">
-							</a>
-								<div style="background: whitesmoke;"
-									class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
-									aria-labelledby="drop2">
-									<div class="message-body">
-										<div class="py-3 px-7 pb-0">
-											<h5 class="mb-0 fs-5 fw-semibold">Cá nhân</h5>
-										</div>
-										<a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item">
-											<div
-												class="d-flex align-items-center py-9 mx-7 border-bottom">
-												<img th:src="@{'/images/' + ${acc.avatar}}"
-													class="rounded-circle" width="80" height="80" alt="">
-												<div class="ms-3">
-													<h5 class="mb-1 fs-3" th:text="${acc.username}"></h5>
-													<span class="mb-1 d-block text-dark"
-														th:text="${acc.account.role.roleName}"></span>
-													<p class="mb-0 d-flex text-dark align-items-center gap-2">
-														<i class="fa-thin fa-envelope"></i> <span
-															th:text="${acc.account.email}"></span>
-													</p>
-												</div>
-											</div>
-										</a> <a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item text-center">
-											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-thin fa-house me-2"></i>
-											<p class="mb-0 fs-3">Trang chủ</p>
-										</a> <a href="#" class="btn btn-outline-primary mx-3 mt-2 d-block">
-											Đăng xuất</a>
-									</div>
-								</div></li>
-						</ul>
-					</div>
-				</nav>
-			</header>
-			<!--  Header End -->
-			<div class="container-fluid">
-				<div class="row" id="postRow">
-					<div class="col-4" th:each="item, status : ${listPosts}"
-						th:id="${status.index != 0 and item.post.postId == listPosts[status.index - 1].post.postId} ? 'alike' : ''">
-						<div class="card">
-							<div class="card-body">
-								<div class="d-flex align-items-center">
-									<a href="#" class="d-flex align-items-center"> <img
-										th:src="@{'/images/' + ${item.post.user.avatar}}"
-										class="rounded-circle" style="object-fit: cover;" width="50"
-										height="50">
-										<div class="ms-3">
-											<h4 class="card-title" th:text="${item.post.user.username}"></h4>
-											<p class="card-subtitle mb-0"
-												th:text="${#dates.format(item.post.postDate, 'dd/MM/yyyy')}"></p>
-										</div>
-									</a>
-									<div class="ms-auto">
-										<div class="dropdown">
-											<a href="#" class="link" id="dropdownMenuButton"
-												data-bs-toggle="dropdown" aria-expanded="false"> <i
-												class="fa-regular fa-ellipsis-vertical fa-xl"></i>
-											</a>
-											<ul style="background: whitesmoke;" class="dropdown-menu"
-												aria-labelledby="dropdownMenuButton">
-												<li><a class="dropdown-item" href="#" th:onclick="'list(\'' + ${item.post.postId} + '\')'">
-												Xem danh sách lý do tố cáo</a></li>
-												<li><a class="dropdown-item" href="#" th:onclick="'removeViolations(\'' + ${item.post.postId} + '\')'">Gỡ vi phạm</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<center class="carousel-dark">
-									<div
-										th:if="${item.post.images != null and not item.post.images.isEmpty()}"
-										style="height: 230px; width: 250px; overflow: hidden;"
-										th:id="'carouselExampleFade-' + ${item.post.postId}"
-										class="mt-4 carousel slide carousel-fade carousel-dark">
-										<div class="carousel-inner">
-											<div th:each="image, imageIndex : ${item.post.images}"
-												class="carousel-item"
-												th:classappend="${imageIndex.index == 0} ? 'active'">
-												<img th:src="@{'/images/' + ${image.imageUrl}}" width="85%"
-													style="object-fit: cover;">
-											</div>
-										</div>
-									</div>
-									<div
-										th:unless="${item.post.images != null and not item.post.images.isEmpty()}">
-										<!-- Nội dung hiển thị khi danh sách images trống -->
-
-									</div>
-									<div
-										th:if="${item.post.images != null and item.post.images.size() > 1}">
-										<button style="height: 50px; margin-top: 200px;"
-											class="carousel-control-prev" type="button"
-											th:data-bs-target="'#carouselExampleFade-' + ${item.post.postId}"
-											data-bs-slide="prev">
-											<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-										</button>
-										<button style="height: 50px; margin-top: 200px;"
-											class="carousel-control-next" type="button"
-											th:data-bs-target="'#carouselExampleFade-' + ${item.post.postId}"
-											data-bs-slide="next">
-											<span class="carousel-control-next-icon" aria-hidden="true"></span>
-										</button>
-									</div>
-
-								</center>
-								<div class="mt-4">
-									<p class="fs-4"
-										th:attr="style=${item.post.images == null ? '' : 'max-width: 350px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;'}"
-										data-bs-toggle="tooltip" data-bs-placement="bottom"
-										th:title="${item.post.content}" th:text="${item.post.content}"></p>
-								</div>
-								<div class="d-flex align-items-center">
-									<div>
-										<i class="fa-regular fa-thumbs-up"></i> &nbsp; <span
-											th:text="${item.post.likeCount}"></span>
-									</div>
-									&nbsp;&nbsp;&nbsp;&nbsp;
-									<div>
-										<i class="fa-regular fa-comment"></i>&nbsp; <span
-											th:text="${item.post.commentCount}"></span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</div>
-			<!-- Modal -->
-			<div class="modal fade" id="exampleModal" tabindex="-1"
-				aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div
-					class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-					<div class="modal-content" style="background-color: aliceblue">
-						<div class="modal-header">
-							<h4>Danh sách lý do bị tố cáo</h4>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div class="table-responsive">
-								<table class="table">
-									<thead>
-										<tr>
-											<th scope="col">Lý do tố cáo</th>
-											<th scope="col" class="text-center">Số lượng</th>
-										</tr>
-									</thead>
-									<tbody id="listTable">
-										
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script>
-			// Tìm tất cả các phần tử có cùng id
-			var elementsToRemove = document.querySelectorAll('[id="alike"]');
-
-			// Lặp qua danh sách các phần tử và xóa chúng
-			for (var i = 0; i < elementsToRemove.length; i++) {
-				var element = elementsToRemove[i];
-				element.parentNode.removeChild(element);
-			}
-		</script>
+        </nav>
+        <!-- End Sidebar navigation -->
+      </div>
+      <!-- End Sidebar scroll-->
+    </aside>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+      <header class="app-header" style="border-bottom: 1px solid rgb(229, 234, 239);">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link nav-icon-hover" href="#" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-regular fa-bell"></i>
+                  <div class="circle mb-2"></div>
+                </a>
+                <div style="background: whitesmoke;" class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+                  aria-labelledby="drop2">
+                  <div class="message-body">
+                    <a href="#" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">Thông báo 1</p>
+                    </a>
+                    <a href="#" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">Thông báo 2</p>
+                    </a>
+                    <a href="#" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">Thông báo 3</p>
+                    </a>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link nav-icon-hover" href="#" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                </a>
+                <div style="background: whitesmoke;" class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+                  aria-labelledby="drop2">
+                  <div class="message-body">
+                    <div class="py-3 px-7 pb-0">
+                      <h5 class="mb-0 fs-5 fw-semibold">Cá nhân</h5>
+                    </div>
+                    <a href="#" class="d-flex align-items-center gap-2 dropdown-item">
+                      <div class="d-flex align-items-center py-9 mx-7 border-bottom">
+                        <img src="../../dist/images/profile/user-1.jpg" class="rounded-circle" width="80" height="80"
+                          alt="">
+                        <div class="ms-3">
+                          <h5 class="mb-1 fs-3">Mathew Anderson</h5>
+                          <span class="mb-1 d-block text-dark">Designer</span>
+                          <p class="mb-0 d-flex text-dark align-items-center gap-2">
+                            <i class="ti ti-mail fs-4"></i> info@modernize.com
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                    <a href="#" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">Đổi mật khẩu</p>
+                    </a>
+                    <a href="#" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-mail fs-6"></i>
+                      <p class="mb-0 fs-3">Thông tin điều khoản</p>
+                    </a>
+                    <a href="#" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-list-check fs-6"></i>
+                      <p class="mb-0 fs-3">Nâng cấp</p>
+                    </a>
+                    <a href="#" class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng xuất</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!--  Header End -->
+      <div class="container-fluid">
+        <!--  Row 1 -->
+        <div class="row">
+          <div class="card-title fw-semibold mb-2">
+            <nav class="navbar navbar-expand-lg navbar-light">
+              <ul class="navbar-nav">
+                <input type="checkbox" id="selectAll" class="form-check-input ms-3 me-4 hover-effect"
+                  style="border: 3px solid rgb(34, 31, 31);">
+                <a href="#" class="me-5" data-bs-placement="top" title="Xóa bài viết vi phạm">
+                  <i class="fa-regular fa-trash-can fa-lg"></i>
+                </a>
+                <small class="mt-1" id="selectedCount"></small>
+              </ul>
+              <div class="navbar-collapse justify-content-end px-0">
+                <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                  <small class="me-3"> <span th:text="${listPosts.number + 1}"></span> / <span th:text="${listPosts.totalPages}"></span> </small>
+                  <a  th:if="${listPosts.number > 0}" th:href="@{/admin/postsviolations(page=${listPosts.number - 1}, size=${listPosts.size})}" class="me-4">
+                    <i class="fa-solid fa-chevron-left fa-xs"></i>
+                  </a>
+                  <a  th:if="${listPosts.number == 0}" href="#" class="me-4">
+                    <i class="fa-solid fa-chevron-left fa-xs"></i>
+                  </a>
+                  <a th:if="${listPosts.number < listPosts.totalPages - 1}" th:href="@{/admin/postsviolations(page=${listPosts.number + 1}, size=${listPosts.size})}" class="me-4">
+                    <i class="fa-solid fa-chevron-right fa-xs"></i>
+                  </a>
+                  <a th:unless="${listPosts.number < listPosts.totalPages - 1}" href="#" class="me-4">
+                    <i class="fa-solid fa-chevron-right fa-xs"></i>
+                  </a>
+                  <form class="position-relative">
+                    <input type="search" class="form-control search-chat py-2 ps-5" id="text-srh"
+                      placeholder="Nhập tên người đăng" style="border: 1px solid #ccc;">
+                    <i
+                      class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+                  </form>
+                </ul>
+              </div>
+            </nav>
+          </div>
+          <div class="table-responsive">
+            <table class="table text-nowrap mb-0 align-middle">
+              <thead class="text-dark fs-4">
+                <tr>
+                  <th class="border-bottom-0">
+                    #
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Tiêu đề bài viết</h6>
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Người đăng</h6>
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0">Ngày đăng</h6>
+                  </th>
+                  <th class="border-bottom-0">
+                    <h6 class="fw-semibold mb-0 text-center">Chi tiết</h6>
+                  </th>
+                </tr>
+              </thead>
+              <tbody >
+                <tr th:each="item : ${listPosts}">
+                  <td class="border-bottom-0">
+                    <input type="checkbox" th:value="${item[0]}" class="table-checkbox form-check-input hover-effect">
+                  </td>
+                  <td class="border-bottom-0">
+                    <span class="fw-normal mb-0" th:text="${item[1]}"
+                      style="max-width: 250px;white-space: nowrap; text-overflow: ellipsis;  overflow: hidden;">
+                    </span>
+                  </td>
+                  <td class="border-bottom-0"
+                    style="max-width: 200px;white-space: nowrap; text-overflow: ellipsis;  overflow: hidden;">
+                    <span class="fw-normal" th:text="${item[2]}"></span>
+                  </td>
+                  <td class="border-bottom-0">
+                    <p class="mb-0 fw-normal" th:text="${#dates.format(item[3], 'dd/MM/yyyy')}"></p>
+                  </td>
+                  <td class="border-bottom-0 text-center">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-placement="top"
+                      title="Xem chi tiết bài viết">
+                      <i class="fa-light fa-eye" style="color: #336cce;"></i>
+                    </a>
+                  </td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+          <div class="modal-content" style="background-color:aliceblue">
+            <div class="modal-header">
+              <h4>Chi tiết</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             <div class="row">
+                <div class="col-5">
+                  <div style="margin-bottom: 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
+                    <a href="#" target="_blank" class="image-link">
+                      <img src="user-1.jpg" alt="" width="55" height="55" class="rounded-circle mt-3" style="margin-left: 15px;">
+                      <div class="content mt-3">
+                        <span class="name">Huỳnh Duy Quý</span>
+                        <small>30-4-1975_09:18 pm</small>
+                      </div>
+                    </a>
+                    <div style="margin-top: 15px; margin-left: 25px;">
+                      Có một con cá mập biết bơi, nó bơi ngoài biển, bơi ngang cọng cáp, nó
+                      cắn cọng cáp
+                      <center style="margin-right: 20px; margin-top: 10px;">
+                        <div id="carouselExampleFade" class="carousel slide carousel-fade carousel-dark">
+                          <div class="carousel-inner" style="width: 75%;">
+                            <div class="carousel-item active">
+                              <img width="75%" src="rocket.png" class="d-block w-100" alt="...">
+                            </div>
+                          </div>
+                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          </button>
+                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          </button>
+                        </div>
+                      </center>
+                      <div class="post-reaction mt-3">
+                        <div class="activity-icons d-flex justify-content">
+                            <div><i class="fa-regular fa-thumbs-up"></i> &nbsp; 120</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <div><i class="fa-regular fa-comment"></i>&nbsp; 52</div>
+                        </div>
+                      </div>
+                      <br>
+                  </div>
+                  </div>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-6">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Lý do bị vi phạm</th>
+                          <th scope="col" class="text-center">Số lượng</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Mark</td>
+                          <td class="text-center">1</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+             </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const selectAllCheckbox = document.getElementById('selectAll');
+      const tableCheckboxes = document.querySelectorAll('.table-checkbox');
+      const selectedCountElement = document.getElementById('selectedCount');
+    
+      selectAllCheckbox.addEventListener('click', function () {
+        const isChecked = this.checked;
+        tableCheckboxes.forEach((checkbox) => {
+          checkbox.checked = isChecked;
+        });
+        updateSelectedCount();
+      });
+    
+      tableCheckboxes.forEach(checkbox => checkbox.addEventListener('click', updateSelectedCount));
+    
+      function updateSelectedCount() {
+        const selectedCount = document.querySelectorAll('.table-checkbox:checked').length;
+        selectedCountElement.textContent = selectedCount > 0 ? + selectedCount + ' mục đã được chọn' : '';
+      }
+    </script>
 		<script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
 		<script type="text/javascript" src="/js/postsviolations.js"></script>
 		<script

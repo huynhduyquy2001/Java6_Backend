@@ -3,7 +3,9 @@ package com.viesonet.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.viesonet.dao.UsersDao;
@@ -19,25 +21,29 @@ public class UsersService {
 		return user.orElse(null);
 	}
 
-	
-	public List<Users> findByUserAndStaff(String userId){
-		List<Users> list = usersDao.findByUserAndStaff(userId);
-		return list;
+	public List<Users> findByUserAndStaff(String userId) {
+		return usersDao.findByUserAndStaff(userId);
 	}
-	
-	public List<Object> findByUserSearch(String userId){
-		List<Object> list = usersDao.findByUserSearch(userId);
-		return list;
+
+	public List<Object> findByUserSearch(String userId) {
+		return usersDao.findByUserSearch(userId);
 	}
 	
 	public List<Object> findByUserSearchAll(){
-		List<Object> list = usersDao.findByUserSearchAll();
-		return list;
+		return usersDao.findByUserSearchAll();
 	}
 	
 	public Object findByDetailUser(String userId) {
-		Object detailUser = usersDao.findByDetailUser(userId);
-		return detailUser;
+		return usersDao.findByDetailUser(userId);
 	}
 	
+	public List<Users> findAll(){
+		return usersDao.findAll();
+	}
+	
+	public Users setViolationCount(String userId) {
+		Users user = usersDao.findByuserId(userId);
+		user.setViolationCount(0);
+		return usersDao.saveAndFlush(user);
+	}
 }
