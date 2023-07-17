@@ -296,10 +296,11 @@ div.dropdown-menu.baoCao {
 			</nav>
 
 			<div class="col-md-6 offset-md-3" style="z-index: 10;">
-				<div class="msger">
+				<div class="msger animate__animated animate__zoomIn" ng-if="ListMess.length>0">
 					<header class="msger-header">
 						<div class="msger-header-title">
-							<i class="fas fa-comment-alt"></i> SimpleChat
+							<a href="#"><img ng-src="/images/{{ userMess.avatar }}"
+								style="border-radius: 100%; max-width: 35px" alt=""></a> {{ userMess.username }}
 						</div>
 						<div class="msger-header-options">
 							<span><i class="fas fa-cog"></i></span>
@@ -314,9 +315,8 @@ div.dropdown-menu.baoCao {
 							<div class="msg-bubble">
 								<div class="msg-info">
 									<div class="msg-info-name">{{mess.sender.username}}</div>
-									<div class="msg-info-time">
-									{{ getFormattedTimeAgo(mess.sendDate) }}
-									</div>
+									<div class="msg-info-time">{{
+										getFormattedTimeAgo(mess.sendDate) }}</div>
 								</div>
 								<div class="msg-text">{{mess.content}}</div>
 							</div>
@@ -335,28 +335,51 @@ div.dropdown-menu.baoCao {
 			<div class="col-md-3 menuLeft animate__animated animate__backInRight"
 				style="position: fixed; right: 0; top: 70px;">
 				<ul class="list-unstyled mb-0" style="padding-left: 8px">
-                <li ng-repeat="UsersMess in ListUsersMess" class="p-2 border-bottom" style="background-color: #eee;">
-                  <div class="user-profile " ng-click="UsersMess">
-												<a href="/nguoiDung/0111111118"><img ng-src="/images/{{ UsersMess[4] }}" style="border-radius: 100%;" alt=""></a>
-												<div style="width: 100%">
-													<label class="ng-binding">{{ UsersMess[1] }}</label>
-													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
-													<br> 
-													<div style="display: flex; justify-content: space-between;">
-													<small style="font-size: 12px;">{{UsersMess[6]}}</small>
-													<small style="font-size: 12px; color: #65676b" class="ng-binding">
-														{{getFormattedTimeAgo(UsersMess[7]) }} </small>
-													</div>
-													
-												</div>
-											</div>
-                </li>
-                
-              </ul>
-				</div>
+					<li ng-repeat="UsersMess in ListUsersMess"
+						class="p-2 border-bottom" style="background-color: white;">
+
+						<div class="user-profile" ng-if="UsersMess[0] === 'UI011'"
+							ng-click="getmess2(UsersMess[2])">
+							<!-- Nội dung khi UsersMess[0] = 'UI010' -->
+							<a href="#"><img ng-src="/images/{{ UsersMess[5] }}"
+								style="border-radius: 100%;" alt=""></a>
+							<div style="width: 100%">
+								<label class="ng-binding">{{ UsersMess[3] }}</label>
+								<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
+								<br>
+								<div style="display: flex; justify-content: space-between;">
+									<small style="font-size: 12px;">{{UsersMess[6]}}</small> <small
+										style="font-size: 12px; color: #65676b" class="ng-binding">
+										{{getFormattedTimeAgo(UsersMess[7]) }} </small>
+								</div>
+							</div>
+						</div>
+
+						<div class="user-profile" ng-if="UsersMess[0] !== 'UI011'"
+							ng-click="getmess2(UsersMess[0])">
+							<!-- Nội dung khi UsersMess[0] khác 'UI010' -->
+							<a href="#"><img ng-src="/images/{{ UsersMess[4] }}"
+								style="border-radius: 100%;" alt=""></a>
+							<div style="width: 100%">
+								<label class="ng-binding">{{ UsersMess[1] }}</label>
+								<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
+								<br>
+								<div style="display: flex; justify-content: space-between;">
+									<small style="font-size: 12px;">{{UsersMess[6]}}</small> <small
+										style="font-size: 12px; color: #65676b" class="ng-binding">
+										{{getFormattedTimeAgo(UsersMess[7]) }} </small>
+								</div>
+
+							</div>
+						</div>
+
+					</li>
+
+				</ul>
+			</div>
 		</div>
 	</div>
-	
+
 	<!-- load ảnh -->
 	<script>
   let input = document.getElementById('inputGroupFile01');
@@ -364,7 +387,6 @@ div.dropdown-menu.baoCao {
 
   input.onchange = (e) => {
     imageList.innerHTML = ''; // Xóa danh sách hình ảnh hiện tại
-
     for (let i = 0; i < input.files.length; i++) {
       let img = document.createElement('img');
       img.src = URL.createObjectURL(input.files[i]);
@@ -378,27 +400,39 @@ angular.module('myApp', [])
 .controller('myCtrl', function ($scope, $http) {
     $scope.LikePost = [];
     $scope.ListUsersMess = [];
-    $http.get('/getmess')
-        .then(function (response) {
-            var ListMess = response.data;
-            $scope.ListMess = ListMess;
-           
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+    $scope.ListMessWith=[];
+   
     
     $http.get('/getusersmess')
     .then(function (response) {
         var ListUsersMess = response.data;
-        $scope.ListUsersMess = ListUsersMess;
+        $scope.ListUsersMess = ListUsersMess; 
         
-       
     })
     .catch(function (error) {
         console.log(error);
     });
     
+    $scope.getmess2 = function(userId) {
+    	
+    	 $http.post('/getUser/' + userId)
+		    .then(function(response) {
+		    	var userMess = response.data;
+	            $scope.userMess = userMess;
+	           
+		    }, function(error) {
+		      console.log(error);
+		    });
+    	
+		  $http.get('/getmess2/' + userId)
+		    .then(function(response) {
+		    	var ListMess = response.data;
+	            $scope.ListMess = ListMess;
+	           
+		    }, function(error) {
+		      console.log(error);
+		    });
+		};
     $scope.getFormattedTimeAgo = function(date) {
     	  var currentTime = new Date();
     	  var activityTime = new Date(date);
@@ -436,7 +470,7 @@ angular.module('myApp', [])
 
 });     
 </script>
-<script >
+	<script>
 
 </script>
 </body>
