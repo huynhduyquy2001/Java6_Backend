@@ -12,6 +12,10 @@ selectAllCheckbox.addEventListener('click', function() {
 
 tableCheckboxes.forEach(checkbox => checkbox.addEventListener('click', updateSelectedCount));
 
+function reloadPage() {
+            location.reload();
+        }
+
 function updateSelectedCount() {
 	const selectedCount = document.querySelectorAll('.table-checkbox:checked').length;
 	selectedCountElement.textContent = selectedCount > 0 ? + selectedCount + ' mục đã được chọn' : '';
@@ -232,8 +236,8 @@ function deleteViolation() {
 					data: JSON.stringify(listPostId),
 					contentType: "application/json",
 					success: function(data) {
-						var table = document.getElementById("listTable");
-						table.innerHTML = ""; 
+						/*var table = document.getElementById("listTable");
+						table.innerHTML = "";
 						data.content.forEach(function(item) {
 							//Chuyển định dạng ngày tháng năm
 							let date = new Date(item[3]);
@@ -265,6 +269,7 @@ function deleteViolation() {
 											class="fa-light fa-eye" style="color: #336cce;"></i>
 									</a></td>
 								</tr>`;
+								});*/
 							Swal.fire({
 								position: 'top',
 								icon: 'success',
@@ -272,7 +277,26 @@ function deleteViolation() {
 								showConfirmButton: false,
 								timer: 1800
 							})
+						 setTimeout(reloadPage, 1800);
+						/*const selectAllCheckbox = document.getElementById('selectAll');
+						const tableCheckboxes = document.querySelectorAll('.table-checkbox');
+						const selectedCountElement = document.getElementById('selectedCount');
+						selectedCountElement.innerHTML = "";
+						selectAllCheckbox.addEventListener('click', function() {
+							const isChecked = this.checked;
+							tableCheckboxes.forEach((checkbox) => {
+								checkbox.checked = isChecked;
+							});
+							updateSelectedCount();
 						});
+
+						tableCheckboxes.forEach(checkbox => checkbox.addEventListener('click', updateSelectedCount));
+
+						function updateSelectedCount() {
+							const selectedCount = document.querySelectorAll('.table-checkbox:checked').length;
+							selectedCountElement.textContent = selectedCount > 0 ? + selectedCount + ' mục đã được chọn' : '';
+						}*/
+
 					},
 					error: function(xhr, status, error) {
 						// Xử lý lỗi (nếu có)
