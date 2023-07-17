@@ -27,19 +27,6 @@ import com.viesonet.entity.AccountStatus;
 		return user.orElse(null);
 	}
 	
-	//Phương thức lấy thông tin chi tiết người dùng
-	public UserInformation getMyInfomation(Users user, Accounts account) {
-	    UserInformation obj = new UserInformation();
-	    obj.setUser(user);
-	    
-	    
-	    obj.setIntrodution(user.getIntroduction());
-	    obj.setBirthday(user.getBirthday());
-	    obj.setGender(user.isGender());
-	    obj.setRelationship(user.getRelationship());
-
-	    return obj;
-	}
 
 
 }

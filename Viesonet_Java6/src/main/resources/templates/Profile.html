@@ -325,8 +325,8 @@
 											<li class="nav-item dropdown"><a
 												class="nav-link nav-icon-hover" href="#" id="drop2"
 												data-bs-toggle="dropdown" aria-expanded="false"> <img
-													src="images/duyQuy.jpg" alt="" width="35" height="35"
-													class="rounded-circle">
+													src="images/{{UserInfo.avatar}}" alt="" width="35" height="35"
+													class="rounded-circle" style="object-fit: cover;">
 											</a>
 												<div style="background: whitesmoke;"
 													class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
@@ -568,32 +568,34 @@
           <!-- Followers-->
           <div class="tab-pane fade" id="pills-followers" role="tabpanel" aria-labelledby="pills-followers-tab" tabindex="0">
             <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
-              <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">Người theo dõi <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">3,586</span></h3>
+              <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">Người theo dõi <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.followers}}</span></h3>
               <form class="position-relative">
                 <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Tìm kiếm?">
                 <i class="fa-solid fa-magnifying-glass fa-sm position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
               </form>
             </div>
             <div class="row">
-              <div class=" col-md-6 col-xl-4">
-                <div class="card">
-                  <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <img src="images/denVauAvt.jpg" alt="" class="rounded-circle" width="40" height="40">
-                    <div>
-                      <h5 class="fw-semibold mb-0">Đen Vâu</h5>
-                      <span class="fs-2 d-flex align-items-center"><i class="fa-regular fa-location-dot fa-sm"></i> &nbsp; Đồng Tháp</span>
-                    </div>
-                    <button class="btn btn-outline-primary py-1 px-2 ms-auto">Theo dõi</button>
-                  </div>
-                </div>
-              </div>
+			  <div class="col-md-6 col-xl-4" ng-repeat="follower in followers">
+			    <div class="card">
+			      <div class="card-body p-4 d-flex align-items-center gap-3">
+			        <img src="images/{{follower.follower.avatar}}" alt="" class="rounded-circle" width="40" height="40" style="object-fit:cover;">
+			        <div>
+			          <h5 class="fw-semibold mb-0">{{ follower.follower.username }}</h5>
+			          <span class="fs-2 d-flex align-items-center"><i class="fa-regular fa-location-dot fa-sm"></i> &nbsp; {{ follower.follower.address }}</span>
+			        </div>
+			        <button class="btn btn-outline-primary py-1 px-2 ms-auto">Theo dõi</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
 
 
             </div>
           </div>
           <div class="tab-pane fade" id="pills-friends" role="tabpanel" aria-labelledby="pills-friends-tab" tabindex="0">
             <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
-              <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">Theo dõi <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">2,659</span></h3>
+              <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">Theo dõi <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.following}}</span></h3>
               <form class="position-relative">
                 <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Tìm kiếm?">
                 <i class="fa-solid fa-magnifying-glass fa-sm position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
@@ -705,7 +707,29 @@
                 $scope.postData = {};
                 $scope.postDetails = {};
                 $scope.postComments =[];
-                $scope.postSum =
+                $scope.Followers =[];
+                
+                $scope.items = [
+                    {
+                      name: 'Đen Vâu',
+                      avatar: 'images/denVauAvt.jpg',
+                      location: 'Đồng Tháp'
+                    },
+                    {
+                      name: 'Ngọc Trinh',
+                      avatar: 'images/ngocTrinhAvt.jpg',
+                      location: 'Hồ Chí Minh'
+                    },
+                    // Thêm các phần tử khác vào mảng items tại đây
+                  ];
+                
+                $http.get('getmyfollowers') 
+                	.then(function(response) {
+			            $scope.followers = response.data;
+			        })
+			        .catch(function(error) {
+			            console.log(error);
+                    });
                 
                 $http.get('/findfollowing')
                     .then(function (response) {
