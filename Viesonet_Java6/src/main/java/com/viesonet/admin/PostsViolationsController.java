@@ -27,7 +27,7 @@ public class PostsViolationsController {
 	@Autowired
 	sp_FilterPostLikeService filterPostsLike;
 	
-	@GetMapping("/admin/postsviolations")
+	@GetMapping("/admin/postsviolation")
 	public String postsViolations(Model m,  @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size) {
 		// Tìm người dùng vai trò là admin
