@@ -27,4 +27,15 @@ public class ViolationsService {
 	public List<Violations> findByPostId(int postId){
 		return violationsDAO.findByPostId(postId);
 	}
+	
+	public List<Object> findSearchUserViolation(String username){
+		return violationsDAO.findSearchUserViolation(username);
+	}
+	
+	public void deleteByPostViolations(List<String> listPostId) {
+		for (String id : listPostId) {
+	           List<Violations> violations = violationsDAO.findByPostId(Integer.parseInt(id));
+	           violationsDAO.deleteAll(violations);
+		}
+	}
 }

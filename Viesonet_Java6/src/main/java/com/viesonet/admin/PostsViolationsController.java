@@ -1,25 +1,17 @@
 package com.viesonet.admin;
 
-import java.util.List;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.viesonet.entity.*;
-import com.viesonet.report.sp_PostsViolations;
-import com.viesonet.service.UsersService;
-import com.viesonet.service.ViolationsService;
-import com.viesonet.service.sp_PostsViolationsService;
+import com.viesonet.service.*;
 
 import jakarta.transaction.Transactional;
 
-import com.viesonet.dao.UsersDao;
-import com.viesonet.dao.ViolationsDao;
 
 
 @Controller
@@ -31,8 +23,9 @@ public class PostsViolationsController {
 	@Autowired
 	ViolationsService violationsService;
 	
+	
 	@Autowired
-	sp_PostsViolationsService spService;
+	sp_FilterPostLikeService filterPostsLike;
 	
 	@GetMapping("/admin/postsviolations")
 	public String postsViolations(Model m,  @RequestParam(defaultValue = "0") int page,
@@ -45,23 +38,33 @@ public class PostsViolationsController {
 		return "admin/postsviolations";
 	}
 	
-//	@ResponseBody
-//	@RequestMapping("/admin/postsviolations/list/{id}")
-//	public List<Object> list(@PathVariable int id) {
-//		//Lấy danh sách lý do tố cáo
-//		return violationsDAO.findList(id);
-//	}
-//	
-//	@ResponseBody
-//	@RequestMapping("/admin/postsviolations/removeViolations/{id}")
-//	@Transactional
-//	public List<PostsViolationsAndUser> removeViolations(@PathVariable int id) {
-//
-//		List<Violations> entity = violationsDAO.findByPostId(id);
-//		violationsDAO.deleteAll(entity);
-//																			
-//		//Lấy lại danh sách 
-//		List<PostsViolationsAndUser> list = spDAO.executePostsViolations();
-//		return list;
-//	}
+	@Transactional
+	@ResponseBody
+	@RequestMapping("/admin/postsviolations/detailPost/{postId}")
+	public TopPostLike detailPost(@PathVariable int postId) {
+		return filterPostsLike.topPostsLike(postId);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/admin/postsviolations/detailViolation/{postId}")
+	public List<Object> detailViolation(@PathVariable int postId) {
+		return violationsService.findList(postId);
+	}
+
+	@ResponseBody
+	@RequestMapping("/admin/postsviolations/search/{userViolation}")
+	public List<Object> searchUserViolation(@PathVariable String userViolation) {
+		return violationsService.findSearchUserViolation(userViolation);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/admin/postsviolations/delete")
+	@Transactional
+	public Page<Object> getPostId(@RequestBody List<String> listPostId) {
+		 
+		violationsService.deleteByPostViolations(listPostId);
+        return violationsService.findAllListFalse(0, 9);
+	}
+	
+	
 }
