@@ -17,7 +17,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
     integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
     crossorigin="anonymous"></script>
-    
+    <script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
 <style>
   body {
@@ -367,23 +368,23 @@
         <div class="card overflow-hidden" style="border-radius: 15px 15px 15px 15px;">
           
           <div class="card-body p-0">
-            <img src="/images/{{myAccount.user.background}}" alt="" height="300" width="1440" style="object-fit: cover;">
+            <img ng-src="/images/{{myAccount.user.background}}" alt="" height="300" width="1440" style="object-fit: cover;">
             <div class="row align-items-center">
               <div class="col-lg-4 order-lg-1 order-2">
                 <div class="d-flex align-items-center justify-content-around m-4">
                   <div class="text-center">
                      <i class="fa-regular fa-memo-pad"></i> 
-                    <h4 class="mb-0 fw-semibold lh-1">938</h4>
+                    <h4 class="mb-0 fw-semibold lh-1">{{ sumPost }}</h4>
                     <p class="mb-0 fs-4">Bài viết</p>
                   </div>
                   <div class="text-center">
                     <i class="fas fa-users fa-sm"></i>
-                    <h4 class="mb-0 fw-semibold lh-1">3,586</h4>  
+                    <h4 class="mb-0 fw-semibold lh-1">{{myAccount.followers}}</h4>  
                     <p class="mb-0 fs-4">Người theo dõi</p>
                   </div>
                   <div class="text-center">
                     <i class="fa-solid fa-user-group-crown fa-sm"></i>
-                    <h4 class="mb-0 fw-semibold lh-1">2,659</h4>
+                    <h4 class="mb-0 fw-semibold lh-1">{{myAccount.following}}</h4>
                     <p class="mb-0 fs-4">Theo dõi</p>
                   </div>
                 </div>
@@ -398,8 +399,8 @@
                     </div>
                   </div>
                   <div class="text-center">
-                    <h5 class="fs-5 mb-0 fw-semibold"><img ng-src="/images/{{myAccount.user.avatar}}" alt=""></h5>
-                    <p class="mb-0 fs-4">Người Tà Răm</p>
+                    <h5 class="fs-5 mb-0 fw-semibold">{{myAccount.user.username}}</h5>
+                    <p class="mb-0 fs-4" style="color: gray;">@vyxcuto</p>
                   </div>
                 </div>
               </div>
@@ -445,23 +446,23 @@
                 <div class="card shadow-none border">
                   <div class="card-body">
                     <h4 class="fw-semibold mb-3">Giới thiệu</h4>
-                    <p>Ey dô quát súp, Tao là Vỹ.</p>
+                    <p>{{UserInfo.introduction}}</p>
                     <ul class="list-unstyled mb-0">
                       <li class="d-flex align-items-center gap-3 mb-4">
                         <i class="ti ti-briefcase text-dark fs-6"></i>
-                        <h6 class="fs-4 fw-semibold mb-0">Địa chỉ: </h6>
+                        <h6 class="fs-4 fw-semibold mb-0">Địa chỉ: {{UserInfo.address}}</h6>
                       </li>
                       <li class="d-flex align-items-center gap-3 mb-4">
                         <i class="ti ti-mail text-dark fs-6"></i>
-                        <h6 class="fs-4 fw-semibold mb-0">Email: </h6>
+                        <h6 class="fs-4 fw-semibold mb-0">Email: {{AccInfo.email}}</h6>
                       </li>
                       <li class="d-flex align-items-center gap-3 mb-4">
                         <i class="ti ti-device-desktop text-dark fs-6"></i>
-                        <h6 class="fs-4 fw-semibold mb-0">Ngày sinh: </h6>
+                       <h6 class="fs-4 fw-semibold mb-0">Ngày sinh: {{ UserInfo.birthday | date:'dd-MM-yyyy' }}</h6>
                       </li>
                       <li class="d-flex align-items-center gap-3 mb-2">
                         <i class="ti ti-map-pin text-dark fs-6"></i>
-                        <h6 class="fs-4 fw-semibold mb-0">Nghề nghiệp:</h6>
+                        <h6 class="fs-4 fw-semibold mb-0">Mối quan hệ: {{UserInfo.relationship}}</h6>
                       </li>
                     </ul>
                   </div>
@@ -529,7 +530,7 @@
                 <div class="card">
                   <div class="card-body border-bottom">
                     <div class="d-flex align-items-center gap-3">
-                      <img src="../../dist/images/profile/user-1.jpg" alt="" class="rounded-circle" width="40" height="40">
+                      <img src="#" alt="" class="rounded-circle" width="40" height="40">
                       <h6 class="fw-semibold mb-0 fs-4">Lê Tuấn Vỹ</h6>
                       <span class="fs-2"><span class="p-1 bg-light rounded-circle d-inline-block"></span> 15 phút trước</span>
                     </div>
@@ -552,70 +553,7 @@
                         <i class="ti ti-share"></i>
                       </a>
                     </div>
-                    <div class="position-relative">
-                      <div class="p-4 rounded-2 bg-light mb-3">
-                        <div class="d-flex align-items-center gap-3">
-                          <img src="/images/348439679_755655829580447_3242710578322081129_n.jpg-20230616.jpg" alt="" class="rounded-circle" width="33" height="33">
-                          <h6 class="fw-semibold mb-0 fs-4">Deran Mac</h6>
-                          <span class="fs-2"><span class="p-1 bg-muted rounded-circle d-inline-block"></span> 8 min ago</span>
-                        </div>
-                        <p class="my-3">Lufo zizrap iwofapsuk pusar luc jodawbac zi op uvezojroj duwage vuhzoc ja vawdud le furhez siva 
-                          fikavu ineloh. Zot afokoge si mucuve hoikpaf adzuk zileuda falohfek zoije fuka udune lub annajor gazo 
-                          conis sufur gu.
-                        </p>
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center gap-2">
-                            <a class="text-white d-flex align-items-center justify-content-center bg-primary p-2 fs-4 rounded-circle" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Like">
-                              <i class="ti ti-thumb-up"></i>
-                            </a>
-                            <span class="text-dark fw-semibold">55</span>
-                          </div>
-                          <div class="d-flex align-items-center gap-2 ms-4">
-                            <a class="text-white d-flex align-items-center justify-content-center bg-secondary p-2 fs-4 rounded-circle" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reply">
-                              <i class="ti ti-arrow-back-up"></i>
-                            </a>
-                            <span class="text-dark fw-semibold">0</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="p-4 rounded-2 bg-light mb-3">
-                        <div class="d-flex align-items-center gap-3">
-                          <img src="../../dist/images/profile/user-4.jpg" alt="" class="rounded-circle" width="33" height="33">
-                          <h6 class="fw-semibold mb-0 fs-4">Jonathan Bg</h6>
-                          <span class="fs-2"><span class="p-1 bg-muted rounded-circle d-inline-block"></span> 5 min ago</span>
-                        </div>
-                        <p class="my-3">
-                          Zumankeg ba lah lew ipep tino tugjekoj hosih fazjid wotmila durmuri buf hi sigapolu joit ebmi joge vo. 
-                          Horemo vogo hat na ejednu sarta afaamraz zi cunidce peroido suvan podene igneve.
-                        </p>
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center gap-2">
-                            <a class="text-dark d-flex align-items-center justify-content-center bg-light-dark p-2 fs-4 rounded-circle" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Like">
-                              <i class="ti ti-thumb-up"></i>
-                            </a>
-                            <span class="text-dark fw-semibold">68</span>
-                          </div>
-                          <div class="d-flex align-items-center gap-2 ms-4">
-                            <a class="text-white d-flex align-items-center justify-content-center bg-secondary p-2 fs-4 rounded-circle" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reply">
-                              <i class="ti ti-arrow-back-up"></i>
-                            </a>
-                            <span class="text-dark fw-semibold">1</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="p-4 rounded-2 bg-light ms-7">
-                        <div class="d-flex align-items-center gap-3">
-                          <img src="../../dist/images/profile/user-5.jpg" alt="" class="rounded-circle" width="40" height="40">
-                          <h6 class="fw-semibold mb-0 fs-4">Carry minati</h6>
-                          <span class="fs-2"><span class="p-1 bg-muted rounded-circle d-inline-block"></span> just now</span>
-                        </div>
-                        <p class="my-3">
-                          Olte ni somvukab ugura ovaobeco hakgoc miha peztajo tawosu udbacas kismakin hi. Dej 
-                          zetfamu cevufi sokbid bud mun soimeuha pokahram vehurpar keecris pepab voegmud 
-                          zundafhef hej pe.
-                        </p>
-                      </div>
-                    </div>
+                    
                   </div>
                   <div class="d-flex align-items-center gap-3 p-3">
                     <img src="../../dist/images/profile/user-1.jpg" alt="" class="rounded-circle" width="33" height="33">
@@ -767,6 +705,7 @@
                 $scope.postData = {};
                 $scope.postDetails = {};
                 $scope.postComments =[];
+                $scope.postSum =
                 
                 $http.get('/findfollowing')
                     .then(function (response) {
@@ -776,7 +715,22 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-
+                $http.get('/findusers')
+	                .then(function (response) {
+	                    var UserInfo = response.data;
+	                    $scope.UserInfo = UserInfo;
+	                })
+	                .catch(function (error) {
+	                    console.log(error);
+	                });
+                $http.get('/findaccounts')
+                .then(function(response) {
+                  var AccInfo = response.data;
+                  $scope.AccInfo = AccInfo;
+                })
+                .catch(function(error) {
+                  console.log(error);
+                });
                 $http.get('/findlikedposts')
                     .then(function (response) {
                         var likedPosts = response.data;
@@ -786,7 +740,7 @@
                         console.log(error);
                     });
 
-                $http.get('/findcurrentuser')
+                $http.get('/findmyfollow')
                     .then(function (response) {
                         var myAccount = response.data;
                         $scope.myAccount = myAccount;
@@ -794,6 +748,21 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+				$http.get('/getmypost')
+					.then(function (response){
+						var myPost = response.data;
+						$scope.myPost = myPost;
+					});
+				$http.get('/countmypost')
+					.then(function (response){
+						var sumPost = response.data;
+						$scope.sumPost = sumPost;
+					})
+				$http.get('/getmyinfomation')
+					.then(function (response){
+						var myInfo = response.data;
+						$scope.myInfo = myInfo;
+					})
 				
                 $scope.saveImages = function() {
 					

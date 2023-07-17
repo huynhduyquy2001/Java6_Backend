@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.viesonet.entity.AccountAndFollow;
+import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.Posts;
+import com.viesonet.entity.UserInformation;
 import com.viesonet.entity.Users;
+import com.viesonet.service.AccountsService;
 import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
@@ -37,7 +41,10 @@ public class ProfileController {
 
 	@Autowired
 	private PostsService postsService;
-
+	
+	@Autowired 
+	private AccountsService accountsService;
+	
 	@Autowired
 	private FavoritesService favoritesService;
 
@@ -49,77 +56,32 @@ public class ProfileController {
 	
 	@Autowired
 	ImagesService imagesService;
-	
-//	@ResponseBody
-//	@GetMapping("/findfollowing")
-//	public List<Posts> getFollowsByFollowingId() {
-//		List<Follow> followList = followService.getFollowing("UI011");
-//		List<String> userId = followList.stream().map(follow -> {
-//			return follow.getFollowing().getUserId();
-//		}).collect(Collectors.toList());
-//		return postsService.findPostsByListUserId(userId);
-//	}
-//
-//	@ResponseBody
-//	@GetMapping("/findlikedposts")
-//	public List<String> findLikedPosts() {
-//		return favoritesService.findLikedPosts("UI011");
-//	}
-//
-	@ResponseBody
-	@GetMapping("/findcurrentuser")
-	public Users findCurrentUser() {
-		return usersService.findUserById("UI011");
+	//Lấy thông tin về follow người dùng hiện tại	
+	@GetMapping("/findmyfollow")
+	public AccountAndFollow findMyAccount() {	
+		 return followService.getFollowingFollower(usersService.findUserById("UI005"));
 	}
-//
-//	@ResponseBody
-//	@PostMapping("/likepost/{postId}")
-//	public void likePost(@PathVariable("postId") int postId) {
-//		favoritesService.likepost(usersService.findUserById("UI011"), postsService.findPostById(postId));
-//	}
-//
-//	@ResponseBody
-//	@PostMapping("/didlikepost/{postId}")
-//	public void didlikePost(@PathVariable("postId") int postId) {
-//		favoritesService.didlikepost("UI011", postId);
-//	}
-//
-//	@ResponseBody
-//	@PostMapping("/post")
-//	public String dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles, @RequestParam("content") String content ) {
-//		List<String> hinhAnhList = new ArrayList<>();
-//		// Lưu bài đăng vào cơ sở dữ liệu
-//		Posts myPost = postsService.post(usersService.findUserById("UI011"));
-//		//Lưu hình ảnh vào cở sở dữ liệu
-//		if (photoFiles != null && photoFiles.length > 0) {
-//			for (MultipartFile photoFile : photoFiles) {
-//				if (!photoFile.isEmpty()) {
-//					String originalFileName = photoFile.getOriginalFilename();
-//					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-//					String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//					String newFileName = originalFileName + "-" + timestamp + extension;
-//					String pathUpload = context.getRealPath("/images/" + newFileName);
-//
-//					try {
-//						photoFile.transferTo(new File(pathUpload));
-//
-//						long fileSize = photoFile.getSize();
-//						if (fileSize > 1 * 1024 * 1024) {
-//							double quality = 0.6;
-//							String outputPath = pathUpload;
-//							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
-//						}											
-//						imagesService.saveImage(myPost, newFileName);						
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		}
-//		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
-//		return "success";
-//	}
+	@GetMapping("/findusers")
+	public Users findmyi1() {
+		return usersService.findUserById("UI005");
+	}
+	@GetMapping("/findaccounts")
+	public Accounts findmyi2() {
+		return accountsService.findAccountPhoneNumber("0939790005");
+	}
 	
+	//Lấy thông tin các bài viết người dùng hiện tại
+	@GetMapping("/getmypost")
+	public List<Posts> getMyPost(){
+		return postsService.getMyPost("UI005");
+	}
+	//Đếm số bài viết của người dùng hiện tại
+	@GetMapping("/countmypost")
+	public int countMyPosts() {
+		return postsService.countPost("UI005");
+	}
+
+	//Hiển thị trang cá nhân
 	@GetMapping("/profile")
 	public ModelAndView profile() {
 		ModelAndView modelAndView = new ModelAndView("Profile");
