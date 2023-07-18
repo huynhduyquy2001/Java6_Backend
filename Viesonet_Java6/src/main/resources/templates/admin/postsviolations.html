@@ -207,7 +207,7 @@ body {
 									style="border: 3px solid rgb(34, 31, 31);">
 								<a href="#" class="me-5" data-bs-placement="top" th:onclick="deleteViolation()"
 									title="Xóa bài viết vi phạm"> <i
-									class="fa-regular fa-trash-can fa-lg"></i>
+									class="fa-regular fa-trash-can fa-lg" style="color: black;"></i>
 								</a>
 								<small class="mt-1" id="selectedCount"></small>
 							</ul>
@@ -218,18 +218,18 @@ body {
 										th:text="${listPosts.number + 1}"></span> / <span
 										th:text="${listPosts.totalPages}"></span>
 									</small>
-									<a th:if="${listPosts.number > 0}"
-										th:href="@{/admin/postsviolations(page=${listPosts.number - 1}, size=${listPosts.size})}"
+									<a th:if="${listPosts.number > 0}" style="color: black;"
+										th:href="@{/admin/postsviolation(page=${listPosts.number - 1}, size=${listPosts.size})}"
 										class="me-4"> <i class="fa-solid fa-chevron-left fa-xs"></i>
 									</a>
-									<a th:if="${listPosts.number == 0}" href="#" class="me-4">
+									<a th:if="${listPosts.number == 0}" style="color: black;" href="#" class="me-4">
 										<i class="fa-solid fa-chevron-left fa-xs"></i>
 									</a>
-									<a th:if="${listPosts.number < listPosts.totalPages - 1}"
-										th:href="@{/admin/postsviolations(page=${listPosts.number + 1}, size=${listPosts.size})}"
+									<a th:if="${listPosts.number < listPosts.totalPages - 1}" style="color: black;"
+										th:href="@{/admin/postsviolation(page=${listPosts.number + 1}, size=${listPosts.size})}"
 										class="me-4"> <i class="fa-solid fa-chevron-right fa-xs"></i>
 									</a>
-									<a th:unless="${listPosts.number < listPosts.totalPages - 1}"
+									<a th:unless="${listPosts.number < listPosts.totalPages - 1}" style="color: black;"
 										href="#" class="me-4"> <i
 										class="fa-solid fa-chevron-right fa-xs"></i>
 									</a>

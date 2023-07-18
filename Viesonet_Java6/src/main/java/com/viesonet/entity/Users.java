@@ -22,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
+@Setter 
 public class Users {
 	@Id
 	private String userId;
@@ -36,7 +36,6 @@ public class Users {
 	private String background;
 	private int violationCount;
 	private Date createDate;
-
 	@OneToOne(mappedBy = "user")
 	private Accounts account;
 	@JsonIgnore

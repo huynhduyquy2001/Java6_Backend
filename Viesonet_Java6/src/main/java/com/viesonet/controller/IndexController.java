@@ -30,10 +30,12 @@ import com.viesonet.entity.Follow;
 import com.viesonet.entity.Images;
 import com.viesonet.entity.Posts;
 import com.viesonet.entity.Users;
+import com.viesonet.service.CommentsService;
 import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
 import com.viesonet.service.PostsService;
+import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
 
 import jakarta.servlet.ServletContext;
@@ -59,8 +61,16 @@ public class IndexController {
 	
 	@Autowired
 	ImagesService imagesService;
-
-	@ResponseBody
+	
+	@Autowired
+	CommentsService commentsService;
+	
+	@Autowired
+	private ServletContext servletContext;
+	
+	@Autowired
+	SessionService session;
+	
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
 		List<Follow> followList = followService.getFollowing("UI011");
@@ -130,6 +140,7 @@ public class IndexController {
 		return "success";
 	}
 
+	
 	@GetMapping("/")
 	public String index() {
 		return "Index";

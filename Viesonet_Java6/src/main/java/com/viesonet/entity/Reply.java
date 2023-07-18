@@ -36,7 +36,11 @@ public class Reply {
 	private Comments comment;
 	
 	@ManyToOne
-	@JoinColumn(name = "userId" )
+	@JoinColumn(name = "responderId" )
+	private Users responder;
+	
+	@ManyToOne
+	@JoinColumn(name = "receiverId" )
 	private Users user;
 	
 	@Temporal(TemporalType.TIMESTAMP)

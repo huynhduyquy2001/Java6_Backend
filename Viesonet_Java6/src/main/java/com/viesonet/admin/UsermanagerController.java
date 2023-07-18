@@ -16,6 +16,7 @@ import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Roles;
 import com.viesonet.entity.Users;
 import com.viesonet.service.AccountsService;
+import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
 
 import jakarta.websocket.server.PathParam;
@@ -29,13 +30,17 @@ public class UsermanagerController {
 	@Autowired
 	AccountsService accountService;
 	
+	@Autowired
+	private SessionService sessionService;
+	
 	@GetMapping("/admin/usermanager")
 	public String usermanager(Model m) {
 		// Tìm người dùng vai trò là admin
-		m.addAttribute("acc", userService.findUserById("UI001"));
+		String userId = sessionService.get("id");
+		m.addAttribute("acc", userService.findUserById(userId));
 		
 		//Lấy danh sách người dùng
-		m.addAttribute("listUser", userService.findByUserAndStaff("UI001"));
+		m.addAttribute("listUser", userService.findByUserAndStaff(userId));
 		return "/admin/usermanager";
 	}
 	

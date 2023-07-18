@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.viesonet.entity.*;
+import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
 import com.viesonet.service.sp_FilterPostLikeService;
 import com.viesonet.service.sp_Last7DaySumAccountsService;
@@ -62,12 +63,15 @@ public class ReportController {
 	@Autowired
 	sp_SumAccountsByDayService sumAccountsByDay;
 	
+	@Autowired
+	private SessionService sessionService;
 	
 	//Load dữ liệu khi mở lên
 	@GetMapping("/admin/report")
 	public String thongKe(Model m) {
 		//Tìm người dùng vai trò là admin
-		m.addAttribute("acc", userService.findUserById("UI001"));
+		String userId = sessionService.get("id");
+		m.addAttribute("acc", userService.findUserById(userId));
 		
 		//Thực hiện gọi stored procedure
 		List<ViolationsPosts> rs = EXEC.violationsPosts(LocalDate.now().getYear());

@@ -21,6 +21,14 @@ public class UsersService {
 		return user.orElse(null);
 	}
 
+	public Users save(Users users) {
+		return usersDao.save(users);
+	}
+
+	public Users getById(String userId) {
+		return usersDao.getById(userId);
+	}
+
 	public List<Users> findByUserAndStaff(String userId) {
 		return usersDao.findByUserAndStaff(userId);
 	}

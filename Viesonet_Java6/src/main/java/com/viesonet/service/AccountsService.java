@@ -13,14 +13,31 @@ public class AccountsService {
 	AccountsDao accountDAO;
 	
 	public Accounts findByphoneNumber(String phoneNumber) {
-		return accountDAO.findByphoneNumber(phoneNumber);
+		return accountDAO.findByPhoneNumber(phoneNumber);
 	}
 	
 	public Accounts setRole(String sdt, int role) {
 		Roles roles = new Roles();
 		roles.setRoleId(role);
-		Accounts accounts = accountDAO.findByphoneNumber(sdt);
+		Accounts accounts = accountDAO.findByPhoneNumber(sdt);
 		accounts.setRole(roles);
 		return accountDAO.saveAndFlush(accounts);
 	}
+
+	public Accounts findByPhoneNumber(String phoneNumber) {
+		return accountDAO.findByPhoneNumber(phoneNumber);
+	}
+	
+	public boolean existById(String phoneNumber) {
+		return accountDAO.existsById(phoneNumber);
+	}
+	
+	public boolean existByEmail(String email) {
+		return accountDAO.existsByEmail(email);
+	}
+	
+	public Accounts save(Accounts accounts) {
+		return accountDAO.save(accounts);
+	}
+	
 }

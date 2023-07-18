@@ -27,11 +27,15 @@ public class PostsViolationsController {
 	@Autowired
 	sp_FilterPostLikeService filterPostsLike;
 	
+	@Autowired
+	private SessionService sessionService;
+	
 	@GetMapping("/admin/postsviolation")
 	public String postsViolations(Model m,  @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size) {
 		// Tìm người dùng vai trò là admin
-		m.addAttribute("acc", userService.findUserById("UI001"));
+		String userId = sessionService.get("id");
+		m.addAttribute("acc", userService.findUserById(userId));
 		
 		// Lấy danh sách bài viết vi phạm
 		m.addAttribute("listPosts", violationsService.findAllListFalse(page, size));

@@ -45,6 +45,11 @@ body {
 .name {
 	margin-bottom: 5px;
 }
+
+::-webkit-scrollbar {
+	/* Ẩn thanh cuộn cho các trình duyệt dựa trên WebKit (Chrome, Safari, Opera, ...) */
+	display: none;
+}
 </style>
 <body>
 	<!--  Body Wrapper -->
@@ -186,7 +191,8 @@ body {
 											phạm</h5>
 									</div>
 									<div>
-										<select class="form-select" id="mySelect">
+										<select style="border: none;" class="form-select"
+											id="mySelect">
 											<option selected="selected" th:value="${yearNow}"
 												th:text="${yearNow}"></option>
 											<option th:if="${year.years != yearNow}"
@@ -246,13 +252,13 @@ body {
 								<ul class="timeline-widget mb-0 position-relative mb-n5">
 									<li th:each="i : ${TotalPosts}"
 										class="timeline-item d-flex position-relative overflow-hidden">
-										<a href="#"> <img th:src="@{'/images/' + ${i.Avatar}}"
-											alt="" width="35" height="35" class="rounded-circle"
-											style="object-fit: cover;">
+										<a href="#" class="nav-link"> <img
+											th:src="@{'/images/' + ${i.Avatar}}" alt="" width="35"
+											height="35" class="rounded-circle" style="object-fit: cover;">
 									</a>
 										<div class="timeline-desc fs-4 text-dark mt-n1"
 											style="max-width: 170px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
-											<a href="#" th:text="${i.Username}"></a>
+											<a href="#" class="nav-link" th:text="${i.Username}"></a>
 										</div>
 										<div
 											class="timeline-time text-dark flex-shrink-0 mt-n1 justify-content-end">
@@ -315,11 +321,10 @@ body {
 													th:text="${item.likeCount}"></b> <i
 													class="fas fa-thumbs-up" style="color: #5d87ff"></i></td>
 												<td class="border-bottom-0 text-center">
-													<button th:onclick="'detail(\'' + ${item.postId} + '\')'"
-														data-bs-placement="top" title="Xem chi tiết bài viết"
-														class="btn btn-danger btn-sm">
-														<i class="fa-solid fa-eye"></i>
-													</button>
+													<a th:onclick="'detail(\'' + ${item.postId} + '\')'" style="cursor: pointer;" class="nav-link"
+														data-bs-placement="top" title="Xem chi tiết bài viết">
+														<i class="fa-light fa-eye" style="color: #336cce;"></i>
+													</a>
 												</td>
 											</tr>
 										</tbody>
@@ -337,13 +342,13 @@ body {
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div
 			class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content" style="background-color: aliceblue">
+			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div
+					<div class="card"
 						style="margin-bottom: 20px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
 						<a href="#" target="_blank" class="image-link" id="avatar"> </a>
 						<div id="detailContent"
@@ -354,6 +359,20 @@ body {
 		</div>
 	</div>
 	</div>
+	<script type="text/javascript">
+		// Bắt sự kiện cuộn trang
+		window.addEventListener("scroll", function() {
+			// Lấy header
+			const header = document.querySelector(".app-header");
+
+			// Kiểm tra vị trí cuộn và thêm/xóa lớp "fixed-header" cho header
+			if (window.pageYOffset > 0) {
+				header.classList.add("fixed-header");
+			} else {
+				header.classList.remove("fixed-header");
+			}
+		});
+	</script>
 	<script src="/js/apexcharts.min.js"></script>
 	<script src="/js/report.js"></script>
 	<script th:inline="javascript">
