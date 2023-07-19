@@ -39,6 +39,7 @@ import com.viesonet.entity.Reply;
 import com.viesonet.entity.ReplyRequest;
 import com.viesonet.entity.Users;
 import com.viesonet.service.CommentsService;
+import com.viesonet.service.CookieService;
 import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
@@ -79,6 +80,9 @@ public class IndexController {
 	
 	@Autowired
 	SessionService session;
+	
+	@Autowired
+	CookieService cookieService;
 	
 	@Autowired
 	ReplyService replyService;
@@ -195,6 +199,8 @@ public class IndexController {
 	public ModelAndView logout() {
 		session.remove("id");
 		session.remove("role");
+		cookieService.delete("user");
+		cookieService.delete("pass");
 		return new ModelAndView("redirect:/login");
 	}
 	

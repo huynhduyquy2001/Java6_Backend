@@ -31,7 +31,12 @@ public class LoginController {
 	@GetMapping("/login")
 	public ModelAndView getLoginPage() {
 		String user = cookieService.getValue("user");
+		
 		if (user != null) {
+			Accounts accounts = accountsService.findByPhoneNumber(user);
+			sessionService.set("role", accounts.getRole().getRoleId());
+			sessionService.set("id", accounts.getUser().getUserId());
+			sessionService.set("phone", accounts.getPhoneNumber());
 			return new ModelAndView("redirect:/");
 		} else if (sessionService.get("id") != null) {
 			return new ModelAndView("redirect:/");
