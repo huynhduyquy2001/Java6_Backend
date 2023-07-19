@@ -70,7 +70,7 @@ div.dropdown-menu.baoCao {
 	opacity: 0;
 	position: absolute;
 	background-color: #f9f9f9;
-	min-width: 17rem;
+	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 	z-index: 1;
 	padding-right: 10px;
@@ -146,11 +146,6 @@ div.dropdown-menu.baoCao {
 													href="#" aria-expanded="false"> <span> <i
 															class="fa-light fa-handshake"></i>
 													</span> <span class="hide-menu">&nbsp; Gợi ý</span>
-												</a></li>
-												<li class="sidebar-item"><a class="sidebar-link"
-													href="#" aria-expanded="false"> <span> <i
-															class="fa-regular fa-messages"></i>
-													</span> <span class="hide-menu">&nbsp; Tin nhắn</span>
 												</a></li>
 												<li class="nav-small-cap"><i
 													class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
@@ -270,7 +265,7 @@ div.dropdown-menu.baoCao {
 													class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
 													aria-labelledby="drop2">
 													<div class="message-body">
-														<a href="/changepassword"
+														<a href="#"
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-user fs-6"></i>
 															<p class="mb-0 fs-3">Đổi mật khẩu</p>
@@ -282,7 +277,7 @@ div.dropdown-menu.baoCao {
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-list-check fs-6"></i>
 															<p class="mb-0 fs-3">Nâng cấp</p>
-														</a> <a ng-click="logout()"
+														</a> <a href="#"
 															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
 															xuất</a>
 													</div>
@@ -302,29 +297,42 @@ div.dropdown-menu.baoCao {
 
 			<div class="col-md-6 offset-md-3 " style="z-index: 10;">
 				<center>
-
-					<div
-						style="width: 85%; text-align: left; background-color: transparent;"
-						data-bs-toggle="modal" href="#exampleModalToggle">
+					<div style="width: 85%; text-align: left; background-color: transparent;" data-bs-toggle="modal"
+						href="#exampleModalToggle">
 						<div>
 							<div
 								class="write-post-container  img-thumbnail animate__animated animate__backInLeft"
-								style="margin-bottom: 15px; background: white 0.5; border-radius: 3px 3px 0 0; padding-top: 10px; padding-bottom: 10px; background-color: transparent; background-image: url('/images/347236939_2465911110227431_5952883918790101011_n.jpg-20230616.jpg'); background-size: cover; min-height: 15rem">
-								<span
-									style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: white"><i
-									class="fa-solid fa-pencil"></i> Đăng bài viết</span>
+								style="margin-bottom: 15px; background: white; border-radius: 3px 3px 0 0; padding-top: 10px; padding-bottom: 10px; background-color: transparent;">
 								<form id="postForm">
 									<center>
 										<img id="img" src="" width="45%"
 											style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
 									</center>
-									<textarea class="form-control"
-										placeholder="Hãy viết gì đó cho ngày hôm nay..."
-										id="floatingTextarea2" style="height: 137px; opacity: 0.4"></textarea>
+									<div class="input-group mb-3">
+										<input type="text" class="form-control"
+											placeholder="Bạn đang nghĩ gì..."
+											style="background: transparent; border: none; border-bottom: 1px solid gray; border-radius: 0">
+										<label class="input-group-text" style="padding: 0"> <a
+											style="background-color: white; border-radius: 2px; border: none; box-sizing: border-box; color: #313131; display: inline-block; font-family: Arial, sans-serif; font-size: 14px; line-height: 16.8px; margin: 0px 3px 10px; padding: 10px 14px; text-decoration-line: none; transition: all 0.2s; margin: 0"
+											title="Đăng bài viết" data-bs-toggle="modal"
+											href="#exampleModalToggle" rel="noopener noreferrer"><i
+												class="fa-regular fa-image"></i> Đăng bài </a>
+										</label>
+									</div>
+
+
+									<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 137px"></textarea>
 								</form>
-								<div class="d-flex  gap-2"
-									style="margin-top: 5px; text-align: right;"></div>
+								<div class="d-flex align-items-center gap-2" style="margin-top: 5px">
+                        <a style="background-color: #5D87FF !important;" class="text-white d-flex align-items-center justify-content-center bg-primary p-2 fs-4 rounded-circle" href="javascript:void(0)">
+                         <i class="fa-light fa-image" style="font-size: 15px"></i>
+                        </a>
+                        <a href="javascript:void(0)" >Hình ảnh</a>
+                        
+                        
+                      </div>
 							</div>
+
 						</div>
 					</div>
 				</center>
@@ -345,7 +353,7 @@ div.dropdown-menu.baoCao {
 												<div>
 
 													<span
-														style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547">{{
+														style="font-weight: 600 !important; font-size: 1rem !important; margin: 0;">{{
 														post.user.username }}</span>
 													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 													<span><small style="font-size: 12px; color: #65676b">
@@ -358,6 +366,7 @@ div.dropdown-menu.baoCao {
 													ng-src="/images/{{ post.user.avatar }}"
 													style="border-radius: 100%;" alt=""></a>
 												<div>
+
 													<label>{{ post.user.username }}</label>
 													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 													<br> <small style="font-size: 12px; color: #65676b">
@@ -389,9 +398,9 @@ div.dropdown-menu.baoCao {
 									</div>
 								</div>
 								<div style="margin-top: 10px;">
-									<div>
+									<div onclick="loadBinhLuan(1109)">
 										<div
-											style="box-sizing: border-box; padding-left: 5px; padding-right: 5px; font-size: 13px;">
+											style="box-sizing: border-box; padding-left: 5px; padding-right: 5px; font-size: 13px; color: black">
 											{{ post.content }}</div>
 										<center>
 											<div ng-if="post.images.length > 1">
@@ -408,15 +417,12 @@ div.dropdown-menu.baoCao {
 															aria-label="Slide {{$index + 1}}"></li>
 													</ol>
 													<!-- Carousel items -->
-													<div ng-click="getPostDetails(post.postId)"
-														class="carousel-inner" role="listbox">
+													<div class="carousel-inner" role="listbox">
 														<div class="carousel-item"
-															style="background-color: #313131; height: 90vh;"
 															ng-repeat="image in post.images track by $index"
 															ng-class="{ 'active': $index === 0 }">
 															<img ng-src="/images/{{ image.imageUrl }}"
-																class="w-100 d-block" alt="Slide {{$index + 1}}"
-																style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
+																class="w-100 d-block" alt="Slide {{$index + 1}}">
 														</div>
 													</div>
 													<!-- Carousel controls -->
@@ -434,8 +440,7 @@ div.dropdown-menu.baoCao {
 											</div>
 											<div ng-if="post.images.length === 1">
 												<!-- Single image HTML code -->
-												<img ng-click="getPostDetails(post.postId)"
-													ng-src="/images/{{ post.images[0].imageUrl }}"
+												<img ng-src="/images/{{ post.images[0].imageUrl }}"
 													class="w-100" alt="Single image">
 											</div>
 
@@ -452,8 +457,7 @@ div.dropdown-menu.baoCao {
 													style="color: #f50000;">❤️&nbsp;{{ post.likeCount }}</span>
 												<span ng-click="likePost(post.postId)"
 													ng-if="likedPosts.indexOf(post.postId.toString()) === -1">🤍&nbsp;{{
-													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-													ng-click="getPostDetails(post.postId)"><i
+													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
 													class="fa-light fa-comments"></i>&nbsp;{{ post.commentCount
 													}}</span>
 											</div>
@@ -464,6 +468,7 @@ div.dropdown-menu.baoCao {
 							</div>
 						</div>
 					</div>
+
 				</center>
 			</div>
 			<div class="col-md-3 menuLeft animate__animated animate__backInRight"
@@ -472,26 +477,26 @@ div.dropdown-menu.baoCao {
 					style="margin-bottom: 5px; margin-left: 0">
 					<div class="user-profile" style="display: block;">
 						<div class="username-dt dpbg-1"
-							style="background-image: url(images/{{myAccount.user.background}}); background-size: cover;">
+							style="background-image: url(images/{{myAccount.background}}); background-size: cover;">
 							<div class="usr-pic">
-								<img ng-src="/images/{{myAccount.user.avatar}}" alt="">
+								<img ng-src="/images/{{myAccount.avatar}}" alt="">
 							</div>
 						</div>
 						<div class="user-main-details">
-							<h6 style="font-weight: 600">{{myAccount.user.username}}</h6>
+							<h6>{{myAccount.username}}</h6>
 							<!-- <span><i class="feather-map-pin"></i>India</span> -->
 						</div>
 						<ul class="followers-dts">
 							<li>
 								<div class="followers-dt-sm">
 									<h4>Người theo dõi</h4>
-									<span>{{myAccount.followers}}</span>
+									<span>{{myAccount.followings.length}}</span>
 								</div>
 							</li>
 							<li>
 								<div class="followers-dt-sm">
 									<h4>Đang theo dõi</h4>
-									<span>{{myAccount.following}}</span>
+									<span>{{myAccount.followers.length}}</span>
 								</div>
 							</li>
 						</ul>
@@ -540,8 +545,9 @@ div.dropdown-menu.baoCao {
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
-				<div class="modal-body">
-					<form id="postForm" enctype="multipart/form-data">
+				<form id="postForm" action="/index/dangbai" method="post"
+					enctype="multipart/form-data">
+					<div class="modal-body">
 						<div class="user-profile">
 							<img ng-src="images/{{ myAccount.user.avatar }}" alt="">
 							<div>
@@ -554,28 +560,32 @@ div.dropdown-menu.baoCao {
 							</div>
 						</div>
 						<br>
-						<textarea name="content" placeholder="Bạn đang nghĩ gì?"
-							id="content" ng-model="postData.content" cols="30" rows="3"
-							style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
+						<textarea name="content" placeholder="Bạn đang nghĩ gì?" id="content"
+          ng-model="postData.content"
+          cols="30" rows="3"
+          style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
+
+
 						<br>
 						<center>
 							<img id="img" src="" width="45%"
 								style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
 						</center>
 						<div id="imageList"></div>
+					</div>
+
+					<div class="modal-footer">
 						<div class="input-group mb-3">
 							<label class="input-group-text" for="inputGroupFile01"> <i
 								class="fa-regular fa-image"></i>Hình ảnh
-							</label> <input type="file" class="form-control" name="photoFiles"
+							</label> <input type="file" class="form-control" name="photo_file"
 								id="inputGroupFile01" multiple accept="image/*">
 						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button ng-click="post()" style="width: 500px; border: none;"
-						class="btn-blue" data-bs-target="#exampleModalToggle2"
-						data-bs-toggle="modal" data-bs-dismiss="modal">Đăng bài</button>
-				</div>
+						<button ng-click="post()" style="width: 500px; border: none;"
+							class="btn-blue" data-bs-target="#exampleModalToggle2"
+							data-bs-toggle="modal" data-bs-dismiss="modal">Đăng bài</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -585,11 +595,33 @@ div.dropdown-menu.baoCao {
 		aria-labelledby="modalTitleId" aria-hidden="true">
 		<div class="modal-dialog modal-xl modal-fullscreen" role="document">
 			<div class="modal-content">
+				<!-- <div class="modal-body">
+                    <div class="row">
+                        <div data-bs-dismiss="modal" style="cursor: pointer;">X</div>
+                        <div class="col-md-6 trai order-sm-2 col-xs-12 order-1"></div>
+                        <div class="col-md-6 phai order-sm-1 col-xs-12"></div>
+                    </div>
+                </div> -->
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-md-6 trai "
-							style="overflow-y: scroll; max-height: 100vh">
+						<div class="col-md-6 trai ">
 							<center>
+								<img
+									src="images/347784847_764367291827600_8536761517187639052_n.jpg-20230616.jpg"
+									alt=""
+									style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh;">
+							</center>
+						</div>
+						<div class="col-md-6 phai ">
+							<div data-bs-dismiss="modal"
+								style="cursor: pointer; text-align: right;">X</div>
+							<div
+								style="display: flex; align-items: center; justify-content: space-between;">
+								<div class="user-profile">
+									<img src="/images/sonTungAvt.jpg" class="img-thumbnail" alt="">
+									<div>
+										<label class="nhan">Lê Tuấn Vỹ</label><br> <small
+											style="font-size: 12px; color: #65676b">1 phút trước</small>
 								<center>
 									<div ng-if="postDetails.images.length > 1">
 										<!-- Carousel HTML code -->
@@ -633,8 +665,12 @@ div.dropdown-menu.baoCao {
 										<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 											class="w-100" alt="Single image"
 											style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
+
 									</div>
+
+
 								</center>
+
 							</center>
 						</div>
 						<div class="col-md-6 phai ">
@@ -647,7 +683,7 @@ div.dropdown-menu.baoCao {
 										<img src="/images/sonTungAvt.jpg" class="img-thumbnail" alt="">
 										<div>
 											<label class="nhan">{{postDetails.user.username}}</label><br>
-											<small style="font-size: 12px; color: #65676b">{{getFormattedTimeAgo(postDetails.postDate)}}</small>
+											<small style="font-size: 12px; color: #65676b">{{postDetails.user.accessTime}}</small>
 										</div>
 									</div>
 
@@ -674,6 +710,34 @@ div.dropdown-menu.baoCao {
 									</div>
 								</form>
 							</div>
+							<div>Ngửi theo hương hoa mây mù giăng lối...</div>
+							<form id="binhLuanForm">
+								<div style="display: flex; flex-direction: column;">
+									<input type="text" id="binhLuan" class="ip form-control"
+										style="width: 80%;" placeholder="Nhận xét của bạn"
+										name="binhLuanCuaToi" required="">
+									<button class="btn01" type="submit"
+										style="background: #007ACC; color: white;"
+										onclick="themBinhLuan(96)">Bình luận</button>
+								</div>
+							</form>
+							<center>
+								<hr style="width: 10%; text-align: center;">
+							</center>
+							<div
+								class="user-profile animate__animated animate__headShake img-thumbnail"
+								style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px">
+								<img src="/images/duyQuy.jpg" class="img-thumbnail" alt="">
+								<div>
+									<div>
+										<label class="nhan" style="font-size: 15px;">Huỳnh Duy
+											Quý</label>
+									</div>
+									<small style="font-size: 12px;"><svg
+											class="svg-inline--fa fa-comment" aria-hidden="true"
+											focusable="false" data-prefix="far" data-icon="comment"
+											role="img" xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 512 512" data-fa-i2svg="">
 							<center>
 								<hr style="width: 10%; text-align: center;">
 							</center>
@@ -681,7 +745,7 @@ div.dropdown-menu.baoCao {
 								<div ng-repeat="comment in postComments">
 									<div
 										class="user-profile animate__animated animate__headShake img-thumbnail"
-										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 10px; background-color: rgba(246, 249, 252);">
+										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 10px; background-color: rgba(246,249,252);">
 										<img ng-src="/images/{{comment.user.avatar}}"
 											class="img-thumbnail" alt="">
 										<div>
@@ -705,38 +769,13 @@ div.dropdown-menu.baoCao {
 													<small ng-if="comment.reply.length>0"
 													style="font-size: 10px; cursor: pointer;"> {{
 														comment.reply.length}} phản hồi </small></label> &nbsp; <small
-													style="font-size: 10px; cursor: pointer;"> 
-													<label><input
-													type="checkbox" ng-model="o_reply" hidden="true">
-													Trả lời</label>
-												</small>
-											</div>
-
-										</div>
-
-									</div>
-									
-									<div ng-show="o_reply"
-										class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
-										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem;">
-										<img ng-src="/images/duyQuy.jpg" class="img-thumbnail" alt=""
-											src="/images/tranTrungAvt.jpg">
-										<div>
-											<small style="font-size: 12px;" class="ng-binding"><i
-												class="fa-regular fa-tag"></i> <label
-												class="nhan ng-binding"
-												style="font-size: 13px; color: #313131; font-weight: bolder;">Huỳnh
-													Duy Quý</label></small><br>
-											<div>
-												<input type="text" class="form-control" name="" id="">
+													style="font-size: 10px; cursor: pointer;"> Trả lời</small>
 											</div>
 
 										</div>
 									</div>
-									
 									<div ng-show="o_checkbox">
-									<div ng-repeat="obj in comment.reply">
-									<div 
+										<div ng-repeat="obj in comment.reply"
 											class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
 											style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 3rem;">
 											<img ng-src="/images/{{obj.responder.avatar}}"
@@ -753,38 +792,16 @@ div.dropdown-menu.baoCao {
 													{{obj.replyContent}}</small><br>
 												<div>
 													<small style="font-size: 10px;" class="ng-binding">
-														{{getFormattedTimeAgo(obj.replyDate)}}</small> &nbsp; <small
-														style="font-size: 10px; cursor: pointer;"><label><input
-													type="checkbox" ng-model="o_reply2" hidden="true">
-													Trả lời</label></small>
+														3 giờ trước</small> &nbsp; <small
+														style="font-size: 10px; cursor: pointer;"> Trả lời</small>
 												</div>
 
 											</div>
 										</div>
-										<div ng-show="o_reply2"
-										class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
-										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem;">
-										<img ng-src="/images/duyQuy.jpg" class="img-thumbnail" alt=""
-											src="/images/tranTrungAvt.jpg">
-										<div>
-											<small style="font-size: 12px;" class="ng-binding"><i
-												class="fa-regular fa-tag"></i> <label
-												class="nhan ng-binding"
-												style="font-size: 13px; color: #313131; font-weight: bolder;">Huỳnh
-													Duy Quý</label></small><br>
-											<div>
-												<input type="text" class="form-control" name="" id="">
-											</div>
-
-										</div>
-									</div>
-									</div>
-										
 									</div>
 								</div>
 
 							</div>
-
 						</div>
 
 
@@ -843,8 +860,6 @@ div.dropdown-menu.baoCao {
                 $scope.likedPosts = [];
                 $scope.myAccount = {};
                 $scope.postData = {};
-                $scope.postDetails = {};
-                $scope.postComments =[];
                 
                 $http.get('/findfollowing')
                     .then(function (response) {
@@ -949,29 +964,27 @@ div.dropdown-menu.baoCao {
                 	      return hours + ' giờ trước';
                 	    }
                 	  } else if (days === 1) {
-                	    return 'Hôm qua';
+                	    return 'hôm qua';
                 	  } else {
                 	    return days + ' ngày trước';
                 	  }
                 	};
 
               	$scope.post = function() {
-              	  var content = $scope.postData.text;
-              	
+              	  var content = $scope.postData;
               	  var formData = new FormData();
               	  var fileInput = document.getElementById('inputGroupFile01');
 
               	  for (var i = 0; i < fileInput.files.length; i++) {
-              	    formData.append('photoFiles', fileInput.files[i]);
-              	    alert(fileInput.files[i])
+              	    formData.append('photo_files', fileInput.files[i]);
               	  }
-              	  formData.append('content', content.content);
+
+              	  formData.append('content', content);
 
               	  $http.post('/post', formData, {
               	    transformRequest: angular.identity,
               	    headers: { 'Content-Type': undefined }
               	  }).then(function(response) {
-              		  alert("ok")
               	    // Xử lý phản hồi thành công từ máy chủ
               	    console.log(response.data);
               	  }, function(error) {
@@ -1019,14 +1032,7 @@ div.dropdown-menu.baoCao {
                 		    });
                 		};
 
-                		$scope.logout = function() {              			
-                		    $http.get('/logout')
-                		      .then(function() {               		    	
-                		    	  window.location.href='/login';
-                		      }, function(error) {
-                		        console.log(error);
-                		      });
-                		  };
+
 
 
             });            

@@ -31,16 +31,15 @@ public class PostsService {
 	    Optional<Posts> optionalPost = postsDao.findById(postId);
 	    return optionalPost.orElse(null);
 	}
-	
-	public Posts post(Users user, String content) {
+	public Posts post(Users user) {
 		// Lấy ngày và giờ hiện tại
 				Calendar cal = Calendar.getInstance();
 				Date ngayGioDang = cal.getTime();
-				
+
 				// Chuyển đổi sang kiểu Timestamp
 				Timestamp timestamp = new Timestamp(ngayGioDang.getTime());
 				Posts post = new Posts();
-				post.setContent(content);
+				post.setContent(null);
 				post.setCommentCount(0);
 				post.setLikeCount(0);
 				post.setIsActive(true);

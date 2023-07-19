@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viesonet.dao.UsersDao;
-import com.viesonet.entity.AccountAndFollow;
-import com.viesonet.entity.Comments;
 import com.viesonet.entity.Favorites;
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.Images;
@@ -46,7 +41,7 @@ import com.viesonet.service.UsersService;
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
 
-@RestController
+@Controller
 public class IndexController {
 
 	@Autowired
@@ -63,7 +58,7 @@ public class IndexController {
 
 	@Autowired
 	ServletContext context;
-
+	
 	@Autowired
 	ImagesService imagesService;
 	
@@ -78,62 +73,44 @@ public class IndexController {
 	
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
-		List<Follow> followList = followService.getFollowing(session.get("id"));
+		List<Follow> followList = followService.getFollowing("UI011");
 		List<String> userId = followList.stream().map(follow -> {
 			return follow.getFollowing().getUserId();
 		}).collect(Collectors.toList());
 		return postsService.findPostsByListUserId(userId);
 	}
 
-	
+	@ResponseBody
 	@GetMapping("/findlikedposts")
 	public List<String> findLikedPosts() {
-		return favoritesService.findLikedPosts(session.get("id"));
+		return favoritesService.findLikedPosts("UI011");
 	}
 
-	
+	@ResponseBody
 	@GetMapping("/findmyaccount")
-	public AccountAndFollow findMyAccount() {	
-		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
+	public Users findMyAccount() {
+		return usersService.findUserById("UI011");
 	}
 
-	
+	@ResponseBody
 	@PostMapping("/likepost/{postId}")
 	public void likePost(@PathVariable("postId") int postId) {
-		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
+		favoritesService.likepost(usersService.findUserById("UI011"), postsService.findPostById(postId));
 	}
 
-	
+	@ResponseBody
 	@PostMapping("/didlikepost/{postId}")
 	public void didlikePost(@PathVariable("postId") int postId) {
-		favoritesService.didlikepost(session.get("id"), postId);
-	}
-	
-	
-	@GetMapping("/postdetails/{postId}")
-	public Posts postDetails(@PathVariable("postId") int postId) {
-		return postsService.findPostById(postId);
-	}
-	
-	
-	@PostMapping("/addcomment/{postId}")
-	public Comments addComment(@PathVariable("postId") int postId , @RequestParam("myComment") String content) { 
-		return commentsService.addComment(postsService.findPostById(postId), usersService.findUserById(session.get("id")), content);
-	}
-	
-	
-	@GetMapping("/findpostcomments/{postId}")
-	public List<Comments> findPostComments(@PathVariable("postId") int postId) {
-		return commentsService.findCommentsByPostId(postId);
+		favoritesService.didlikepost("UI011", postId);
 	}
 
+	@ResponseBody
 	@PostMapping("/post")
-	public void dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles,
-			@RequestParam("content") String content) {
+	public String dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles, @RequestParam("content") String content ) {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
-		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
-		// Lưu hình ảnh vào thư mục static/images
+		Posts myPost = postsService.post(usersService.findUserById("UI011"));
+		//Lưu hình ảnh vào cở sở dữ liệu
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
 				if (!photoFile.isEmpty()) {
@@ -141,10 +118,7 @@ public class IndexController {
 					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 					String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 					String newFileName = originalFileName + "-" + timestamp + extension;
-
-					String rootPath = servletContext.getRealPath("/");
-					String parentPath = new File(rootPath).getParent();
-					String pathUpload = parentPath + "/resources/static/images/" + newFileName;
+					String pathUpload = context.getRealPath("/images/" + newFileName);
 
 					try {
 						photoFile.transferTo(new File(pathUpload));
@@ -154,8 +128,8 @@ public class IndexController {
 							double quality = 0.6;
 							String outputPath = pathUpload;
 							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
-						}
-						imagesService.saveImage(myPost, newFileName);
+						}											
+						imagesService.saveImage(myPost, newFileName);						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -163,20 +137,12 @@ public class IndexController {
 			}
 		}
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
+		return "success";
 	}
 
 	
 	@GetMapping("/")
-	public ModelAndView getHomePage() {
-        ModelAndView modelAndView = new ModelAndView("Index");
-        return modelAndView;
-    }
-	
-	@GetMapping("/logout")
-	public ModelAndView logout() {
-		session.remove("id");
-		session.remove("role");
-		return new ModelAndView("redirect:/login");
+	public String index() {
+		return "Index";
 	}
-	
 }

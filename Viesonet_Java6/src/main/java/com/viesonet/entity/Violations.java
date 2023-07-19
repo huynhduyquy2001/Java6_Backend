@@ -44,6 +44,7 @@ public class Violations {
     @Temporal(TemporalType.TIMESTAMP)
     private Date reportDate;
     
+    private Boolean violationStatus;
 
 }
 
