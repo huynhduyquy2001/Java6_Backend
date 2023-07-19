@@ -28,4 +28,8 @@ public interface UsersDao extends JpaRepository<Users, String> {
 	@Query("SELECT b FROM Users b WHERE b.userId=?1")
 	List<Posts> findUserByUserId(String userId);
 	
+	@Query("SELECT b FROM Users b WHERE b.userId=?1")
+	List<Users> findByUser(String userId);
+	
+	List<Users> findByUsernameContaining(String username);
 }
