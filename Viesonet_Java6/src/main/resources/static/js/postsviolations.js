@@ -1,20 +1,27 @@
 const selectAllCheckbox = document.getElementById('selectAll');
 const tableCheckboxes = document.querySelectorAll('.table-checkbox');
 const selectedCountElement = document.getElementById('selectedCount');
-
+const myHidden = document.querySelector('.my-hidden');
 selectAllCheckbox.addEventListener('click', function() {
 	const isChecked = this.checked;
 	tableCheckboxes.forEach((checkbox) => {
 		checkbox.checked = isChecked;
 	});
 	updateSelectedCount();
+
+	// Hiển thị hoặc ẩn phần tử dựa trên trạng thái của checkbox
+	if (isChecked) {
+		myHidden.style.display = 'block'; // Hiển thị phần tử
+	} else {
+		myHidden.style.display = 'none'; // Ẩn phần tử
+	}
 });
 
 tableCheckboxes.forEach(checkbox => checkbox.addEventListener('click', updateSelectedCount));
 
 function updateSelectedCount() {
 	const selectedCount = document.querySelectorAll('.table-checkbox:checked').length;
-	selectedCountElement.textContent = selectedCount > 0 ? + selectedCount + ' mục đã được chọn' : '';
+	selectedCountElement.textContent = selectedCount > 0 ? selectedCount : '';
 }
 
 function detail(postId) {
@@ -176,20 +183,27 @@ input.addEventListener("keyup", function(event) {
 			const selectAllCheckbox = document.getElementById('selectAll');
 			const tableCheckboxes = document.querySelectorAll('.table-checkbox');
 			const selectedCountElement = document.getElementById('selectedCount');
-
+			const myHidden = document.querySelector('.my-hidden');
 			selectAllCheckbox.addEventListener('click', function() {
 				const isChecked = this.checked;
 				tableCheckboxes.forEach((checkbox) => {
 					checkbox.checked = isChecked;
 				});
 				updateSelectedCount();
+
+				// Hiển thị hoặc ẩn phần tử dựa trên trạng thái của checkbox
+				if (isChecked) {
+					myHidden.style.display = 'block'; // Hiển thị phần tử
+				} else {
+					myHidden.style.display = 'none'; // Ẩn phần tử
+				}
 			});
 
 			tableCheckboxes.forEach(checkbox => checkbox.addEventListener('click', updateSelectedCount));
 
 			function updateSelectedCount() {
 				const selectedCount = document.querySelectorAll('.table-checkbox:checked').length;
-				selectedCountElement.textContent = selectedCount > 0 ? + selectedCount + ' mục đã được chọn' : '';
+				selectedCountElement.textContent = selectedCount > 0 ? selectedCount : '';
 			}
 		},
 		error: function(xhr, status, error) {
@@ -218,7 +232,7 @@ function deleteViolation() {
 	} else {
 
 		Swal.fire({
-			text: 'Bạn có chắc muốn gỡ vi phạm không?',
+			text: 'Bạn có chắc muốn xóa bài viết vi phạm không?',
 			icon: 'warning',
 			confirmButtonText: 'Có, chắc chắn',
 			showCancelButton: true,
@@ -232,8 +246,8 @@ function deleteViolation() {
 					data: JSON.stringify(listPostId),
 					contentType: "application/json",
 					success: function(data) {
-						var table = document.getElementById("listTable");
-						table.innerHTML = ""; 
+					/*	var table = document.getElementById("listTable");
+						table.innerHTML = "";
 						data.content.forEach(function(item) {
 							//Chuyển định dạng ngày tháng năm
 							let date = new Date(item[3]);
@@ -264,7 +278,7 @@ function deleteViolation() {
 										th:onclick="detail('${item[0]}')"> <i
 											class="fa-light fa-eye" style="color: #336cce;"></i>
 									</a></td>
-								</tr>`;
+								</tr>`; }); */
 							Swal.fire({
 								position: 'top',
 								icon: 'success',
@@ -272,7 +286,9 @@ function deleteViolation() {
 								showConfirmButton: false,
 								timer: 1800
 							})
-						});
+							
+							setTimeout(reloadPage, 1800);
+						
 					},
 					error: function(xhr, status, error) {
 						// Xử lý lỗi (nếu có)
@@ -292,5 +308,9 @@ function deleteViolation() {
 	}
 	//
 }
+
+function reloadPage() {
+            location.reload();
+        }
 
 

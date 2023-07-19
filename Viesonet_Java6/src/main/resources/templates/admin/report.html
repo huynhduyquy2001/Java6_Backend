@@ -69,33 +69,35 @@ body {
 					</a>
 				</div>
 				<!-- Sidebar navigation-->
-				<nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+				<nav class="sidebar-nav scroll-sidebar">
 					<ul id="sidebarnav">
 						<li class="nav-small-cap"><i
 							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
-							class="hide-menu">Thống kê</span></li>
+							class="hide-menu" th:text="#{nav.report}">Thống kê</span></li>
 						<li class="sidebar-item"><a class="sidebar-link active"
 							href="/admin/report" aria-expanded="false"> <span> <i
 									class="fa-regular fa-chart-tree-map"></i>
-							</span> <span class="hide-menu">&nbsp; Chung</span>
+							</span> <span class="hide-menu" th:text="#{nav.general}">&nbsp; Chung</span>
 						</a></li>
 						<li class="nav-small-cap"><i
 							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
-							class="hide-menu">Quản Lý</span></li>
+							class="hide-menu" th:text="#{nav.admin}">Quản Lý</span></li>
 						<li class="sidebar-item"><a class="sidebar-link"
 							href="/admin/usermanager" aria-expanded="false"> <span>
 									<i class="fa-regular fa-users"></i>
-							</span> <span class="hide-menu">Người dùng</span>
+							</span> <span class="hide-menu" th:text="#{nav.user}">Người dùng</span>
 						</a> <a class="sidebar-link" href="/admin/postsviolation"
 							aria-expanded="false"> <span> <i
 									class="fa-regular fa-memo-circle-info"></i>
-							</span> <span class="hide-menu"> &nbsp; Bài viết vi phạm</span>
-						</a> <a class="sidebar-link" href="#" aria-expanded="false"> <span>
-									<i class="fa-regular fa-comments"></i>
-							</span> <span class="hide-menu"> &nbsp; Chat Message</span>
-						</a></li>
+							</span> <span class="hide-menu" th:text="#{nav.post}"> &nbsp; Bài viết vi phạm</span>
+						</a>
+						<a class="sidebar-link" href="#"
+							aria-expanded="false"> <span> 
+							<i class="fa-regular fa-comments"></i>
+							</span> <span th:text="#{nav.chat}" class="hide-menu"> &nbsp; Chat Message</span>
+						</a>
+						</li>
 					</ul>
-
 				</nav>
 				<!-- End Sidebar navigation -->
 			</div>
@@ -146,13 +148,13 @@ body {
 									class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
 									aria-labelledby="drop2">
 									<div class="message-body">
-										<div class="py-3 px-7 pb-0">
-											<h5 class="mb-0 fs-5 fw-semibold">Cá nhân</h5>
+										<div class="px-7 pb-0">
+											<b class="mb-0 fs-3 fw-semibold" th:text="#{li.profile}">Hồ sơ</b>
 										</div>
 										<a href="#"
 											class="d-flex align-items-center gap-2 dropdown-item">
 											<div
-												class="d-flex align-items-center py-9 mx-7 border-bottom">
+												class="d-flex align-items-center mx-7">
 												<img th:src="@{'/images/' + ${acc.avatar}}"
 													class="rounded-circle" width="80" height="80" alt="">
 												<div class="ms-3">
@@ -165,11 +167,24 @@ body {
 													</p>
 												</div>
 											</div>
-										</a> <a href="#"
+										</a> 
+										<div class="px-7 mt-1 mb-1">
+											<b class="mb-0 fs-3 fw-semibold" th:text="#{li.language}">Ngôn ngữ</b>
+										</div>
+										<div class="d-flex align-items-center gap-2 dropdown-item text-center">
+											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-light fa-globe ms-3"></i>
+											<a href="?lang=vi" class="mb-0 fs-3 text-dark" th:text="#{a.vi}">Tiếng việt</a> 
+											| <a href="?lang=en" class="mb-0 fs-3 text-dark" th:text="#{a.en}">Tiếng Anh</a>
+										</div>  
+										<div class="px-7 mt-1 mb-1">
+											<b class="mb-0 fs-3 fw-semibold" th:text="#{li.function}">Chức năng</b>
+										</div>
+										<a href="#"
 											class="d-flex align-items-center gap-2 dropdown-item text-center">
-											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-thin fa-house me-2"></i>
-											<p class="mb-0 fs-3">Trang chủ</p>
-										</a> <a href="#" class="btn btn-outline-primary mx-3 mt-2 d-block">
+											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-thin fa-house me-2 ms-3"></i>
+											<p class="mb-0 fs-3" th:text="#{a.home}">Trang chủ</p>
+										</a> 
+										<a href="#" class="btn btn-outline-primary mx-3 mt-2 d-block" th:text="#{btn.loguot}">
 											Đăng xuất</a>
 									</div>
 								</div></li>
@@ -187,7 +202,7 @@ body {
 								<div
 									class="d-sm-flex d-block align-items-center justify-content-between mb-9">
 									<div class="mb-3 mb-sm-0">
-										<h5 class="card-title fw-semibold">Số lượt tố cáo & vi
+										<h5 class="card-title fw-semibold" th:text="#{chart1}">Số lượt tố cáo & vi
 											phạm</h5>
 									</div>
 									<div>
@@ -211,7 +226,7 @@ body {
 								<!-- Yearly Breakup -->
 								<div class="card overflow-hidden">
 									<div class="card-body p-4">
-										<h5 class="card-title mb-9 fw-semibold">Độ tuổi sử dụng</h5>
+										<h5 class="card-title mb-9 fw-semibold" th:text="#{chart2}">Độ tuổi sử dụng</h5>
 										<div class="row align-items-center">
 											<div class="col-2"></div>
 											<div class="col-6">
@@ -230,7 +245,7 @@ body {
 										<div class="row alig n-items-start">
 											<div class="col-9">
 												<div class="d-flex align-items-center pb-1">
-													<b>Số lượng tài khoản mới tạo</b>
+													<b th:text="#{chart3}">Số lượng tài khoản mới tạo</b>
 												</div>
 											</div>
 										</div>
@@ -246,7 +261,7 @@ body {
 						<div class="card w-100">
 							<div class="card-body p-4">
 								<div class="mb-4">
-									<h5 class="card-title fw-semibold">Tài khoản có bài viết
+									<h5 class="card-title fw-semibold" th:text="#{card1}">Tài khoản có bài viết
 										nhiều nhất</h5>
 								</div>
 								<ul class="timeline-widget mb-0 position-relative mb-n5">
@@ -273,7 +288,7 @@ body {
 					<div class="col-lg-8 d-flex align-items-stretch">
 						<div class="card w-100">
 							<div class="card-body p-4">
-								<h5 class="card-title fw-semibold mb-4">Top 5 bài viết có
+								<h5 class="card-title fw-semibold mb-4" th:text="#{card2}">Top 5 bài viết có
 									lượt thích nhiều nhất</h5>
 								<div class="table-responsive">
 									<table class="table text-nowrap mb-0 align-middle">
@@ -283,19 +298,19 @@ body {
 													<h6 class="fw-semibold mb-0">Top</h6>
 												</th>
 												<th class="border-bottom-0">
-													<h6 class="fw-semibold mb-0">Tiêu đề bài viết</h6>
+													<h6 class="fw-semibold mb-0" th:text="#{table.title}">Tiêu đề bài viết</h6>
 												</th>
 												<th class="border-bottom-0">
-													<h6 class="fw-semibold mb-0">Người đăng</h6>
+													<h6 class="fw-semibold mb-0" th:text="#{table.userpost}">Người đăng</h6>
 												</th>
 												<th class="border-bottom-0">
-													<h6 class="fw-semibold mb-0">Ngày đăng</h6>
+													<h6 class="fw-semibold mb-0" th:text="#{table.postdate}">Ngày đăng</h6>
 												</th>
 												<th class="border-bottom-0">
-													<h6 class="fw-semibold mb-0">Số lượt thích</h6>
+													<h6 class="fw-semibold mb-0" th:text="#{table.like}">Số lượt thích</h6>
 												</th>
 												<th class="border-bottom-0">
-													<h6 class="fw-semibold mb-0">Chi tiết</h6>
+													<h6 class="fw-semibold mb-0" th:text="#{table.detail}">Chi tiết</h6>
 												</th>
 											</tr>
 										</thead>
