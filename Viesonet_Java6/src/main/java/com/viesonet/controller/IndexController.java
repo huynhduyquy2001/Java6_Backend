@@ -78,7 +78,7 @@ public class IndexController {
 	
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
-		List<Follow> followList = followService.getFollowing("UI011");
+		List<Follow> followList = followService.getFollowing(session.get("id"));
 		List<String> userId = followList.stream().map(follow -> {
 			return follow.getFollowing().getUserId();
 		}).collect(Collectors.toList());
@@ -88,25 +88,25 @@ public class IndexController {
 	
 	@GetMapping("/findlikedposts")
 	public List<String> findLikedPosts() {
-		return favoritesService.findLikedPosts("UI011");
+		return favoritesService.findLikedPosts(session.get("id"));
 	}
 
 	
 	@GetMapping("/findmyaccount")
 	public AccountAndFollow findMyAccount() {	
-		 return followService.getFollowingFollower(usersService.findUserById("UI011"));
+		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
 	}
 
 	
 	@PostMapping("/likepost/{postId}")
 	public void likePost(@PathVariable("postId") int postId) {
-		favoritesService.likepost(usersService.findUserById("UI011"), postsService.findPostById(postId));
+		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
 
 	
 	@PostMapping("/didlikepost/{postId}")
 	public void didlikePost(@PathVariable("postId") int postId) {
-		favoritesService.didlikepost("UI011", postId);
+		favoritesService.didlikepost(session.get("id"), postId);
 	}
 	
 	
@@ -118,7 +118,7 @@ public class IndexController {
 	
 	@PostMapping("/addcomment/{postId}")
 	public Comments addComment(@PathVariable("postId") int postId , @RequestParam("myComment") String content) { 
-		return commentsService.addComment(postsService.findPostById(postId), usersService.findUserById("UI011"), content);
+		return commentsService.addComment(postsService.findPostById(postId), usersService.findUserById(session.get("id")), content);
 	}
 	
 	
@@ -132,7 +132,7 @@ public class IndexController {
 			@RequestParam("content") String content) {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
-		Posts myPost = postsService.post(usersService.findUserById("UI011"), content);
+		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -171,4 +171,12 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView("Index");
         return modelAndView;
     }
+	
+	@GetMapping("/logout")
+	public ModelAndView logout() {
+		session.remove("id");
+		session.remove("role");
+		return new ModelAndView("redirect:/login");
+	}
+	
 }

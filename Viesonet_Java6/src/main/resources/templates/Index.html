@@ -282,7 +282,7 @@ div.dropdown-menu.baoCao {
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-list-check fs-6"></i>
 															<p class="mb-0 fs-3">Nâng cấp</p>
-														</a> <a href="#"
+														</a> <a ng-click="logout()"
 															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
 															xuất</a>
 													</div>
@@ -302,29 +302,29 @@ div.dropdown-menu.baoCao {
 
 			<div class="col-md-6 offset-md-3 " style="z-index: 10;">
 				<center>
-					<div style="width: 85%; text-align: left; background-color: transparent;" data-bs-toggle="modal"
-						href="#exampleModalToggle">
+
+					<div
+						style="width: 85%; text-align: left; background-color: transparent;"
+						data-bs-toggle="modal" href="#exampleModalToggle">
 						<div>
 							<div
 								class="write-post-container  img-thumbnail animate__animated animate__backInLeft"
-								style="margin-bottom: 15px; background: white; border-radius: 3px 3px 0 0; padding-top: 10px; padding-bottom: 10px; background-color: transparent;">
+								style="margin-bottom: 15px; background: white 0.5; border-radius: 3px 3px 0 0; padding-top: 10px; padding-bottom: 10px; background-color: transparent; background-image: url('/images/347236939_2465911110227431_5952883918790101011_n.jpg-20230616.jpg'); background-size: cover; min-height: 15rem">
+								<span
+									style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: white"><i
+									class="fa-solid fa-pencil"></i> Đăng bài viết</span>
 								<form id="postForm">
 									<center>
 										<img id="img" src="" width="45%"
 											style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
 									</center>
-									<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 137px"></textarea>
+									<textarea class="form-control"
+										placeholder="Hãy viết gì đó cho ngày hôm nay..."
+										id="floatingTextarea2" style="height: 137px; opacity: 0.4"></textarea>
 								</form>
-								<div class="d-flex align-items-center gap-2" style="margin-top: 5px">
-                        <a style="background-color: #5D87FF !important;" class="text-white d-flex align-items-center justify-content-center bg-primary p-2 fs-4 rounded-circle" href="javascript:void(0)">
-                         <i class="fa-light fa-image" style="font-size: 15px"></i>
-                        </a>
-                        <a href="javascript:void(0)" >Hình ảnh</a>
-                        
-                        
-                      </div>
+								<div class="d-flex  gap-2"
+									style="margin-top: 5px; text-align: right;"></div>
 							</div>
-
 						</div>
 					</div>
 				</center>
@@ -345,7 +345,7 @@ div.dropdown-menu.baoCao {
 												<div>
 
 													<span
-														style="font-weight: 600 !important; font-size: 1rem !important; margin: 0;">{{
+														style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: #2A3547">{{
 														post.user.username }}</span>
 													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 													<span><small style="font-size: 12px; color: #65676b">
@@ -391,7 +391,7 @@ div.dropdown-menu.baoCao {
 								<div style="margin-top: 10px;">
 									<div>
 										<div
-											style="box-sizing: border-box; padding-left: 5px; padding-right: 5px; font-size: 13px; color: black">
+											style="box-sizing: border-box; padding-left: 5px; padding-right: 5px; font-size: 13px;">
 											{{ post.content }}</div>
 										<center>
 											<div ng-if="post.images.length > 1">
@@ -452,7 +452,8 @@ div.dropdown-menu.baoCao {
 													style="color: #f50000;">❤️&nbsp;{{ post.likeCount }}</span>
 												<span ng-click="likePost(post.postId)"
 													ng-if="likedPosts.indexOf(post.postId.toString()) === -1">🤍&nbsp;{{
-													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
+													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+													ng-click="getPostDetails(post.postId)"><i
 													class="fa-light fa-comments"></i>&nbsp;{{ post.commentCount
 													}}</span>
 											</div>
@@ -477,7 +478,7 @@ div.dropdown-menu.baoCao {
 							</div>
 						</div>
 						<div class="user-main-details">
-							<h6>{{myAccount.user.username}}</h6>
+							<h6 style="font-weight: 600">{{myAccount.user.username}}</h6>
 							<!-- <span><i class="feather-map-pin"></i>India</span> -->
 						</div>
 						<ul class="followers-dts">
@@ -632,12 +633,8 @@ div.dropdown-menu.baoCao {
 										<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 											class="w-100" alt="Single image"
 											style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
-
 									</div>
-
-
 								</center>
-
 							</center>
 						</div>
 						<div class="col-md-6 phai ">
@@ -650,7 +647,7 @@ div.dropdown-menu.baoCao {
 										<img src="/images/sonTungAvt.jpg" class="img-thumbnail" alt="">
 										<div>
 											<label class="nhan">{{postDetails.user.username}}</label><br>
-											<small style="font-size: 12px; color: #65676b">{{postDetails.user.accessTime}}</small>
+											<small style="font-size: 12px; color: #65676b">{{getFormattedTimeAgo(postDetails.postDate)}}</small>
 										</div>
 									</div>
 
@@ -684,7 +681,7 @@ div.dropdown-menu.baoCao {
 								<div ng-repeat="comment in postComments">
 									<div
 										class="user-profile animate__animated animate__headShake img-thumbnail"
-										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 10px; background-color: rgba(246,249,252);">
+										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 10px; background-color: rgba(246, 249, 252);">
 										<img ng-src="/images/{{comment.user.avatar}}"
 											class="img-thumbnail" alt="">
 										<div>
@@ -708,13 +705,38 @@ div.dropdown-menu.baoCao {
 													<small ng-if="comment.reply.length>0"
 													style="font-size: 10px; cursor: pointer;"> {{
 														comment.reply.length}} phản hồi </small></label> &nbsp; <small
-													style="font-size: 10px; cursor: pointer;"> Trả lời</small>
+													style="font-size: 10px; cursor: pointer;"> 
+													<label><input
+													type="checkbox" ng-model="o_reply" hidden="true">
+													Trả lời</label>
+												</small>
+											</div>
+
+										</div>
+
+									</div>
+									
+									<div ng-show="o_reply"
+										class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
+										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem;">
+										<img ng-src="/images/duyQuy.jpg" class="img-thumbnail" alt=""
+											src="/images/tranTrungAvt.jpg">
+										<div>
+											<small style="font-size: 12px;" class="ng-binding"><i
+												class="fa-regular fa-tag"></i> <label
+												class="nhan ng-binding"
+												style="font-size: 13px; color: #313131; font-weight: bolder;">Huỳnh
+													Duy Quý</label></small><br>
+											<div>
+												<input type="text" class="form-control" name="" id="">
 											</div>
 
 										</div>
 									</div>
+									
 									<div ng-show="o_checkbox">
-										<div ng-repeat="obj in comment.reply"
+									<div ng-repeat="obj in comment.reply">
+									<div 
 											class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
 											style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 3rem;">
 											<img ng-src="/images/{{obj.responder.avatar}}"
@@ -731,12 +753,33 @@ div.dropdown-menu.baoCao {
 													{{obj.replyContent}}</small><br>
 												<div>
 													<small style="font-size: 10px;" class="ng-binding">
-														3 giờ trước</small> &nbsp; <small
-														style="font-size: 10px; cursor: pointer;"> Trả lời</small>
+														{{getFormattedTimeAgo(obj.replyDate)}}</small> &nbsp; <small
+														style="font-size: 10px; cursor: pointer;"><label><input
+													type="checkbox" ng-model="o_reply2" hidden="true">
+													Trả lời</label></small>
 												</div>
 
 											</div>
 										</div>
+										<div ng-show="o_reply2"
+										class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
+										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem;">
+										<img ng-src="/images/duyQuy.jpg" class="img-thumbnail" alt=""
+											src="/images/tranTrungAvt.jpg">
+										<div>
+											<small style="font-size: 12px;" class="ng-binding"><i
+												class="fa-regular fa-tag"></i> <label
+												class="nhan ng-binding"
+												style="font-size: 13px; color: #313131; font-weight: bolder;">Huỳnh
+													Duy Quý</label></small><br>
+											<div>
+												<input type="text" class="form-control" name="" id="">
+											</div>
+
+										</div>
+									</div>
+									</div>
+										
 									</div>
 								</div>
 
@@ -906,7 +949,7 @@ div.dropdown-menu.baoCao {
                 	      return hours + ' giờ trước';
                 	    }
                 	  } else if (days === 1) {
-                	    return 'hôm qua';
+                	    return 'Hôm qua';
                 	  } else {
                 	    return days + ' ngày trước';
                 	  }
@@ -976,7 +1019,14 @@ div.dropdown-menu.baoCao {
                 		    });
                 		};
 
-
+                		$scope.logout = function() {              			
+                		    $http.get('/logout')
+                		      .then(function() {               		    	
+                		    	  window.location.href='/login';
+                		      }, function(error) {
+                		        console.log(error);
+                		      });
+                		  };
 
 
             });            
