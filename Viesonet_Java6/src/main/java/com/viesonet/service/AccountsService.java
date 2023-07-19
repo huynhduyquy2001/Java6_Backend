@@ -13,9 +13,12 @@ public class AccountsService {
 	@Autowired
 	AccountsDao accountsDao;
 
-	public Accounts findAccountPhoneNumber(String sdt) {
-		Optional<Accounts> acc =  accountsDao.findByPhoneNumber(sdt);
-		return acc.orElse(null);
+	public Accounts getAccountByUsers(String userId) {
+        return accountsDao.findByUserId(userId);
+    }
+	
+	public Accounts findByPhoneNumber(String phoneNumber) {
+		return accountsDao.findByphoneNumber(phoneNumber);
 	}
 	
 }

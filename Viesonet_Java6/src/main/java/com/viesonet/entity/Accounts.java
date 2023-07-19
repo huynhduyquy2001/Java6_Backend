@@ -27,13 +27,12 @@ public class Accounts {
     private String phoneNumber;
     private String password;
     private String email;
-    @Column(name = "userId", insertable=false, updatable=false) 
-	private String userId;
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "userId")
     private Users user;
-    
+    @Column(name = "userId", insertable=false, updatable=false) 
+	private String userId;
     
     @ManyToOne
     @JoinColumn(name = "roleId")

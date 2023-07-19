@@ -394,7 +394,7 @@
                   <div class="d-flex align-items-center justify-content-center mb-2">
                     <div class="linear-gradient d-flex align-items-center justify-content-center rounded-circle" style="width: 155px; height: 155px;" >
                       <div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden" style="width: 150px; height: 150px;" ;="">
-                        <img src="images/leVy.jpg" alt="" class="w-100 h-100" style="object-fit: cover;">
+                        <img ng-src="/images/{{UserInfo.avatar}}" alt="" class="w-100 h-100" style="object-fit: cover;">
                       </div>
                     </div>
                   </div>
@@ -527,15 +527,16 @@
                     </div>
                   </div>
                 </div>
+                <div class="post" style="margin-bottom: 20px" ng-repeat="myPost in myPosts">
                 <div class="card">
                   <div class="card-body border-bottom">
-                    <div class="d-flex align-items-center gap-3">
-                      <img src="#" alt="" class="rounded-circle" width="40" height="40">
-                      <h6 class="fw-semibold mb-0 fs-4">Lê Tuấn Vỹ</h6>
-                      <span class="fs-2"><span class="p-1 bg-light rounded-circle d-inline-block"></span> 15 phút trước</span>
+                    <div class="d-flex align-items-center gap-3" >
+                      <img src="/images/{{myPost.user.avatar}}" alt="" class="rounded-circle" width="40" height="40" style="object-fit:cover;">
+                      <h6 class="fw-semibold mb-0 fs-4">{{myPost.user.username}}</h6>
+                      <span class="fs-2"><span class="p-1 bg-light rounded-circle d-inline-block"></span> {{ getFormattedTimeAgo(myPost.postDate) }}</span>
                     </div>
                     <p class="text-dark my-3">
-                      Dề dê
+                      {{myPost.content}}
                     </p>
                     <img src="images/297392774_1263902804342958_4850954387533039689_n.jpg" alt="" class="img-fluid rounded-4 w-100 object-fit-cover" style="height: 360px;">
                     <div class="d-flex align-items-center my-3">
@@ -560,6 +561,7 @@
                     <input type="text" class="form-control py-8" id="exampleInputtext" aria-describedby="textHelp" placeholder="Comment">
                     <button class="btn btn-primary">Comment</button>
                   </div>
+                  </div>
                 </div>
                 
               </div>
@@ -575,20 +577,18 @@
               </form>
             </div>
             <div class="row">
-			  <div class="col-md-6 col-xl-4" ng-repeat="follower in followers">
-			    <div class="card">
-			      <div class="card-body p-4 d-flex align-items-center gap-3">
-			        <img src="images/{{follower.follower.avatar}}" alt="" class="rounded-circle" width="40" height="40" style="object-fit:cover;">
-			        <div>
-			          <h5 class="fw-semibold mb-0">{{ follower.follower.username }}</h5>
-			          <span class="fs-2 d-flex align-items-center"><i class="fa-regular fa-location-dot fa-sm"></i> &nbsp; {{ follower.follower.address }}</span>
-			        </div>
-			        <button class="btn btn-outline-primary py-1 px-2 ms-auto">Theo dõi</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-
+              <div class=" col-md-6 col-xl-4" ng-repeat="follower in followers">
+                <div class="card">
+                  <div class="card-body p-4 d-flex align-items-center gap-3" >
+                    <img ng-src="/images/{{follower.avatar}}" alt="" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+                    <div>
+                      <h5 class="fw-semibold mb-0">{{follower.username}}</h5>
+                      <span class="fs-2 d-flex align-items-center"><i class="fa-regular fa-location-dot fa-sm"></i> &nbsp; {{follower.address}}</span>
+                    </div>
+                    <button class="btn btn-outline-primary py-1 px-2 ms-auto">Theo dõi</button>
+                  </div>
+                </div>
+              </div>
 
 
             </div>
@@ -602,12 +602,12 @@
               </form>
             </div>
             <div class="row">
-              <div class="col-sm-6 col-lg-4">
+              <div class="col-sm-6 col-lg-4" ng-repeat="following in followings">
                 <div class="card hover-img">
                   <div class="card-body p-4 text-center border-bottom">
-                    <img src="/images/duyQuy.jpg" alt="" class="rounded-circle mb-3" width="80" height="80">
-                    <h5 class="fw-semibold mb-0">Duy Quý</h5>
-                    <span class="text-dark fs-2">Bố già Rito Software</span>
+                    <img src="/images/{{following.avatar}}" alt="" class="rounded-circle mb-3" width="80" height="80" style="object-fit: cover;">
+                    <h5 class="fw-semibold mb-0">{{following.username}}</h5>
+                    <span class="text-dark fs-2">{{following.introduction}}</span>
                   </div>
                   <ul class="px-2 py-2 list-unstyled d-flex align-items-center justify-content-center mb-0" style="background-color: #f6f9fc;">
                     <a href="#"><i class="fa-regular fa-flag fa-lg me-3" style="color: #f9ae58;"></i></a>
@@ -631,46 +631,11 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card hover-img overflow-hidden rounded-2">
-                  <div class="card-body p-0">
-                    <img src="images/leVy.jpg" alt="" class="img-fluid w-100" style="object-fit: cover;height: 330px;">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card hover-img overflow-hidden rounded-2">
-                  <div class="card-body p-0">
-                    <img src="images/leVy.jpg" alt="" class="img-fluid w-100" style="object-fit: cover;height: 330px;">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card hover-img overflow-hidden rounded-2">
-                  <div class="card-body p-0">
-                    <img src="images/leVy.jpg" alt="" class="img-fluid w-100" style="object-fit: cover;height: 330px;">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card hover-img overflow-hidden rounded-2">
-                  <div class="card-body p-0">
-                    <img src="images/leVy.jpg" alt="" class="img-fluid w-100" style="object-fit: cover;height: 330px;">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="card hover-img overflow-hidden rounded-2">
-                  <div class="card-body p-0">
-                    <img src="images/leVy.jpg" alt="" class="img-fluid w-100" style="object-fit: cover;height: 330px;">
-                  </div>
-                </div>
-              </div>
+              
+              
 
             </div>
           </div>
-        </div>
-      </div>
           
           <!-- <div class="col-3" style="border: 1px solid red;">
             
@@ -707,29 +672,25 @@
                 $scope.postData = {};
                 $scope.postDetails = {};
                 $scope.postComments =[];
-                $scope.Followers =[];
+                $scope.followers =[];
+                $scope.followings =[];
                 
-                $scope.items = [
-                    {
-                      name: 'Đen Vâu',
-                      avatar: 'images/denVauAvt.jpg',
-                      location: 'Đồng Tháp'
-                    },
-                    {
-                      name: 'Ngọc Trinh',
-                      avatar: 'images/ngocTrinhAvt.jpg',
-                      location: 'Hồ Chí Minh'
-                    },
-                    // Thêm các phần tử khác vào mảng items tại đây
-                  ];
-                
-                $http.get('getmyfollowers') 
-                	.then(function(response) {
-			            $scope.followers = response.data;
-			        })
-			        .catch(function(error) {
-			            console.log(error);
-                    });
+                $http.get('/findmyfollowers')
+	                .then(function(response) {
+	                  $scope.followers = response.data;
+	                  console.log($scope.followers); // Kiểm tra dữ liệu trong console log
+	                })
+	                .catch(function(error) {
+	                  console.log(error);
+                });
+                $http.get('/findmyfollowing')
+	                .then(function(response) {
+	                  $scope.followings = response.data;
+	                  console.log($scope.followings); // Kiểm tra dữ liệu trong console log
+	                })
+	                .catch(function(error) {
+	                  console.log(error);
+	            });
                 
                 $http.get('/findfollowing')
                     .then(function (response) {
@@ -774,8 +735,9 @@
                     });
 				$http.get('/getmypost')
 					.then(function (response){
-						var myPost = response.data;
-						$scope.myPost = myPost;
+						var myPosts = response.data;
+						$scope.myPosts = myPosts;
+						console.log($scope.myPosts); // Kiểm tra dữ liệu trong console log
 					});
 				$http.get('/countmypost')
 					.then(function (response){

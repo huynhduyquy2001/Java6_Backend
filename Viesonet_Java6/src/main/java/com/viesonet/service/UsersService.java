@@ -27,6 +27,4 @@ import com.viesonet.entity.AccountStatus;
 		return user.orElse(null);
 	}
 	
-
-
 }

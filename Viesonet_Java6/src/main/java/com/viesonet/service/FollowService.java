@@ -1,5 +1,6 @@
 package com.viesonet.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ public class FollowService {
 
 	@Autowired
 	FollowDao followDao;
+    
 	public List<Follow> getFollowing(String followingId){
 		return followDao.findByFollowingId(followingId);
 	}
@@ -27,5 +29,11 @@ public class FollowService {
 		
 	}
 	
+	public List<Users> getFollowersInfoByUserId(String userId) {
+        return followDao.findFollowersInfoByUserId(userId);
+    }
 	
+	public List<Users> getFollowingInfoByUserId(String userId) {
+        return followDao.findFollowingInfoByUserId(userId);
+    }
 }
