@@ -1,5 +1,6 @@
 package com.viesonet.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +27,13 @@ public class FollowService {
 		return obj;
 		
 	}
+	
+	public List<Users> getUsersFollowedByLoggedInUser(Users loggedInUser) {
+        List<Follow> followList = followDao.findByFollower(loggedInUser);
+        List<Users> followedUsers = new ArrayList<>();
+        for (Follow follow : followList) {
+            followedUsers.add(follow.getFollowing());
+        }
+        return followedUsers;
+    }
 }

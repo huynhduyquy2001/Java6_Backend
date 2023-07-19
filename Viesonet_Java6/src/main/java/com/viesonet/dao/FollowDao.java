@@ -19,4 +19,5 @@ public interface FollowDao extends JpaRepository<Follow, Integer> {
 	@Query("SELECT COUNT(obj) from Follow obj where obj.follower = ?1")
     int getFollowingById(Users user);
 	
+	List<Follow> findByFollower(Users follower);
 }
