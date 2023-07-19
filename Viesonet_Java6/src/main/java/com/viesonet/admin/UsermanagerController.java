@@ -15,6 +15,9 @@ import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Roles;
 import com.viesonet.entity.Users;
+import com.viesonet.service.AccountsService;
+import com.viesonet.service.SessionService;
+import com.viesonet.service.UsersService;
 
 import jakarta.websocket.server.PathParam;
 
@@ -22,18 +25,22 @@ import jakarta.websocket.server.PathParam;
 public class UsermanagerController {
 
 	@Autowired
-	UsersDao userDAO;
+	UsersService userService;
 	
 	@Autowired
-	AccountsDao accDAO;
+	AccountsService accountService;
+	
+	@Autowired
+	private SessionService sessionService;
 	
 	@GetMapping("/admin/usermanager")
 	public String usermanager(Model m) {
 		// Tìm người dùng vai trò là admin
-		m.addAttribute("acc", userDAO.findByuserId("UI001"));
+		String userId = sessionService.get("id");
+		m.addAttribute("acc", userService.findUserById(userId));
 		
 		//Lấy danh sách người dùng
-		m.addAttribute("listUser", userDAO.findByUserAndStaff("UI001"));
+		m.addAttribute("listUser", userService.findByUserAndStaff(userId));
 		return "/admin/usermanager";
 	}
 	
@@ -46,10 +53,10 @@ public class UsermanagerController {
 		//Xét điều kiện để tìm
 		if(key.equals("all")) {
 			//Tìm hết
-			 searchUser = userDAO.findByUserSearchAll();
+			 searchUser = userService.findByUserSearchAll();
 		}else {
 			//Tìm theo chữ đã nhập
-			 searchUser = userDAO.findByUserSearch(key);
+			 searchUser = userService.findByUserSearch(key);
 		}
 		return searchUser;
 	}
@@ -59,7 +66,7 @@ public class UsermanagerController {
 	@RequestMapping("/admin/usermanager/detailUser/{userId}")
 	public Object detailUser(@PathVariable String userId) {
 		//Tìm thông tin chi tiết người dùng
-		Object searchUser = userDAO.findByDetailUser(userId);
+		Object searchUser = userService.findByDetailUser(userId);
 		return searchUser;
 	}
 	
@@ -69,16 +76,13 @@ public class UsermanagerController {
 		public Object userRole(@PathVariable int role, @PathVariable String userId, @PathVariable String sdt) {
 			//Đổi vai trò tài khoản 
 			Accounts account = new Accounts();
-			Roles roles = new Roles();
-			roles.setRoleId(role);
-			account = accDAO.findByphoneNumber(sdt);
+			account = accountService.findByPhoneNumber(sdt);
 			if(account.getRole().getRoleId() == role) {
 				return "warning";
 			}
-			account.setRole(roles);
-			accDAO.saveAndFlush(account);
+			accountService.setRole(sdt, role);
 			//Tìm thông tin người dùng này
-			Object searchUser = userDAO.findByDetailUser(userId);
+			Object searchUser = userService.findByDetailUser(userId);
 			return searchUser;
 		}
 		
@@ -89,14 +93,14 @@ public class UsermanagerController {
 				public Object userViolations(@PathVariable String userId) {
 					//Gỡ vi phạm cho người dùng
 					Users user = new Users();
-					user = userDAO.findByuserId(userId);
+					user = userService.findUserById(userId);
 					if(user.getViolationCount() == 0) {
 						return "warning";
 					}
-					user.setViolationCount(0);
-					userDAO.saveAndFlush(user);
+					
+					userService.setViolationCount(userId);
 					//Tìm thông tin người dùng này
-					Object searchUser = userDAO.findByDetailUser(userId);
+					Object searchUser = userService.findByDetailUser(userId);
 					return searchUser;
 				}
 }

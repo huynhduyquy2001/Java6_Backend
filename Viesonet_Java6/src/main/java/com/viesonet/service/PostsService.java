@@ -28,32 +28,33 @@ public class PostsService {
 	public List<Posts> findPostsByListUserId(List<String> userId) {
 		return postsDao.findPostsByListUserId(userId, Sort.by(Sort.Direction.DESC, "postDate"));
 	}
+
 	public Posts findPostById(int postId) {
-	    Optional<Posts> optionalPost = postsDao.findById(postId);
-	    return optionalPost.orElse(null);
+		Optional<Posts> optionalPost = postsDao.findById(postId);
+		return optionalPost.orElse(null);
 	}
-	
+
 	public Posts post(Users user, String content) {
 		// Lấy ngày và giờ hiện tại
-				Calendar cal = Calendar.getInstance();
-				Date ngayGioDang = cal.getTime();
-				
-				// Chuyển đổi sang kiểu Timestamp
-				Timestamp timestamp = new Timestamp(ngayGioDang.getTime());
-				Posts post = new Posts();
-				post.setContent(content);
-				post.setCommentCount(0);
-				post.setLikeCount(0);
-				post.setIsActive(true);
-				post.setPostDate(timestamp);
-				post.setUser(user);
-				return postsDao.saveAndFlush(post);
+		Calendar cal = Calendar.getInstance();
+		Date ngayGioDang = cal.getTime();
+
+		// Chuyển đổi sang kiểu Timestamp
+		Timestamp timestamp = new Timestamp(ngayGioDang.getTime());
+		Posts post = new Posts();
+		post.setContent(content);
+		post.setCommentCount(0);
+		post.setLikeCount(0);
+		post.setIsActive(true);
+		post.setPostDate(timestamp);
+		post.setUser(user);
+		return postsDao.saveAndFlush(post);
 	}
-	
-	public List<Posts> getMyPost(String userId){
+
+	public List<Posts> getMyPost(String userId) {
 		return postsDao.getMyPosts(userId);
 	}
-	
+
 	public int countPost(String userId) {
 		return postsDao.countMyPosts(userId);
 	}

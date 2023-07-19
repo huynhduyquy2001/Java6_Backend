@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.viesonet.dao.AccountsDao;
 import com.viesonet.entity.Accounts;
+import com.viesonet.entity.Roles;
 import com.viesonet.entity.Users;
 @Service
 public class AccountsService {
@@ -18,7 +19,7 @@ public class AccountsService {
     }
 	
 	public Accounts findByPhoneNumber(String phoneNumber) {
-		return accountsDao.findByphoneNumber(phoneNumber);
+		return accountsDao.findByPhoneNumber(phoneNumber);
 	}
 	
 	public boolean existById(String phoneNumber) {
@@ -31,6 +32,14 @@ public class AccountsService {
 	
 	public Accounts save(Accounts accounts) {
 		return accountsDao.save(accounts);
+	}
+
+	public Accounts setRole(String sdt, int role) {
+		Roles roles = new Roles();
+		roles.setRoleId(role);
+		Accounts accounts = accountsDao.findByPhoneNumber(sdt);
+		accounts.setRole(roles);
+		return accountsDao.saveAndFlush(accounts);
 	}
 	
 }

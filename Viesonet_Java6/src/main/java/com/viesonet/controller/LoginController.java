@@ -44,6 +44,7 @@ public class LoginController {
 			return new ModelAndView("Login");
 		}
 	}
+		
 
 	@PostMapping("/dangnhap")
 	public ResponseEntity<?> dangNhap2(@RequestBody Map<String, Object> data) {
@@ -62,6 +63,7 @@ public class LoginController {
 				sessionService.set("role", accounts.getRole().getRoleId());
 				sessionService.set("id", accounts.getUser().getUserId());
 				sessionService.set("phone", accounts.getPhoneNumber());
+
 				if (remember) {
 					cookieService.add("user", sdt, 10);
 					cookieService.add("pass", matKhau, 10);

@@ -41,7 +41,7 @@ public class Comments {
 	@ManyToOne
 	@JoinColumn(name = "userId")
 	private Users user;
-	@JsonIgnore
+	
 	@ManyToOne
 	@JoinColumn(name = "postId")
 	private Posts post;

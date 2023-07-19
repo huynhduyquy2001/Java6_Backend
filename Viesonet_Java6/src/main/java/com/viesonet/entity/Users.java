@@ -44,11 +44,9 @@ public class Users {
 	@JsonIgnore
 	@OneToOne(mappedBy = "user")
 	private Accounts account;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Posts> posts;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "responder")
 	private List<Reply> replyResponder;
@@ -60,7 +58,6 @@ public class Users {
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Favorites> favorites;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Comments> comments;
@@ -68,27 +65,14 @@ public class Users {
 	@JsonIgnore
 	@OneToMany(mappedBy = "receiver")
 	private List<Notifications> notifications;
-	
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "follower")
 	private List<Follow> followers;
-	
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "following")
 	private List<Follow> followings;
-	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Violations> violations;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "receiver")
-	private List<Message> messageReceiver;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "sender")
-	private List<Message> messageSender;
-	
-	
 
 }

@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +49,7 @@ import com.viesonet.service.UsersService;
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
 
-@RestController
+@Controller
 public class IndexController {
 
 	@Autowired
@@ -68,7 +66,7 @@ public class IndexController {
 
 	@Autowired
 	ServletContext context;
-
+	
 	@Autowired
 	ImagesService imagesService;
 	
@@ -96,25 +94,25 @@ public class IndexController {
 		return postsService.findPostsByListUserId(userId);
 	}
 
-	
+	@ResponseBody
 	@GetMapping("/findlikedposts")
 	public List<String> findLikedPosts() {
 		return favoritesService.findLikedPosts(session.get("id"));
 	}
 
-	
+	@ResponseBody
 	@GetMapping("/findmyaccount")
 	public AccountAndFollow findMyAccount() {	
 		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
 	}
 
-	
+	@ResponseBody
 	@PostMapping("/likepost/{postId}")
 	public void likePost(@PathVariable("postId") int postId) {
 		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
 
-	
+	@ResponseBody
 	@PostMapping("/didlikepost/{postId}")
 	public void didlikePost(@PathVariable("postId") int postId) {
 		favoritesService.didlikepost(session.get("id"), postId);
@@ -150,9 +148,9 @@ public class IndexController {
 		return commentsService.findCommentsByPostId(postId);
 	}
 
+	@ResponseBody
 	@PostMapping("/post")
-	public void dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles,
-			@RequestParam("content") String content) {
+	public String dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles, @RequestParam("content") String content ) {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
 		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
@@ -164,10 +162,7 @@ public class IndexController {
 					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 					String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 					String newFileName = originalFileName + "-" + timestamp + extension;
-
-					String rootPath = servletContext.getRealPath("/");
-					String parentPath = new File(rootPath).getParent();
-					String pathUpload = parentPath + "/resources/static/images/" + newFileName;
+					String pathUpload = context.getRealPath("/images/" + newFileName);
 
 					try {
 						photoFile.transferTo(new File(pathUpload));
@@ -177,8 +172,8 @@ public class IndexController {
 							double quality = 0.6;
 							String outputPath = pathUpload;
 							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
-						}
-						imagesService.saveImage(myPost, newFileName);
+						}											
+						imagesService.saveImage(myPost, newFileName);						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -186,6 +181,7 @@ public class IndexController {
 			}
 		}
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
+		return "success";
 	}
 
 	
