@@ -56,6 +56,7 @@ public class LoginController {
 			} else {
 				sessionService.set("role", accounts.getRole().getRoleId());
 				sessionService.set("id", accounts.getUser().getUserId());
+				sessionService.set("phone", accounts.getPhoneNumber());
 				if (remember) {
 					cookieService.add("user", sdt, 10);
 					cookieService.add("pass", matKhau, 10);

@@ -1,6 +1,5 @@
 package com.viesonet.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +25,13 @@ import com.viesonet.entity.AccountStatus;
 		Optional<Users> user = usersDao.findById(userId);
 		return user.orElse(null);
 	}
-	
+
+	public Users save(Users users) {
+		return usersDao.save(users);
+	}
+
+	public Users getById(String userId) {
+		return usersDao.getById(userId);
+	}
+
 }

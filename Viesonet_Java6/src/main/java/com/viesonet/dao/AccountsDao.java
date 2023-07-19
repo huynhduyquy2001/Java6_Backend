@@ -11,4 +11,5 @@ import java.util.List;
 public interface AccountsDao extends JpaRepository<Accounts, String> {
 	Accounts findByphoneNumber(String phoneNumber);
 	Accounts findByUserId(String userId);
+	boolean existsByEmail(String email);
 }

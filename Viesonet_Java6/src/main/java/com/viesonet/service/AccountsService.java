@@ -21,4 +21,16 @@ public class AccountsService {
 		return accountsDao.findByphoneNumber(phoneNumber);
 	}
 	
+	public boolean existById(String phoneNumber) {
+		return accountsDao.existsById(phoneNumber);
+	}
+	
+	public boolean existByEmail(String email) {
+		return accountsDao.existsByEmail(email);
+	}
+	
+	public Accounts save(Accounts accounts) {
+		return accountsDao.save(accounts);
+	}
+	
 }
