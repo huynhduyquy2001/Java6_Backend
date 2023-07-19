@@ -54415,3 +54415,7 @@ ul {
 .title-part-padding {
     padding: 15px 30px
 }
+.card-body{
+margin: 0;
+padding:0;
+}
