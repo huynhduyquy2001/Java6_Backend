@@ -1,0 +1,900 @@
+<!doctype html>
+<html ng-app="myApp">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile</title>
+  <link rel="stylesheet" href="/css/styles.min.css" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap">
+  <script src="https://kit.fontawesome.com/f737751420.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+    <script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  ul>.active{
+    border-bottom: 2px solid #5D87FF;
+    color: #5D87FF!important;
+  }
+  .circle {
+    width: 7px;
+    height: 7px;
+    background-color: rgb(225, 15, 15);
+    border-radius: 50%;
+  }
+
+  .image-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #989692;
+    margin-left: 30px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+  }
+
+  /* CSS */
+  .sidebar-scrollable {
+    max-height: 440px;
+    /* Đặt chiều cao tối đa của vùng cuộn */
+    overflow-y: auto;
+    /* Tạo thanh cuộn dọc */
+  }
+
+  .sidebar-scrollable::-webkit-scrollbar {
+    width: 5px;
+    /* Độ rộng của thanh cuộn */
+  }
+
+  .sidebar-scrollable::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Màu sắc của thanh cuộn */
+    border-radius: 4px;
+    /* Bo tròn viền thanh cuộn */
+  }
+
+  .sidebar-scrollable::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    /* Màu sắc của vùng di chuyển thanh cuộn */
+  }
+  .follow{
+    color: #222;
+  }
+  .follow:hover{
+    color: #222;
+  }
+  .linear-gradient {
+    background-image: linear-gradient(#50b2fc,#f44c66);
+  }
+  .container-fluid {
+    --bs-gutter-x: 24px;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-right: auto;
+    margin-left: auto;
+ }
+ .card {
+    --bs-card-spacer-y: 30px;
+    --bs-card-spacer-x: 30px;
+    --bs-card-title-spacer-y: 0.5rem;
+    --bs-card-title-color: #2A3547;
+    --bs-card-subtitle-color: #2A3547;
+    --bs-card-border-width: 0px;
+    --bs-card-border-color: #ebf1f6;
+    --bs-card-border-radius: 7px;
+    --bs-card-box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px,rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+    --bs-card-inner-border-radius: 7px;
+    --bs-card-cap-padding-y: 15px;
+    --bs-card-cap-padding-x: 30px;
+    --bs-card-cap-bg: rgba(var(--bs-body-color-rgb), 0.03);
+    --bs-card-bg: var(--bs-body-bg);
+    --bs-card-img-overlay-padding: 1rem;
+    --bs-card-group-margin: 12px;
+    color: var(--bs-body-color);
+    word-wrap: break-word;
+  }
+
+  .nav {
+    --bs-nav-link-padding-x: 1rem;
+    --bs-nav-link-padding-y: 0.5rem;
+    --bs-nav-link-font-size: 1rem;
+    --bs-nav-link-font-weight: 400;
+    --bs-nav-link-color: #2A3547;
+    --bs-nav-link-hover-color: #2A3547;
+    --bs-nav-link-disabled-color: var(--bs-secondary-color);
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+  }
+  .nav-pills {
+    --bs-nav-pills-border-radius: var(--bs-border-radius);
+    --bs-nav-pills-link-active-color: #fff;
+    --bs-nav-pills-link-active-bg: #5D87FF;
+ }
+</style>
+<body ng-controller="myCtrl">
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <aside class="left-sidebar">
+      <div>
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <a href="./index.html" class="text-nowrap logo-img"
+            style="color: #222; font-weight: bolder; font-family: 'robo';">
+            <img src="/images/chimLac.png" height="30px" alt=""> VIE_SONET
+          </a>
+        </div>
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar="init">
+          <div class="simplebar-wrapper" style="margin: 0px -24px;">
+            <div class="simplebar-height-auto-observer-wrapper">
+              <div class="simplebar-height-auto-observer"></div>
+            </div>
+            <div class="simplebar-mask">
+              <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                <div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden;">
+                  <div class="simplebar-content" style="padding: 0px 24px;">
+                    <ul id="sidebarnav">
+                      <li class="nav-small-cap">
+                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                        <span class="hide-menu">Chung</span>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                          <span>
+                            <svg class="svg-inline--fa fa-search" aria-hidden="true" focusable="false" data-prefix="far"
+                              data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                              data-fa-i2svg="">
+                              <path fill="currentColor"
+                                d="M368 208A160 160 0 1 0 48 208a160 160 0 1 0 320 0zM337.1 371.1C301.7 399.2 256.8 416 208 416C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208c0 48.8-16.8 93.7-44.9 129.1L505 471c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L337.1 371.1z">
+                              </path>
+                            </svg><!-- <i class="fa-regular fa-search"></i> -->
+                          </span>
+                          <span class="hide-menu">&nbsp; Tìm Kiếm</span>
+                        </a>
+                      </li>
+
+                      <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                          <span>
+                            <svg class="svg-inline--fa fa-lightbulb-on" aria-hidden="true" focusable="false"
+                              data-prefix="far" data-icon="lightbulb-on" role="img" xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 640 512" data-fa-i2svg="">
+                              <path fill="currentColor"
+                                d="M69.3 4C58.3-3.3 43.4-.3 36 10.7s-4.4 25.9 6.7 33.3l48 32c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L69.3 4zM597.3 44c11-7.4 14-22.3 6.7-33.3s-22.3-14-33.3-6.7l-48 32c-11 7.4-14 22.3-6.7 33.3s22.3 14 33.3 6.7l48-32zM24 160c-13.3 0-24 10.7-24 24s10.7 24 24 24H88c13.3 0 24-10.7 24-24s-10.7-24-24-24H24zm528 0c-13.3 0-24 10.7-24 24s10.7 24 24 24h64c13.3 0 24-10.7 24-24s-10.7-24-24-24H552zM117.3 332c11-7.4 14-22.3 6.7-33.3s-22.3-14-33.3-6.7l-48 32c-11 7.4-14 22.3-6.7 33.3s22.3 14 33.3 6.7l48-32zm432-39.9c-11-7.4-25.9-4.4-33.3 6.7s-4.4 25.9 6.7 33.3l48 32c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3l-48-32zM448 176c0 27.2-8.4 52.3-22.8 72.9c-3.7 5.3-8 11.3-12.7 17.7l0 0 0 0 0 0 0 0c-12.9 17.7-28.3 38.9-39.8 59.8c-10.4 19-15.7 38.8-18.3 57.5H403c2.2-12 5.9-23.7 11.8-34.5c9.9-18 22.2-34.9 34.5-51.8l0 0 0 0 0 0c5.2-7.1 10.4-14.2 15.4-21.4c19.8-28.5 31.4-63 31.4-100.3C496 78.8 417.2 0 320 0S144 78.8 144 176c0 37.3 11.6 71.9 31.4 100.3c5 7.2 10.2 14.3 15.4 21.4l0 0 0 0c12.3 16.8 24.6 33.7 34.5 51.8c5.9 10.8 9.6 22.5 11.8 34.5h48.6c-2.6-18.7-7.9-38.6-18.3-57.5c-11.5-20.9-26.9-42.1-39.8-59.8l0 0 0 0c-4.7-6.4-9-12.4-12.8-17.7C200.4 228.3 192 203.2 192 176c0-70.7 57.3-128 128-128s128 57.3 128 128zm-176 0c0-26.5 21.5-48 48-48c8.8 0 16-7.2 16-16s-7.2-16-16-16c-44.2 0-80 35.8-80 80c0 8.8 7.2 16 16 16s16-7.2 16-16zM400 432V416H240v16c0 44.2 35.8 80 80 80s80-35.8 80-80z">
+                              </path>
+                            </svg><!-- <i class="fa-regular fa-lightbulb-on"></i> -->
+                          </span>
+                          <span class="hide-menu">&nbsp; Gợi Ý</span>
+                        </a>
+                      </li>
+
+                      <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                          <span>
+                            <svg class="svg-inline--fa fa-envelope" aria-hidden="true" focusable="false"
+                              data-prefix="far" data-icon="envelope" role="img" xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 512 512" data-fa-i2svg="">
+                              <path fill="currentColor"
+                                d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z">
+                              </path>
+                            </svg><!-- <i class="fa-regular fa-envelope"></i> -->
+                          </span>
+                          <span class="hide-menu">&nbsp; Tin Nhắn</span>
+                        </a>
+                      </li>
+
+                      <li class="sidebar-item">
+                        <a class="sidebar-link active" href="#" aria-expanded="false">
+                          <span>
+                            <svg class="svg-inline--fa fa-user-circle" aria-hidden="true" focusable="false"
+                              data-prefix="far" data-icon="user-circle" role="img" xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 512 512" data-fa-i2svg="">
+                              <path fill="currentColor"
+                                d="M406.5 399.6C387.4 352.9 341.5 320 288 320H224c-53.5 0-99.4 32.9-118.5 79.6C69.9 362.2 48 311.7 48 256C48 141.1 141.1 48 256 48s208 93.1 208 208c0 55.7-21.9 106.2-57.5 143.6zm-40.1 32.7C334.4 452.4 296.6 464 256 464s-78.4-11.6-110.5-31.7c7.3-36.7 39.7-64.3 78.5-64.3h64c38.8 0 71.2 27.6 78.5 64.3zM256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-272a40 40 0 1 1 0-80 40 40 0 1 1 0 80zm-88-40a88 88 0 1 0 176 0 88 88 0 1 0 -176 0z">
+                              </path>
+                            </svg><!-- <i class="fa-regular fa-user-circle"></i> -->
+                          </span>
+                          <span class="hide-menu">&nbsp; Trang Cá Nhân</span>
+                        </a>
+                      </li>
+
+                      <li class="nav-small-cap">
+                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                        <span class="hide-menu">Quản Lý</span>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                          <span>
+                            <svg class="svg-inline--fa fa-users" aria-hidden="true" focusable="false" data-prefix="far"
+                              data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"
+                              data-fa-i2svg="">
+                              <path fill="currentColor"
+                                d="M144 160A80 80 0 1 0 144 0a80 80 0 1 0 0 160zm368 0A80 80 0 1 0 512 0a80 80 0 1 0 0 160zM0 298.7C0 310.4 9.6 320 21.3 320H234.7c.2 0 .4 0 .7 0c-26.6-23.5-43.3-57.8-43.3-96c0-7.6 .7-15 1.9-22.3c-13.6-6.3-28.7-9.7-44.6-9.7H106.7C47.8 192 0 239.8 0 298.7zM405.3 320H618.7c11.8 0 21.3-9.6 21.3-21.3C640 239.8 592.2 192 533.3 192H490.7c-15.9 0-31 3.5-44.6 9.7c1.3 7.2 1.9 14.7 1.9 22.3c0 38.2-16.8 72.5-43.3 96c.2 0 .4 0 .7 0zM320 176a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm0 144a96 96 0 1 0 0-192 96 96 0 1 0 0 192zm-58.7 80H378.7c39.8 0 73.2 27.2 82.6 64H178.7c9.5-36.8 42.9-64 82.6-64zm0-48C187.7 352 128 411.7 128 485.3c0 14.7 11.9 26.7 26.7 26.7H485.3c14.7 0 26.7-11.9 26.7-26.7C512 411.7 452.3 352 378.7 352H261.3z">
+                              </path>
+                            </svg><!-- <i class="fa-regular fa-users"></i> -->
+                          </span>
+                          <span class="hide-menu">Người dùng</span>
+                        </a>
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                          <span>
+                            <svg class="svg-inline--fa fa-memo-pad" aria-hidden="true" focusable="false"
+                              data-prefix="far" data-icon="memo-pad" role="img" xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 448 512" data-fa-i2svg="">
+                              <path fill="currentColor"
+                                d="M400 128V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V128H400zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 200c0 13.3 10.7 24 24 24H328c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-13.3 0-24 10.7-24 24zm0 96c0 13.3 10.7 24 24 24H328c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-13.3 0-24 10.7-24 24zm0 96c0 13.3 10.7 24 24 24H232c13.3 0 24-10.7 24-24s-10.7-24-24-24H120c-13.3 0-24 10.7-24 24z">
+                              </path>
+                            </svg><!-- <i class="fa-regular fa-memo-pad"></i> -->
+                          </span>
+                          <span class="hide-menu"> &nbsp; &nbsp;Bài viết</span>
+                        </a>
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                          <span>
+                            <svg class="svg-inline--fa fa-memo-circle-info" aria-hidden="true" focusable="false"
+                              data-prefix="far" data-icon="memo-circle-info" role="img"
+                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg="">
+                              <path fill="currentColor"
+                                d="M320 48H64c-8.8 0-16 7.2-16 16V448c0 8.8 7.2 16 16 16H284.5c12 18.4 27.4 34.5 45.3 47.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64C0 28.7 28.7 0 64 0H320c35.3 0 64 28.7 64 64V198.6c-17.2 4.9-33.4 12.3-48 21.8V64c0-8.8-7.2-16-16-16zM96 152c0-13.3 10.7-24 24-24H264c13.3 0 24 10.7 24 24s-10.7 24-24 24H120c-13.3 0-24-10.7-24-24zm24 72H264c13.3 0 24 10.7 24 24s-10.7 24-24 24H120c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 96h48c13.3 0 24 10.7 24 24s-10.7 24-24 24H120c-13.3 0-24-10.7-24-24s10.7-24 24-24zm312-96a144 144 0 1 1 0 288 144 144 0 1 1 0-288zm0 96a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm-32 48c0 8.8 7.2 16 16 16h0v48h0c-8.8 0-16 7.2-16 16s7.2 16 16 16h16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16V368c0-8.8-7.2-16-16-16H416c-8.8 0-16 7.2-16 16z">
+                              </path>
+                            </svg><!-- <i class="fa-regular fa-memo-circle-info"></i> -->
+                          </span>
+                          <span class="hide-menu"> &nbsp; Bài viết vi phạm</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="simplebar-placeholder" style="width: auto; height: 453px;"></div>
+          </div>
+          <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+            <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
+          </div>
+          <div class="simplebar-track simplebar-vertical" style="visibility: hidden;">
+            <div class="simplebar-scrollbar" style="height: 0px; display: none;"></div>
+          </div>
+        </nav>
+      </div>
+    </aside>
+
+    <nav class="navbar navbar-expand-sm "
+				style="padding: 0; position: fixed; top: 0; z-index: 101">
+				<div class="container" style="width: 100%; padding: 0;">
+					<div class="collapse navbar-collapse" id="collapsibleNavId">
+						<ul class="navbar-nav me-auto mt-2 mt-lg-0">
+						</ul>
+						<div class="body-wrapper">
+							<header class="app-header">
+								<nav class="navbar navbar-expand-lg navbar-light">
+									<div class="navbar-collapse justify-content-end px-0"
+										id="navbarNav">
+										<ul
+											class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+											<li class="nav-item dropdown"><a
+												class="nav-link nav-icon-hover" href="#" id="drop2"
+												data-bs-toggle="dropdown" aria-expanded="false"> <svg
+														class="svg-inline--fa fa-bell" aria-hidden="true"
+														focusable="false" data-prefix="far" data-icon="bell"
+														role="img" xmlns="http://www.w3.org/2000/svg"
+														viewBox="0 0 448 512" data-fa-i2svg="">
+                                                        <path
+															fill="currentColor"
+															d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z">
+                                                        </path>
+                                                    </svg>
+													<div class="circle mb-2"></div>
+											</a>
+												<div style="background: whitesmoke;"
+													class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+													aria-labelledby="drop2">
+													<div class="message-body">
+														<a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-user fs-6"></i>
+															<p class="mb-0 fs-3">Thông báo 1</p>
+														</a> <a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-user fs-6"></i>
+															<p class="mb-0 fs-3">Thông báo 2</p>
+														</a> <a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-user fs-6"></i>
+															<p class="mb-0 fs-3">Thông báo 3</p>
+														</a>
+													</div>
+												</div></li>
+											<li class="nav-item dropdown"><a
+												class="nav-link nav-icon-hover" href="#" id="drop2"
+												data-bs-toggle="dropdown" aria-expanded="false"> <img
+													src="images/{{UserInfo.avatar}}" alt="" width="35" height="35"
+													class="rounded-circle" style="object-fit: cover;">
+											</a>
+												<div style="background: whitesmoke;"
+													class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+													aria-labelledby="drop2">
+													<div class="message-body">
+														<a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-user fs-6"></i>
+															<p class="mb-0 fs-3">Đổi mật khẩu</p>
+														</a> <a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-mail fs-6"></i>
+															<p class="mb-0 fs-3">Thông tin điều khoản</p>
+														</a> <a href="#"
+															class="d-flex align-items-center gap-2 dropdown-item">
+															<i class="ti ti-list-check fs-6"></i>
+															<p class="mb-0 fs-3">Nâng cấp</p>
+														</a> <a href="#"
+															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
+															xuất</a>
+													</div>
+												</div></li>
+										</ul>
+									</div>
+								</nav>
+							</header>
+							<div class="container-fluid">
+								<div class="row"></div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</nav>
+
+    <div class="body-wrapper">
+      <div class="container-fluid">
+        
+        <div class="card overflow-hidden" style="border-radius: 15px 15px 15px 15px;">
+          
+          <div class="card-body p-0">
+            <img ng-src="/images/{{myAccount.user.background}}" alt="" height="300" width="1440" style="object-fit: cover;">
+            <div class="row align-items-center">
+              <div class="col-lg-4 order-lg-1 order-2">
+                <div class="d-flex align-items-center justify-content-around m-4">
+                  <div class="text-center">
+                     <i class="fa-regular fa-memo-pad"></i> 
+                    <h4 class="mb-0 fw-semibold lh-1">{{ sumPost }}</h4>
+                    <p class="mb-0 fs-4">Bài viết</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-users fa-sm"></i>
+                    <h4 class="mb-0 fw-semibold lh-1">{{myAccount.followers}}</h4>  
+                    <p class="mb-0 fs-4">Người theo dõi</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fa-solid fa-user-group-crown fa-sm"></i>
+                    <h4 class="mb-0 fw-semibold lh-1">{{myAccount.following}}</h4>
+                    <p class="mb-0 fs-4">Theo dõi</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 mt-n3 order-lg-2 order-1">
+                <div class="mt-n5">
+                  <div class="d-flex align-items-center justify-content-center mb-2">
+                    <div class="linear-gradient d-flex align-items-center justify-content-center rounded-circle" style="width: 155px; height: 155px;" >
+                      <div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden" style="width: 150px; height: 150px;" ;="">
+                        <img ng-src="/images/{{UserInfo.avatar}}" alt="" class="w-100 h-100" style="object-fit: cover;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <h5 class="fs-5 mb-0 fw-semibold">{{myAccount.user.username}}</h5>
+                    <p class="mb-0 fs-4" style="color: gray;">@vyxcuto</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 order-last">
+                <ul class="list-unstyled d-flex align-items-center justify-content-center justify-content-lg-start my-3 gap-3">
+                  
+                  <li><button class="btn btn-primary">Add To Story</button></li>
+                </ul>
+              </div>
+            </div>
+            <ul class="nav nav-pills user-profile-tab justify-content-end mt-2 rounded-2 text-dark" id="pills-tab" role="tablist" style="background-color:#ebf3fe;">
+              <li class="nav-item active" role="presentation">
+                <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true">
+                  <i class="ti ti-user-circle me-2 fs-6"></i>
+                  <span class="d-none d-md-block" style="color: #5D87FF;">Hồ sơ</span> 
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6" id="pills-followers-tab" data-bs-toggle="pill" data-bs-target="#pills-followers" type="button" role="tab" aria-controls="pills-followers" aria-selected="false" tabindex="-1">
+                  <i class="ti ti-heart me-2 fs-6"></i>
+                  <span class="d-none d-md-block" style="color: #5D87FF;">Người theo dõi</span> 
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6" id="pills-friends-tab" data-bs-toggle="pill" data-bs-target="#pills-friends" type="button" role="tab" aria-controls="pills-friends" aria-selected="false" tabindex="-1">
+                  <i class="ti ti-user-circle me-2 fs-6"></i>
+                  <span class="d-none d-md-block" style="color: #5D87FF;">Theo dõi</span> 
+                </button>
+              </li>
+              <li class="nav-item me-1" role="presentation" >
+                <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6" id="pills-gallery-tab" data-bs-toggle="pill" data-bs-target="#pills-gallery" type="button" role="tab" aria-controls="pills-gallery" aria-selected="false" tabindex="-1">
+                  <i class="ti ti-photo-plus me-2 fs-6"></i>
+                  <span class="d-none d-md-block" style="color: #5D87FF;">Bộ sưu tập</span> 
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade active show" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="card shadow-none border">
+                  <div class="card-body">
+                    <h4 class="fw-semibold mb-3">Giới thiệu</h4>
+                    <p>{{UserInfo.introduction}}</p>
+                    <ul class="list-unstyled mb-0">
+                      <li class="d-flex align-items-center gap-3 mb-4">
+                        <i class="ti ti-briefcase text-dark fs-6"></i>
+                        <h6 class="fs-4 fw-semibold mb-0">Địa chỉ: {{UserInfo.address}}</h6>
+                      </li>
+                      <li class="d-flex align-items-center gap-3 mb-4">
+                        <i class="ti ti-mail text-dark fs-6"></i>
+                        <h6 class="fs-4 fw-semibold mb-0">Email: {{AccInfo.email}}</h6>
+                      </li>
+                      <li class="d-flex align-items-center gap-3 mb-4">
+                        <i class="ti ti-device-desktop text-dark fs-6"></i>
+                       <h6 class="fs-4 fw-semibold mb-0">Ngày sinh: {{ UserInfo.birthday | date:'dd-MM-yyyy' }}</h6>
+                      </li>
+                      <li class="d-flex align-items-center gap-3 mb-2">
+                        <i class="ti ti-map-pin text-dark fs-6"></i>
+                        <h6 class="fs-4 fw-semibold mb-0">Mối quan hệ: {{UserInfo.relationship}}</h6>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="card shadow-none border">
+                  <div class="card-body">
+                    <h4 class="fw-semibold mb-3">Hình ảnh</h4>
+                    <div class="row">
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      <div class="col-4">
+                        <img src="images/127223760_IMG_1458.JPG" alt="" class="rounded-2 img-fluid mb-9">
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="card shadow-none border">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <textarea class="form-control" placeholder=" Bạn muốn đăng gì?"  style="height: 137px" data-bs-toggle="modal"
+											href="#exampleModalToggle"></textarea>
+                      
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="text-white d-flex align-items-center justify-content-center bg-primary p-2 fs-4 rounded-circle" href="javascript:void(0)">
+                        <i class="fa-solid fa-image fa-xs"></i>
+                      </div>
+                      <a href="javascript:void(0)" class="text-dark py-2 nav-link">Chọn ảnh</a>
+                      <a href="javascript:void(0)" class="d-flex align-items-center gap-2">
+                        <div class="text-white d-flex align-items-center justify-content-center bg-secondary p-2 fs-4 rounded-circle">
+                          <i class="fa-solid fa-shop fa-xs"></i>
+                        </div>
+                        <a href="javascript:void(0)" class="text-dark py-2 nav-link">Cửa hàng</a>
+                      </a>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="post" style="margin-bottom: 20px" ng-repeat="myPost in myPosts">
+                <div class="card">
+                  <div class="card-body border-bottom">
+                    <div class="d-flex align-items-center gap-3" >
+                      <img src="/images/{{myPost.user.avatar}}" alt="" class="rounded-circle" width="40" height="40" style="object-fit:cover;">
+                      <h6 class="fw-semibold mb-0 fs-4">{{myPost.user.username}}</h6>
+                      <span class="fs-2"><span class="p-1 bg-light rounded-circle d-inline-block"></span> {{ getFormattedTimeAgo(myPost.postDate) }}</span>
+                    </div>
+                    <p class="text-dark my-3">
+                      {{myPost.content}}
+                    </p>
+                    <img src="images/297392774_1263902804342958_4850954387533039689_n.jpg" alt="" class="img-fluid rounded-4 w-100 object-fit-cover" style="height: 360px;">
+                    <div class="d-flex align-items-center my-3">
+                      <div class="d-flex align-items-center gap-2">
+                        
+                          <i class="fa-solid fa-heart fa-xs"></i>
+                        
+                        <span class="text-dark fw-semibold">67</span>
+                      </div>
+                      <div class="d-flex align-items-center gap-2 ms-4">
+                        <i class="fa-solid fa-comment fa-xs"></i>
+                        <span class="text-dark fw-semibold">2</span>
+                      </div>
+                      <a class="text-dark ms-auto d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share">
+                        <i class="ti ti-share"></i>
+                      </a>
+                    </div>
+                    
+                  </div>
+                  <div class="d-flex align-items-center gap-3 p-3">
+                    <img src="../../dist/images/profile/user-1.jpg" alt="" class="rounded-circle" width="33" height="33">
+                    <input type="text" class="form-control py-8" id="exampleInputtext" aria-describedby="textHelp" placeholder="Comment">
+                    <button class="btn btn-primary">Comment</button>
+                  </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <!-- Followers-->
+          <div class="tab-pane fade" id="pills-followers" role="tabpanel" aria-labelledby="pills-followers-tab" tabindex="0">
+            <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+              <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">Người theo dõi <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.followers}}</span></h3>
+              <form class="position-relative">
+                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Tìm kiếm?">
+                <i class="fa-solid fa-magnifying-glass fa-sm position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
+              </form>
+            </div>
+            <div class="row">
+              <div class=" col-md-6 col-xl-4" ng-repeat="follower in followers">
+                <div class="card">
+                  <div class="card-body p-4 d-flex align-items-center gap-3" >
+                    <img ng-src="/images/{{follower.avatar}}" alt="" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+                    <div>
+                      <h5 class="fw-semibold mb-0">{{follower.username}}</h5>
+                      <span class="fs-2 d-flex align-items-center"><i class="fa-regular fa-location-dot fa-sm"></i> &nbsp; {{follower.address}}</span>
+                    </div>
+                    <button class="btn btn-outline-primary py-1 px-2 ms-auto">Theo dõi</button>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+          <div class="tab-pane fade" id="pills-friends" role="tabpanel" aria-labelledby="pills-friends-tab" tabindex="0">
+            <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+              <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">Theo dõi <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.following}}</span></h3>
+              <form class="position-relative">
+                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Tìm kiếm?">
+                <i class="fa-solid fa-magnifying-glass fa-sm position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
+              </form>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-lg-4" ng-repeat="following in followings">
+                <div class="card hover-img">
+                  <div class="card-body p-4 text-center border-bottom">
+                    <img src="/images/{{following.avatar}}" alt="" class="rounded-circle mb-3" width="80" height="80" style="object-fit: cover;">
+                    <h5 class="fw-semibold mb-0">{{following.username}}</h5>
+                    <span class="text-dark fs-2">{{following.introduction}}</span>
+                  </div>
+                  <ul class="px-2 py-2 list-unstyled d-flex align-items-center justify-content-center mb-0" style="background-color: #f6f9fc;">
+                    <a href="#"><i class="fa-regular fa-flag fa-lg me-3" style="color: #f9ae58;"></i></a>
+                    <a href="#"><i class="fa-solid fa-eye fa-xl me-3" style="color: #50b2fc;"></i></a>
+                    <a href="#"><i class="fa-regular fa-circle-xmark fa-xl " style="color: #fd3a3a;"></i></a>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="tab-pane fade" id="pills-gallery" role="tabpanel" aria-labelledby="pills-gallery-tab" tabindex="0">
+            <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+              <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">Bộ sưu tập <span class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">9</span></h3>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-lg-4">
+                <div class="card hover-img overflow-hidden rounded-2">
+                  <div class="card-body p-0">
+                    <img src="images/leVy.jpg" alt="" class="img-fluid w-100" style="object-fit: cover;height: 330px;">
+                  </div>
+                </div>
+              </div>
+              
+              
+
+            </div>
+          </div>
+          
+          <!-- <div class="col-3" style="border: 1px solid red;">
+            
+          </div> -->
+          
+
+        </div>
+
+
+      </div>
+      <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+      <script>
+        $(document).ready(function() {
+          $(".nav-pills .nav-link").click(function() {
+            // Xóa class "active" khỏi tất cả các thẻ li
+            $(".nav-pills .nav-item").removeClass("active");
+            
+            // Thêm class "active" vào thẻ li được nhấp vào
+            $(this).parent().addClass("active");
+          });
+        });
+      </script>
+      <script>
+        angular.module('myApp', [])
+            .controller('myCtrl', function ($scope, $http) {
+                $scope.Posts = [];
+                $scope.likedPosts = [];
+                $scope.myAccount = {};
+                $scope.postData = {};
+                $scope.postDetails = {};
+                $scope.postComments =[];
+                $scope.followers =[];
+                $scope.followings =[];
+                
+                $http.get('/findmyfollowers')
+	                .then(function(response) {
+	                  $scope.followers = response.data;
+	                  console.log($scope.followers); // Kiểm tra dữ liệu trong console log
+	                })
+	                .catch(function(error) {
+	                  console.log(error);
+                });
+                $http.get('/findmyfollowing')
+	                .then(function(response) {
+	                  $scope.followings = response.data;
+	                  console.log($scope.followings); // Kiểm tra dữ liệu trong console log
+	                })
+	                .catch(function(error) {
+	                  console.log(error);
+	            });
+                
+                $http.get('/findfollowing')
+                    .then(function (response) {
+                        var Posts = response.data;
+                        $scope.Posts = Posts;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                $http.get('/findusers')
+	                .then(function (response) {
+	                    var UserInfo = response.data;
+	                    $scope.UserInfo = UserInfo;
+	                })
+	                .catch(function (error) {
+	                    console.log(error);
+	                });
+                $http.get('/findaccounts')
+                .then(function(response) {
+                  var AccInfo = response.data;
+                  $scope.AccInfo = AccInfo;
+                })
+                .catch(function(error) {
+                  console.log(error);
+                });
+                $http.get('/findlikedposts')
+                    .then(function (response) {
+                        var likedPosts = response.data;
+                        $scope.likedPosts = likedPosts;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                $http.get('/findmyfollow')
+                    .then(function (response) {
+                        var myAccount = response.data;
+                        $scope.myAccount = myAccount;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+				$http.get('/getmypost')
+					.then(function (response){
+						var myPosts = response.data;
+						$scope.myPosts = myPosts;
+						console.log($scope.myPosts); // Kiểm tra dữ liệu trong console log
+					});
+				$http.get('/countmypost')
+					.then(function (response){
+						var sumPost = response.data;
+						$scope.sumPost = sumPost;
+					})
+				$http.get('/getmyinfomation')
+					.then(function (response){
+						var myInfo = response.data;
+						$scope.myInfo = myInfo;
+					})
+				
+                $scope.saveImages = function() {
+					
+				}
+                $scope.likePost = function (postId) {
+                    var likedIndex = $scope.likedPosts.indexOf(postId.toString());
+                    var likeEndpoint = '/likepost/' + postId;
+                    var dislikeEndpoint = '/didlikepost/' + postId;
+
+                    // Nếu postId chưa tồn tại trong mảng likedPosts
+                    if (likedIndex === -1) {
+                        // Thêm postId vào mảng likedPosts
+                        $scope.likedPosts.push(postId.toString());
+
+                        // Gửi yêu cầu POST để like bài viết và cập nhật likeCount+1
+                        $http.post(likeEndpoint)
+                            .then(function (response) {
+                                
+                                // Cập nhật thuộc tính likeCount+1 trong đối tượng post
+                                var post = $scope.Posts.find(function (item) {
+                                    return item.postId === postId;
+                                });
+                                if (post) {
+                                    post.likeCount++;
+                                    
+                                }
+                            })
+                            .catch(function (error) {
+                                // Xử lý lỗi
+                                console.log(error);
+                            });
+                    } else {
+                    	
+                        // Xóa postId khỏi mảng likedPosts
+                        $scope.likedPosts.splice(likedIndex, 1);
+                        
+                        // Gửi yêu cầu POST để dislike bài viết và cập nhật likeCount-1
+                        $http.post(dislikeEndpoint)
+                            .then(function (response) {                            	
+                                // Xử lý thành công
+                                //console.log(response.data);
+
+                                // Cập nhật thuộc tính likeCount-1 trong đối tượng post
+                                var post = $scope.Posts.find(function (item) {
+                                    return item.postId === postId;
+                                });
+                                if (post) {
+                                    post.likeCount--;
+                                    
+                                }
+                            })
+                            .catch(function (error) {
+                                // Xử lý lỗi
+                                console.log(error);
+                            });
+                    }
+                };
+                $scope.getFormattedTimeAgo = function(date) {
+              	  var currentTime = new Date();
+              	  var activityTime = new Date(date);
+              	  var timeDiff = currentTime.getTime() - activityTime.getTime();
+              	  var seconds = Math.floor(timeDiff / 1000);
+              	  var minutes = Math.floor(timeDiff / (1000 * 60));
+              	  var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+              	  var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+              	  if (days === 0) {
+              	    if (hours === 0 && minutes < 60) {
+              	      return minutes + ' phút trước';
+              	    } else if (hours < 24) {
+              	      return hours + ' giờ trước';
+              	    }
+              	  } else if (days === 1) {
+              	    return 'hôm qua';
+              	  } else {
+              	    return days + ' ngày trước';
+              	  }
+              	};
+              	$scope.post = function() {
+              	  var content = $scope.postData.text;
+              	
+              	  var formData = new FormData();
+              	  var fileInput = document.getElementById('inputGroupFile01');
+
+              	  for (var i = 0; i < fileInput.files.length; i++) {
+              	    formData.append('photoFiles', fileInput.files[i]);
+              	    alert(fileInput.files[i])
+              	  }
+              	  formData.append('content', content.content);
+
+              	  $http.post('/post', formData, {
+              	    transformRequest: angular.identity,
+              	    headers: { 'Content-Type': undefined }
+              	  }).then(function(response) {
+              		  alert("ok")
+              	    // Xử lý phản hồi thành công từ máy chủ
+              	    console.log(response.data);
+              	  }, function(error) {
+              	    // Xử lý lỗi
+              	    console.log(error);
+              	  });
+              	};
+              	
+              	$scope.getPostDetails = function(postId) {            
+                	
+              		$http.get('/findpostcomments/'+ postId)
+              	  .then(function(response) {
+              		  var postComments = response.data;
+              		  $scope.postComments = postComments;                		  
+              	    
+              	    
+              	    console.log(response.data);
+              	  }, function(error) {
+              	    // Xử lý lỗi
+              	    console.log(error);
+              	  });
+              		
+              		$http.get('/postdetails/'+ postId)
+                	  .then(function(response) {
+                		  var postDetails = response.data;
+                		  $scope.postDetails = postDetails;                		  
+                	    // Xử lý phản hồi thành công từ máy chủ
+                	    $('#chiTietBaiViet').modal('show');
+                	    console.log(response.data);
+                	  }, function(error) {
+                	    // Xử lý lỗi
+                	    console.log(error);
+                	  });  
+                	};
+                
+                	
+                	$scope.addComment = function(postId) {
+                		  var myComment = $scope.myComment;
+                		  $http.post('/addcomment/' + postId + '?myComment=' + myComment)
+                		    .then(function(response) {
+                		    	$scope.postComments.unshift(response.data);
+                		      $scope.myComment = '';
+                		      
+                		    }, function(error) {
+                		      console.log(error);
+                		    });
+                		};
+            });            
+    </script>
+    </div>
+  </div>
+</body>
+
+</html>

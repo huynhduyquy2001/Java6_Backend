@@ -32,7 +32,7 @@ import lombok.Setter;
 public class Posts {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer postId;
+	private int postId;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date postDate ;
