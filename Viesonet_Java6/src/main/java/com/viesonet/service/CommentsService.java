@@ -2,6 +2,7 @@ package com.viesonet.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -37,5 +38,10 @@ public class CommentsService {
 		comment.setUser(user);
 		commentsDao.saveAndFlush(comment);
 		return comment;
+	}
+	
+	public Comments getCommentById(int commentId) {
+		Optional<Comments> obj = commentsDao.findById(commentId);
+		return obj.orElse(null);
 	}
 }

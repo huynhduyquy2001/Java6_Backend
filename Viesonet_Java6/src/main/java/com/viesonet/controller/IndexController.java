@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,12 +35,15 @@ import com.viesonet.entity.Favorites;
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.Images;
 import com.viesonet.entity.Posts;
+import com.viesonet.entity.Reply;
+import com.viesonet.entity.ReplyRequest;
 import com.viesonet.entity.Users;
 import com.viesonet.service.CommentsService;
 import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
 import com.viesonet.service.PostsService;
+import com.viesonet.service.ReplyService;
 import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
 
@@ -75,6 +79,9 @@ public class IndexController {
 	
 	@Autowired
 	SessionService session;
+	
+	@Autowired
+	ReplyService replyService;
 	
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
@@ -121,7 +128,19 @@ public class IndexController {
 		return commentsService.addComment(postsService.findPostById(postId), usersService.findUserById(session.get("id")), content);
 	}
 	
-	
+
+
+	@PostMapping("/addreply")
+	public ResponseEntity<Reply> addReply(@RequestBody ReplyRequest request) {
+	    // Lấy các tham số từ request
+	    String receiverId = request.getReceiverId();
+	    String replyContent = request.getReplyContent();
+	    int commentId = request.getCommentId();
+
+	    return ResponseEntity.ok(replyService.addReply( usersService.findUserById(session.get("id")), replyContent, commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
+		
+	}
+
 	@GetMapping("/findpostcomments/{postId}")
 	public List<Comments> findPostComments(@PathVariable("postId") int postId) {
 		return commentsService.findCommentsByPostId(postId);
