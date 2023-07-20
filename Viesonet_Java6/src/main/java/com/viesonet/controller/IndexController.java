@@ -49,7 +49,7 @@ import com.viesonet.service.UsersService;
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
 
-@Controller
+@RestController
 public class IndexController {
 
 	@Autowired
