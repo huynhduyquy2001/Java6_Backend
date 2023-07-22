@@ -300,53 +300,62 @@ div.dropdown-menu.baoCao {
 					<div style="width: 85%; text-align: left;" data-bs-toggle="modal">
 						<!--Tìm kiếm-->
 						<div style="width: 85%; text-align: left;" data-bs-toggle="modal">
-						 <form class="position-relative">
-							<input type="search" class="form-control search-chat py-2 ps-5" ng-keyup="searchUser()"
-								ng-model="username" id="text-srh" placeholder="Search"
-								 style="border: 1px solid #ccc;"> <i
-								class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-						</form>
-						<!-- <input type="text" ng-model="username" placeholder="Tên người dùng">
-  						<button ng-click="searchUser()">Tìm kiếm</button>  --> 
+							<form class="position-relative">
+								<input type="search" class="form-control search-chat py-2 ps-5" ng-blur="checkInput()" ng-focus="resetError()"
+									ng-keyup="searchUser()" ng-model="username" id="text-srh"
+									placeholder="Search" style="border: 1px solid #ccc;"> 
+									<a ng-click="LS()"><i class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+									<!--  <button ng-click="LS()">Tìm kiếm</button> -->
+									
+							</form>
+							<span ng-show="showError" style="color: red;">Vui lòng nhập kí tự ạ.</span>
+  								
+						</div>
+				</center>
+
+				<center>
+					<div ng-repeat="user in users" class="col-md-10"
+						style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; margin-top: 20px">
+						<div class="user-profile">
+							<img src="images/{{user.background}}" class="img-thumbnail" a
+								lt="" style="border-radius: 30%;">
+							<div>
+								<label>{{user.username}}</label> <br>
+							</div>
+						</div>
+						<div>
+							<a href="" role="button" class="btn btn-primary"
+								style="background-color: #5D87FF; color: #fff;">Follow</a>
+						</div>
 					</div>
 				</center>
-				
-				<center>
-						<div ng-repeat="user in users" class="col-md-10" 
-								style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-								<div class="user-profile">
-									<img src="images/{{user.background}}"
-										class="img-thumbnail" alt="" style="border-radius: 30%;">
-									<div>
-										<label>{{user.username}}</label> <br>
-										<small style="font-size: 12px">Email :{{user.account.email}}</small>
-									</div> 
-								</div>
-								<div>
-									<a href="" role="button" class="btn btn-primary" style="background-color: #5D87FF;color: #fff;">Follow</a>	
-								</div>
-							</div>
-				</center>
-				</div>
 			</div>
-			<div class="col-md-3 menuLeft animate__animated animate__backInRight"
-				style="position: fixed; right: 3%; top: 70px;">
-
-				<div class="row">
-					<h5>Lịch sử tìm kiếm</h5>
-					<div style="display: flex; justify-content: space-between;" ng-repeat="key in item">{{key.username}}</div><span>icon xóa</span>
-							
-				</div>
-
+		</div>
+		<div class="col-md-3 menuLeft animate__animated animate__backInRight"
+			style="position: fixed; right: 3%; top: 70px;">
+			<div class="row">
+    			<h5>Lịch sử tìm kiếm</h5>
+    				<div class="col-lg-12" ng-repeat="(key,name) in items" style="display: flex; justify-content: space-between;">
+        				<a>{{name.username}}</a>
+        				<a ng-click="deleteLS(key)">x</a>
+    				</div>
 			</div>
+
+			
 		</div>
 	</div>
 	<!-- load ảnh-->
 	<script>
-  
-</script> 
+  // $http.get(url).then(resp=>{ code đúng r nè 
+//	  $scope.items = resp.data;
+//	  console.log("Load OK", response);
+ // }).catch(function(error) {
+ //     console.log("Load Error", error);
+ // });
+</script>
 
-<script>
+	<script>
+  let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
   angular.module('myApp', [])
     .controller('myCtrl', function ($scope, $http) {
       $scope.Posts = [];
@@ -354,22 +363,8 @@ div.dropdown-menu.baoCao {
       $scope.myAccount = {};
       $scope.postData = {};
       $scope.item = {};
-      let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
-      var item = angular.copy($scope.username);
-      var url = `${host}/history.json`;
-
-      $http.post(url, { username: item })
-        .then(function(response) {
-          $scope.key = response.data.name;
-          $scope.item[$scope.key] = item;
-          //$scope.reset();
-          console.log("OK", response);
-        })
-        .catch(function(error) {
-          console.log("Error", error);
-        });
+	  // đây là code tim kiếm người dùng (tất cả)
       $scope.searchUser = function() {
-    	  
         var username = $scope.username; // Lấy tên người dùng từ input hoặc form
 
         // Gọi API để tìm kiếm người dùng
@@ -380,9 +375,56 @@ div.dropdown-menu.baoCao {
           })
           .catch(function(error) {
             console.log('Lỗi khi tìm kiếm người dùng:', error);
-          })
+          });
       };
+      //đây là code hiện lên lịch sử người dùng
+      var url = `${host}/history.json`;
+      $http.get(url).
+	 	then(resp=>{ 
+ 	 		$scope.items = resp.data;
+  			console.log("Load OK", response);
+		}).catch(function(error) {
+  		console.log("Load Error", error);
+			});
+      //đây là code xóa lịch sử tìm kiếm
+      $scope.deleteLS = function(key){
+    	  var url = `${host}/history/${key}.json`;
+    	  $http.delete(url).then(resp=>{
+    		  delete $scope.items[key];
+    		  console.log("Xóa OK", response);
+    	  }).catch(function(error) {
+    	  		console.log("Xóa Error", error);
+			});
+      }
+      //Đơn giản là check input
+      $scope.checkInput = function () {
+          // Kiểm tra nếu người dùng không nhập dữ liệu
+          if (!$scope.username) {
+              $scope.showError = true;
+          } else {
+              $scope.showError = false;
+              $scope.showError = true;
+              $scope.LS = function(){
+            	  var item = angular.copy($scope.username);
+                  var url = `${host}/history.json`;
 
+                  $http.post(url, { username: item })
+                    .then(function(response) {
+                      $scope.key = response.data.name;
+                      $scope.item[$scope.key] = item;
+                      console.log("OK", response);
+                    })
+                    .catch(function(error) {
+                      console.log("Error", error);
+                    });
+              }
+          }
+      };
+      $scope.resetError = function () {
+          // Ẩn thông báo lỗi khi người dùng nhập lại
+          $scope.showError = false;
+      };
+      
       $scope.getFormattedTimeAgo = function(date) {
         var currentTime = new Date();
         var activityTime = new Date(date);
