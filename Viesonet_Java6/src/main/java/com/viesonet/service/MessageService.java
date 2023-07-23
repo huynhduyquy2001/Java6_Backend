@@ -1,6 +1,7 @@
 package com.viesonet.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.viesonet.dao.MessageDao;
 import com.viesonet.entity.Message;
 import com.viesonet.entity.UserMessage;
+import com.viesonet.entity.Users;
 
 @Service
 public class MessageService {
@@ -18,6 +20,15 @@ public class MessageService {
 	MessageDao messageDao;
 	public List<Message> getListMess(String senderId, String receiverId) {
 		return messageDao.getListMess(senderId, receiverId);
+	}
+	public Message addMess(Users sender, Users receiver, String content) {
+		Message obj = new Message();
+		obj.setContent(content);
+		obj.setReceiver(receiver);
+		obj.setSender(sender);
+		obj.setSendDate(new Date());
+		messageDao.save(obj);
+		return obj;
 	}
 	
 	// Trong phương thức trong service hoặc controller
