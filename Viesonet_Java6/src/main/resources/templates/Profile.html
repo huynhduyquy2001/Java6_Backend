@@ -1188,6 +1188,20 @@ div.dropdown-menu.baoCao {
             };
           });            
       </script>
+      <script type="text/javascript">
+		// Bắt sự kiện cuộn trang
+		window.addEventListener("scroll", function() {
+			// Lấy header
+			const header = document.querySelector(".app-header");
+
+			// Kiểm tra vị trí cuộn và thêm/xóa lớp "fixed-header" cho header
+			if (window.pageYOffset > 0) {
+				header.classList.add("fixed-header");
+			} else {
+				header.classList.remove("fixed-header");
+			}
+		});
+	</script>
     </div>
   </div>
 </body>
