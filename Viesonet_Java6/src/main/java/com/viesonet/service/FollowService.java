@@ -33,6 +33,8 @@ public class FollowService {
         return followDao.findFollowersInfoByUserId(userId);
     }
 	
-	
+	public List<Users> getFollowingInfoByUserId(String userId) {
+        return followDao.findFollowingInfoByUserId(userId);
+    }
 	
 }
