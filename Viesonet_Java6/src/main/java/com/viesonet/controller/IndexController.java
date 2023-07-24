@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,10 +27,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viesonet.dao.UsersDao;
+import com.viesonet.entity.AccountAndFollow;
+import com.viesonet.entity.Comments;
 import com.viesonet.entity.Favorites;
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.Images;
 import com.viesonet.entity.Posts;
+import com.viesonet.entity.Reply;
+import com.viesonet.entity.ReplyRequest;
 import com.viesonet.entity.Users;
 import com.viesonet.service.CommentsService;
 import com.viesonet.service.CookieService;
@@ -37,13 +42,14 @@ import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
 import com.viesonet.service.PostsService;
+import com.viesonet.service.ReplyService;
 import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
 
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
 
-@Controller
+@RestController
 public class IndexController {
 
 	@Autowired
@@ -76,9 +82,12 @@ public class IndexController {
 	@Autowired
 	CookieService cookieService;
 	
+	@Autowired
+	ReplyService replyService;
+	
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
-		List<Follow> followList = followService.getFollowing("UI011");
+		List<Follow> followList = followService.getFollowing(session.get("id"));
 		List<String> userId = followList.stream().map(follow -> {
 			return follow.getFollowing().getUserId();
 		}).collect(Collectors.toList());
@@ -88,25 +97,55 @@ public class IndexController {
 	@ResponseBody
 	@GetMapping("/findlikedposts")
 	public List<String> findLikedPosts() {
-		return favoritesService.findLikedPosts("UI011");
+		return favoritesService.findLikedPosts(session.get("id"));
 	}
 
 	@ResponseBody
 	@GetMapping("/findmyaccount")
-	public Users findMyAccount() {
-		return usersService.findUserById("UI011");
+	public AccountAndFollow findMyAccount() {	
+		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
 	}
 
 	@ResponseBody
 	@PostMapping("/likepost/{postId}")
 	public void likePost(@PathVariable("postId") int postId) {
-		favoritesService.likepost(usersService.findUserById("UI011"), postsService.findPostById(postId));
+		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
 
 	@ResponseBody
 	@PostMapping("/didlikepost/{postId}")
 	public void didlikePost(@PathVariable("postId") int postId) {
-		favoritesService.didlikepost("UI011", postId);
+		favoritesService.didlikepost(session.get("id"), postId);
+	}
+	
+	
+	@GetMapping("/postdetails/{postId}")
+	public Posts postDetails(@PathVariable("postId") int postId) {
+		return postsService.findPostById(postId);
+	}
+	
+	
+	@PostMapping("/addcomment/{postId}")
+	public Comments addComment(@PathVariable("postId") int postId , @RequestParam("myComment") String content) { 
+		return commentsService.addComment(postsService.findPostById(postId), usersService.findUserById(session.get("id")), content);
+	}
+	
+
+
+	@PostMapping("/addreply")
+	public ResponseEntity<Reply> addReply(@RequestBody ReplyRequest request) {
+	    // Lấy các tham số từ request
+	    String receiverId = request.getReceiverId();
+	    String replyContent = request.getReplyContent();
+	    int commentId = request.getCommentId();
+
+	    return ResponseEntity.ok(replyService.addReply( usersService.findUserById(session.get("id")), replyContent, commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
+		
+	}
+
+	@GetMapping("/findpostcomments/{postId}")
+	public List<Comments> findPostComments(@PathVariable("postId") int postId) {
+		return commentsService.findCommentsByPostId(postId);
 	}
 
 	@ResponseBody
@@ -114,8 +153,8 @@ public class IndexController {
 	public String dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles, @RequestParam("content") String content ) {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
-		Posts myPost = postsService.post(usersService.findUserById("UI011"));
-		//Lưu hình ảnh vào cở sở dữ liệu
+		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
+		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
 				if (!photoFile.isEmpty()) {
@@ -147,9 +186,10 @@ public class IndexController {
 
 	
 	@GetMapping("/")
-	public String index() {
-		return "Index";
-	}
+	public ModelAndView getHomePage() {
+        ModelAndView modelAndView = new ModelAndView("Index");
+        return modelAndView;
+    }
 	
 	@GetMapping("/logout")
 	public ModelAndView logout() {
@@ -159,4 +199,5 @@ public class IndexController {
 		cookieService.delete("pass");
 		return new ModelAndView("redirect:/login");
 	}
+	
 }

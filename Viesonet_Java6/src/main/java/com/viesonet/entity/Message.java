@@ -1,14 +1,17 @@
 package com.viesonet.entity;
 
 import java.util.Date;
+import java.util.List;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -26,24 +29,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int messId;
-
-    @ManyToOne
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int messId;
+	@ManyToOne
 	@JoinColumn(name = "senderId")
 	private Users sender;
-
-    @ManyToOne
+	
+	@ManyToOne
 	@JoinColumn(name = "receiverId")
 	private Users receiver;
-    
-    private String content;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timeSend;
-    
-    private Boolean statusChat;
+	
+	private String content;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date sendDate;
 }
-

@@ -76,7 +76,7 @@ public class UsermanagerController {
 		public Object userRole(@PathVariable int role, @PathVariable String userId, @PathVariable String sdt) {
 			//Đổi vai trò tài khoản 
 			Accounts account = new Accounts();
-			account = accountService.findByphoneNumber(sdt);
+			account = accountService.findByPhoneNumber(sdt);
 			if(account.getRole().getRoleId() == role) {
 				return "warning";
 			}

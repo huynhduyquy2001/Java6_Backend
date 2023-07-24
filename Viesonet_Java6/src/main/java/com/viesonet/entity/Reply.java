@@ -2,6 +2,8 @@ package com.viesonet.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,17 +33,18 @@ public class Reply {
 
 	private String replyContent;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "commentId" )
 	private Comments comment;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "responderId" )
 	private Users responder;
 	
 	@ManyToOne
 	@JoinColumn(name = "receiverId" )
-	private Users user;
+	private Users receiver;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date replyDate;

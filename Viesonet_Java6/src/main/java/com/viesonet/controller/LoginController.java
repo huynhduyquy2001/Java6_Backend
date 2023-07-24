@@ -33,7 +33,12 @@ public class LoginController {
 	@GetMapping("/login")
 	public ModelAndView getLoginPage() {
 		String user = cookieService.getValue("user");
+		
 		if (user != null) {
+			Accounts accounts = accountsService.findByPhoneNumber(user);
+			sessionService.set("role", accounts.getRole().getRoleId());
+			sessionService.set("id", accounts.getUser().getUserId());
+			sessionService.set("phone", accounts.getPhoneNumber());
 			return new ModelAndView("redirect:/");
 		} else if (sessionService.get("id") != null) {
 			return new ModelAndView("redirect:/");
@@ -41,6 +46,7 @@ public class LoginController {
 			return new ModelAndView("Login");
 		}
 	}
+		
 
 	@PostMapping("/dangnhap")
 	public ResponseEntity<?> dangNhap2(@RequestBody Map<String, Object> data) {
@@ -58,6 +64,8 @@ public class LoginController {
 			} else {
 				sessionService.set("role", accounts.getRole().getRoleId());
 				sessionService.set("id", accounts.getUser().getUserId());
+				sessionService.set("phone", accounts.getPhoneNumber());
+
 				if (remember) {
 					cookieService.add("user", sdt, 10);
 					cookieService.add("pass", matKhau, 10);
