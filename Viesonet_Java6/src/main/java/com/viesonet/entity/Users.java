@@ -50,6 +50,7 @@ public class Users {
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Comments> comments;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "receiver")
 	private List<Notifications> notifications;
@@ -62,5 +63,13 @@ public class Users {
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Violations> violations;
+	
+	@JsonIgnore
+    @OneToMany(mappedBy = "sender")
+    private List<Message> sentChats;
+	
+	@JsonIgnore
+    @OneToMany(mappedBy = "receiver")
+    private List<Message> receiverChat;
 
 }

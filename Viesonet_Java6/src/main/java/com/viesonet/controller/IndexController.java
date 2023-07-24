@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,7 @@ import com.viesonet.entity.Images;
 import com.viesonet.entity.Posts;
 import com.viesonet.entity.Users;
 import com.viesonet.service.CommentsService;
+import com.viesonet.service.CookieService;
 import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
@@ -70,6 +72,9 @@ public class IndexController {
 	
 	@Autowired
 	SessionService session;
+	
+	@Autowired
+	CookieService cookieService;
 	
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
@@ -144,5 +149,14 @@ public class IndexController {
 	@GetMapping("/")
 	public String index() {
 		return "Index";
+	}
+	
+	@GetMapping("/logout")
+	public ModelAndView logout() {
+		session.remove("id");
+		session.remove("role");
+		cookieService.delete("user");
+		cookieService.delete("pass");
+		return new ModelAndView("redirect:/login");
 	}
 }
