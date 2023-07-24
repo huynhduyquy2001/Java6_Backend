@@ -81,5 +81,13 @@ public class Users {
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Violations> violations;
+	
+	@JsonIgnore
+    @OneToMany(mappedBy = "sender")
+    private List<Message> sentMessages;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiver")
+    private List<Message> receivedMessages;
 
 }
