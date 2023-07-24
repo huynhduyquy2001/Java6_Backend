@@ -95,7 +95,7 @@ public class ProfileController {
 		return postsService.getMyPost(session.get("id"));
 	}
 	//Lấy hình ảnh của các bài viết người dùng hiện tại
-
+	
 	//Đếm số bài viết của người dùng hiện tại
 	@GetMapping("/countmypost")
 	public int countMyPosts() {

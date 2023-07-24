@@ -17,32 +17,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
     integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
     crossorigin="anonymous"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
-
-  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+	
   <script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-	crossorigin="anonymous">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-	crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/f737751420.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
 <style>
   body {
@@ -112,57 +94,64 @@
     background-image: linear-gradient(#50b2fc, #f44c66);
   }
 
-  .container-fluid {
-    --bs-gutter-x: 24px;
-    --bs-gutter-y: 0;
-    width: 100%;
-    padding-right: calc(var(--bs-gutter-x) * .5);
-    padding-left: calc(var(--bs-gutter-x) * .5);
-    margin-right: auto;
-    margin-left: auto;
-  }
 
-  .card {
-    --bs-card-spacer-y: 30px;
-    --bs-card-spacer-x: 30px;
-    --bs-card-title-spacer-y: 0.5rem;
-    --bs-card-title-color: #2A3547;
-    --bs-card-subtitle-color: #2A3547;
-    --bs-card-border-width: 0px;
-    --bs-card-border-color: #ebf1f6;
-    --bs-card-border-radius: 7px;
-    --bs-card-box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
-    --bs-card-inner-border-radius: 7px;
-    --bs-card-cap-padding-y: 15px;
-    --bs-card-cap-padding-x: 30px;
-    --bs-card-cap-bg: rgba(var(--bs-body-color-rgb), 0.03);
-    --bs-card-bg: var(--bs-body-bg);
-    --bs-card-img-overlay-padding: 1rem;
-    --bs-card-group-margin: 12px;
-    color: var(--bs-body-color);
-    word-wrap: break-word;
-  }
+.red-heart {
+	color: red;
+	/* Màu đỏ cho trái tim đã thích */
+}
 
-  .nav {
-    --bs-nav-link-padding-x: 1rem;
-    --bs-nav-link-padding-y: 0.5rem;
-    --bs-nav-link-font-size: 1rem;
-    --bs-nav-link-font-weight: 400;
-    --bs-nav-link-color: #2A3547;
-    --bs-nav-link-hover-color: #2A3547;
-    --bs-nav-link-disabled-color: var(--bs-secondary-color);
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 0;
-    margin-bottom: 0;
-    list-style: none;
-  }
+.gray-heart {
+	color: gray;
+	/* Màu xám cho trái tim chưa thích */
+}
 
-  .nav-pills {
-    --bs-nav-pills-border-radius: var(--bs-border-radius);
-    --bs-nav-pills-link-active-color: #fff;
-    --bs-nav-pills-link-active-bg: #5D87FF;
-  }
+div.dropdown-menu.baoCao {
+	transform: translate(-80%, 39px);
+}
+
+.container, .container-lg, .container-md, .container-sm, .container-xl {
+	max-width: 100%;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-content {
+	display: none;
+	opacity: 0;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 17rem;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	padding-right: 10px;
+	border-radius: 3px;
+	transition: 0.5s ease-in-out;
+}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+	transition: 0.5s ease-in-out;
+	opacity: 1;
+}
+
+.uploaded-image {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	margin-bottom: 7px;
+}
+
+  
 </style>
 
 <body ng-controller="myCtrl">
@@ -623,31 +612,26 @@
                         </div>
                         <div ng-if="myPost.images.length === 1">
                           <!-- Single image HTML code -->
-                          <img ng-click="getPostDetails(post.postId)" ng-src="/images/{{ myPost.images[0].imageUrl }}"
+                          <img ng-click="getPostDetails(myPost.postId)" ng-src="/images/{{ myPost.images[0].imageUrl }}"
                             class="w-100" alt="Single image">
                         </div>
                       </center>
                       <div class="d-flex align-items-center my-3">
                         <div class="d-flex align-items-center gap-2">
-                          <span ng-click="likePost(post.postId);"
-                            ng-if="likedPosts.indexOf(myPost.postId) !== -1"
+                          <span ng-click="likePost(myPost.postId);" ng-if="likedPosts.indexOf(myPost.postId) !== -1"
                             style="color: #f50000;">❤️&nbsp;{{ myPost.likeCount }}
                           </span>
                         </div>
                         <div class="d-flex align-items-center gap-2 ms-4">
-                          <span ng-click="likePost(post.postId)"
-                            ng-if="likedPosts.indexOf(post.postId) === -1">🤍&nbsp;{{
+                          <span ng-click="likePost(myPost.postId)"
+                            ng-if="likedPosts.indexOf(myPost.postId) === -1">🤍&nbsp;{{
                             myPost.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-                            ng-click="getPostDetails(post.postId)"><i class="fa-light fa-comments"></i>&nbsp;{{
+                            ng-click="getPostDetails(myPost.postId)"><i class="fa-light fa-comments"></i>&nbsp;{{
                             myPost.commentCount
                             }}
                           </span>
                         </div>
-                        <a class="text-dark ms-auto d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle"
-                          href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top"
-                          data-bs-title="Share">
-                          <i class="ti ti-share"></i>
-                        </a>
+                        
                       </div>
 
                     </div>
@@ -806,7 +790,7 @@
                       <div data-bs-dismiss="modal" style="cursor: pointer; text-align: right;">X</div>
                       <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div class="user-profile">
-                          <img src="/images/sonTungAvt.jpg" class="img-thumbnail" alt="">
+                          <img src="/images/{{myInfo.avatar}}" class="img-thumbnail" alt="" style="object-fit:cover;">
                           <div>
                             <label class="nhan">{{postDetails.user.username}}</label><br>
                             <small
@@ -841,7 +825,7 @@
                       <div ng-repeat="comment in postComments">
                         <div class="user-profile animate__animated animate__headShake img-thumbnail"
                           style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 10px; background-color: rgba(246, 249, 252); border: 1px solid gray">
-                          <img ng-src="/images/{{comment.user.avatar}}" class="img-thumbnail" alt="">
+                          <img ng-src="/images/{{comment.user.avatar}}" class="img-thumbnail" alt="" style="object-fit:cover;" width="33" height="33">
                           <div>
                             <div>
                               <label class="nhan" style="font-size: 15px;">{{comment.user.username}}</label>
@@ -871,7 +855,7 @@
                         <div ng-show="o_reply"
                           class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
                           style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-                          <img ng-src="/images/{{myAccount.user.avatar}}" class="img-thumbnail" alt="">
+                          <img ng-src="/images/{{myAccount.user.avatar}}" class="img-thumbnail" alt="" style="object-fit:cover;" width="33" height="33">
                           <div style="width: 70%">
                             <small style="font-size: 12px;" class="ng-binding"> <i class="fa-regular fa-tag"></i> <label
                                 class="nhan ng-binding"
@@ -898,7 +882,7 @@
                           <div ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
                             <div class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
                               style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 3rem; width: 85%">
-                              <img ng-src="/images/{{obj.responder.avatar}}" class="img-thumbnail" alt="">
+                              <img ng-src="/images/{{obj.responder.avatar}}" class="img-thumbnail" alt="" style="object-fit:cover;" width="33" height="33">
                               <div>
                                 <div>
                                   <label class="nhan ng-binding"
@@ -922,8 +906,9 @@
                             <div ng-show="o_reply2"
                               class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
                               style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
-                              <img ng-src="/images/{{myAccount.user.avatar}}" class="img-thumbnail" alt="">
-                              <div style="width: 65%">
+                              <img ng-src="/images/{{myAccount.user.avatar}}" class="img-thumbnail" alt="" style="object-fit:cover;" width="100" height="100">
+                              
+                              <div style="width: 65%">  
                                 <small style="font-size: 12px;" class="ng-binding">
                                   <i class="fa-regular fa-tag"></i> <label class="nhan ng-binding"
                                     style="font-size: 13px; color: #313131; font-weight: bolder;"><span class="nhan">Bạn
