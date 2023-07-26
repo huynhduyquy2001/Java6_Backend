@@ -5,9 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,18 +98,46 @@ public class ProfileController {
 	public List<Posts> getMyPost(){
 		return postsService.getMyPost(session.get("id"));
 	}
-	//Lấy hình ảnh của các bài viết người dùng hiện tại
 	
 	//Đếm số bài viết của người dùng hiện tại
 	@GetMapping("/countmypost")
 	public int countMyPosts() {
 		return postsService.countPost(session.get("id"));
 	}
+	//Hiển thị 9 bức hình trên trang cá nhân 
+	@GetMapping("/find9post")
+	public Page<Object> find9Post(@SessionAttribute("id") String userId){
+		return postsService.find9Post(0, 9, userId);
+	}
+	@GetMapping("/getUserInfo")
+    public Users getUserInfo(@SessionAttribute("id") String userId) {
+        return usersService.getUserById(userId);
+    }
+	@PostMapping("/updateUserInfo")
+    public ResponseEntity<String> updateUserInfo(@RequestBody Users userInfo, @SessionAttribute("id") String userId) {
+        Users currentUser = usersService.findUserById(session.get("id"));
+        System.out.println(userInfo.getUsername());
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+        // Cập nhật thông tin người dùng từ userInfo
+        currentUser.setUsername(userInfo.getUsername());
+        currentUser.setBirthday(userInfo.getBirthday());
+        currentUser.setGender(userInfo.isGender());
+        currentUser.setAddress(userInfo.getAddress());
+        currentUser.setRelationship(userInfo.getRelationship());
+        // Lưu thông tin người dùng đã cập nhật
+        usersService.updateUserInfo(currentUser);
+        return ResponseEntity.ok("User info updated successfully.");
+    }
 
+
+	
 	//Hiển thị trang cá nhân
 	@GetMapping("/profile")
 	public ModelAndView profile() {
 		ModelAndView modelAndView = new ModelAndView("Profile");
         return modelAndView;
 	}
+	
 }
