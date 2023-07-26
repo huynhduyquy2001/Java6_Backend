@@ -32,7 +32,6 @@ public class Message {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int messId;
-	
 	@ManyToOne
 	@JoinColumn(name = "senderId")
 	private Users sender;
@@ -45,6 +44,4 @@ public class Message {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date sendDate;
-	
-	private String status;
 }

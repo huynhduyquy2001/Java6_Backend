@@ -15,7 +15,7 @@ public class SearchService {
 	UsersDao usersDao;
 	
 	 public List<Users> searchUsersByUsername(String username) {
-	        // Thực hiện tìm kiếm người dùng theo tên người dùng trong DAO
+	        // Thực hiện tìm kiếm người dùng theo tên người dùng trong Repository
 	        return usersDao.findByUsernameContaining(username);
 	    }
 	 

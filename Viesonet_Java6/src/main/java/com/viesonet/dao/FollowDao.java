@@ -28,5 +28,5 @@ public interface FollowDao extends JpaRepository<Follow, Integer> {
 	
 	@Query("SELECT f.following FROM Follow f JOIN f.follower u WHERE u.userId = :userId")
 	List<Users> findFollowingInfoByUserId(String userId);	
-	
+
 }
