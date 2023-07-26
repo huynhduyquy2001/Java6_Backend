@@ -143,7 +143,7 @@ div.dropdown-menu.baoCao {
 													</span> <span class="hide-menu">&nbsp; Tìm kiếm</span>
 												</a></li>
 												<li class="sidebar-item"><a class="sidebar-link"
-													href="#" aria-expanded="false"> <span> <i
+													href="/ListFollow" aria-expanded="false"> <span> <i
 															class="fa-light fa-handshake"></i>
 													</span> <span class="hide-menu">&nbsp; Gợi ý</span>
 												</a></li>
@@ -304,28 +304,31 @@ div.dropdown-menu.baoCao {
 								<input type="search" class="form-control search-chat py-2 ps-5" ng-blur="checkInput()" ng-focus="resetError()"
 									ng-keyup="searchUser()" ng-model="username" id="text-srh"
 									placeholder="Search" style="border: 1px solid #ccc;"> 
-									<a ng-click="LS()"><i class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+									<a ng-click="LS()"><i style="cursor: pointer;" class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
 									<!--  <button ng-click="LS()">Tìm kiếm</button> -->
 									
 							</form>
 							<span ng-show="showError" style="color: red;">Vui lòng nhập kí tự ạ.</span>
   								
 						</div>
+						
 				</center>
 
 				<center>
 					<div ng-repeat="user in users" class="col-md-10"
 						style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; margin-top: 20px">
 						<div class="user-profile">
-							<img src="images/{{user.background}}" class="img-thumbnail" a
-								lt="" style="border-radius: 30%;">
+							<img src="images/{{user.avatar}}" class="img-thumbnail" alt="" style="border-radius: 30%;">
 							<div>
 								<label>{{user.username}}</label> <br>
+								
 							</div>
 						</div>
 						<div>
 							<a href="" role="button" class="btn btn-primary"
-								style="background-color: #5D87FF; color: #fff;">Follow</a>
+								style="background-color: #5D87FF; color: #fff;" ng-if="followings.indexOf(user.userId.toString())===-1" ng-click="followUser(user)">Follow</a>
+								<a href="" role="button" class="btn btn-primary"
+								style="background-color: #5D87FF; color: #fff;" ng-if="followings.indexOf(user.userId.toString())!==-1" ng-click="unfollowUser(user)">UnFollow</a>
 						</div>
 					</div>
 				</center>
@@ -337,7 +340,7 @@ div.dropdown-menu.baoCao {
     			<h5>Lịch sử tìm kiếm</h5>
     				<div class="col-lg-12" ng-repeat="(key,name) in items" style="display: flex; justify-content: space-between;">
         				<a>{{name.username}}</a>
-        				<a ng-click="deleteLS(key)">x</a>
+        				<a ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
     				</div>
 			</div>
 
@@ -363,6 +366,7 @@ div.dropdown-menu.baoCao {
       $scope.myAccount = {};
       $scope.postData = {};
       $scope.item = {};
+
 	  // đây là code tim kiếm người dùng (tất cả)
       $scope.searchUser = function() {
         var username = $scope.username; // Lấy tên người dùng từ input hoặc form
@@ -403,7 +407,6 @@ div.dropdown-menu.baoCao {
               $scope.showError = true;
           } else {
               $scope.showError = false;
-              $scope.showError = true;
               $scope.LS = function(){
             	  var item = angular.copy($scope.username);
                   var url = `${host}/history.json`;
@@ -423,6 +426,28 @@ div.dropdown-menu.baoCao {
       $scope.resetError = function () {
           // Ẩn thông báo lỗi khi người dùng nhập lại
           $scope.showError = false;
+      };
+      
+      $http.get('/ListFollowing')
+      .then(function(response) {
+        $scope.followings = response.data;
+        console.log($scope.followings); // Kiểm tra dữ liệu trong console log
+      })
+      .catch(function(error) {
+        console.log(error);
+  	});
+      
+     
+      // Function to follow a user
+      $scope.followUser = function(user) {
+          // Implement logic to follow the user
+          // For example, make an API call to follow the user and update the $scope.followings array accordingly
+      };
+
+      // Function to unfollow a user
+      $scope.unfollowUser = function(user) {
+          // Implement logic to unfollow the user
+          // For example, make an API call to unfollow the user and update the $scope.followings array accordingly
       };
       
       $scope.getFormattedTimeAgo = function(date) {
