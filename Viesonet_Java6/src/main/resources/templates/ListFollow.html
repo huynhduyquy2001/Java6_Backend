@@ -300,19 +300,39 @@ div.dropdown-menu.baoCao {
 				<center>
 				
 					<div class="row">
-						<div class="col-md-10"
+						<div class="col-md-10" ng-repeat="follower in followers"
 							style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
 							<div class="user-profile">
-								<img src="images/{{user.background}}" class="img-thumbnail"
+								<img src="images/{{follower.background}}" class="img-thumbnail"
 									alt="" style="border-radius: 30%;">
 								<div>
-									<label>{{user.username}}</label> <br> <small
-										style="font-size: 12px">Email :{{user.account.email}}</small>
+									<label>{{follower.username}}</label> <br> 
+									
 								</div>
 							</div>
 							<div>
 								<a href="" role="button" class="btn btn-primary"
 									style="background-color: #5D87FF; color: #fff;">Follow</a>
+							</div>
+						</div>
+					</div>
+				</center>
+				
+				<center>
+					<div class="row">
+						<div class="col-md-10" ng-repeat="following in followings"
+							style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+							<div class="user-profile">
+								<img src="images/{{following.background}}" class="img-thumbnail"
+									alt="" style="border-radius: 30%;">
+								<div>
+									<label>{{following.username}}</label> <br> 
+									
+								</div>
+							</div>
+							<div>
+								<a href="" role="button" class="btn btn-primary"
+									style="background-color: #5D87FF; color: #fff;">Un Follow</a>
 							</div>
 						</div>
 					</div>
@@ -347,34 +367,25 @@ div.dropdown-menu.baoCao {
       $scope.myAccount = {};
       $scope.postData = {};
       $scope.item = {};
-      let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
-      var item = angular.copy($scope.username);
-      var url = `${host}/history.json`;
-
-      $http.post(url, {username: item })
-        .then(function(response) {
-          $scope.key = response.data.name;
-          $scope.item[$scope.key] = item;
-          //$scope.reset();
-          console.log("OK", response);
-        })
-        .catch(function(error) {
-          console.log("Error", error);
-        });
-      $scope.searchUser = function() {
-    	  
-        var username = $scope.username; // Lấy tên người dùng từ input hoặc form
-
-        // Gọi API để tìm kiếm người dùng
-        $http.get('/search/users?username=' + username)
+      $scope.followers =[];
+      $scope.followings =[];
+      
+      $http.get('/ListFollower')
           .then(function(response) {
-            // Xử lý kết quả trả về từ API
-            $scope.users = response.data;
+            $scope.followers = response.data;
+            console.log($scope.followers); // Kiểm tra dữ liệu trong console log
           })
           .catch(function(error) {
-            console.log('Lỗi khi tìm kiếm người dùng:', error);
+            console.log(error);
+      });
+      $http.get('/ListFollowing')
+          .then(function(response) {
+            $scope.followings = response.data;
+            console.log($scope.followings); // Kiểm tra dữ liệu trong console log
           })
-      };
+          .catch(function(error) {
+            console.log(error);
+      });
 
       $scope.getFormattedTimeAgo = function(date) {
         var currentTime = new Date();

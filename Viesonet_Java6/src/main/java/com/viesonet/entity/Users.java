@@ -87,10 +87,10 @@ public class Users {
 	
 	@JsonIgnore
     @OneToMany(mappedBy = "sender")
-    private List<Message> sentChats;
-	
-	@JsonIgnore
+    private List<Message> sentMessages;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "receiver")
-    private List<Message> receiverChat;
+    private List<Message> receivedMessages;
 
 }

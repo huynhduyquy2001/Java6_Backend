@@ -10,8 +10,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/chat", "/private-chat");
+        config.enableSimpleBroker("/queue", "/user", "/private-user"); // Thêm "/user" vào đây
         config.setApplicationDestinationPrefixes("/app");
+        config.setUserDestinationPrefix("/user");
     }
 
     @Override
@@ -19,5 +20,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/chat").withSockJS();
         registry.addEndpoint("/private-notification").withSockJS();
     }
-
 }
+
+
