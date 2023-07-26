@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -162,8 +164,11 @@ public class IndexController {
 					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 					String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 					String newFileName = originalFileName + "-" + timestamp + extension;
-					String pathUpload = context.getRealPath("/images/" + newFileName);
 
+					String rootPath = servletContext.getRealPath("/");
+					String parentPath = new File(rootPath).getParent();
+					String pathUpload = parentPath + "/resources/static/images/" + newFileName;
+					
 					try {
 						photoFile.transferTo(new File(pathUpload));
 
@@ -172,11 +177,12 @@ public class IndexController {
 							double quality = 0.6;
 							String outputPath = pathUpload;
 							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
-						}											
-						imagesService.saveImage(myPost, newFileName);						
+						}
+						imagesService.saveImage(myPost, newFileName);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
 				}
 			}
 		}
@@ -185,7 +191,7 @@ public class IndexController {
 	}
 
 	
-	@GetMapping("/")
+	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
 	public ModelAndView getHomePage() {
         ModelAndView modelAndView = new ModelAndView("Index");
         return modelAndView;
