@@ -1061,14 +1061,14 @@ div.dropdown-menu.baoCao {
 								<input type="text" class="form-control" id="nametext"
 									aria-describedby="name" placeholder="Name" value="{{UserInfo.username}}" ng-model="UpdateUser.username"> <br>
 								<p>Ngày sinh</p>
-								<input type="date" class="form-control" id="nametext" aria-describedby="name" placeholder="Name" value="{{UserInfo.birthday | date:'yyyy-MM-dd'}}" ng-model="UpdateUser.birthday ">
+								<input type="date" class="form-control" id="nametext" aria-describedby="name" placeholder="Name" ng-model="birthday">
 								<p>Giới tính</p>
 								<div class="form-check">
-				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio1" value="Nam" ng-model="UserInfo.gender">
+				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio1" ng-value="true" ng-model="UserInfo.gender">
 				                    <label class="form-check-label" for="exampleRadio1">Nam</label>
 				                </div>
 				                <div class="mb-3 form-check">
-				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio2" value="Nữ" ng-model="UserInfo.gender">
+				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio2" ng-value="false" ng-model="UserInfo.gender">
 				                    <label class="form-check-label" for="exampleRadio2">Nữ</label>
 				                </div>
 								 <br>
@@ -1081,7 +1081,7 @@ div.dropdown-menu.baoCao {
 							<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Hủy</button>
-							<button type="submit" class="btn btn-primary">Lưu</button>
+							<button type="submit"  data-bs-dismiss="modal" class="btn btn-primary">Lưu</button>
 						</div>
 							
 							</form>
@@ -1134,14 +1134,15 @@ div.dropdown-menu.baoCao {
             // Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
             $http.get('/getUserInfo').then(function(response) {
                 $scope.UserInfo = response.data;
+               
+                $scope.birthday = new Date($scope.UserInfo.birthday); 
                 // Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
                 $scope.UpdateUser = angular.copy($scope.UserInfo);
             });
 
             // Hàm cập nhật thông tin người dùng
             $scope.updateUserInfo = function() {
-                // Thêm thông tin cập nhật từ biến $scope.UpdateUser vào mảng $scope.updatedUsers
-                
+                console.log($scope.UpdateUser.birthday)
                 // Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
                 $http.post('/updateUserInfo', $scope.UpdateUser).then(function(response) {
                     console.log('User info updated successfully.');

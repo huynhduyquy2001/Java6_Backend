@@ -116,7 +116,7 @@ public class ProfileController {
 	@PostMapping("/updateUserInfo")
     public ResponseEntity<String> updateUserInfo(@RequestBody Users userInfo, @SessionAttribute("id") String userId) {
         Users currentUser = usersService.findUserById(session.get("id"));
-        System.out.println(userInfo.getUsername());
+        System.out.println(userInfo.getBirthday());
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }

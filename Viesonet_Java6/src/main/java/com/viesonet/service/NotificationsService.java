@@ -1,6 +1,7 @@
 package com.viesonet.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,9 @@ public class NotificationsService {
 		notifications.setNotificationStatus(true);
 		
 		return notificationsDao.saveAndFlush(notifications);
+	}
+	
+	public List<Notifications> findNotificationByReceiver(){
+		return notificationsDao.findNotificationTrue();
 	}
 }

@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,7 +55,7 @@ import com.viesonet.service.UsersService;
 
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
-
+@EnableScheduling
 @RestController
 public class IndexController {
 
@@ -84,7 +87,7 @@ public class IndexController {
 	private ServletContext servletContext;
 
 	@Autowired
-	SessionService session;
+	private SessionService session;
 
 	@Autowired
 	CookieService cookieService;
@@ -94,6 +97,9 @@ public class IndexController {
 
 	@Autowired
 	NotificationsService notificationsService;
+	
+	@Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
@@ -223,6 +229,17 @@ public class IndexController {
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 		return "success";
 	}
+	
+	@Scheduled(fixedRate = 1000)  // Lặp lại theo thời gian
+    public void sendRealTimeThongBao() {
+        List<Notifications> thongBao = notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
+        messagingTemplate.convertAndSend("/private-chat", thongBao);
+    }
+	
+	@GetMapping("/loadnotification")
+    public List<Notifications> getThongBao() {
+        return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
+    }
 
 	@GetMapping("/")
 	public ModelAndView getHomePage() {

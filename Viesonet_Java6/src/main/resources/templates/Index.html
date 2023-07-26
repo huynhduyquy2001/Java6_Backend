@@ -36,7 +36,9 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-
+<!-- Thêm thư viện SockJS và Stomp -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
 body {
@@ -113,7 +115,8 @@ div.dropdown-menu.baoCao {
 	display: flex;
 }
 
-.hover:hover {
+.notification {
+	border-radius: 10px;
 	background-color: rgba(93, 135, 255, 0.1);
 	color: #5D87FF;
 }
@@ -839,24 +842,23 @@ div.dropdown-menu.baoCao {
 					<li class="nav-item" role="presentation">
 						<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
 							data-bs-target="#pills-home1" type="button" role="tab"
-							aria-controls="home" aria-selected="true">Mới nhất</button>
+							aria-controls="home" aria-selected="true">Chưa đọc</button>
 					</li>
 					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
 							data-bs-target="#pills-profile1" type="button" role="tab"
-							aria-controls="profile" aria-selected="false">Chưa đọc</button>
+							aria-controls="profile" aria-selected="false">Tất cả</button>
 					</li>
 				</ul>
 				<div class="tab-content" id="pills-tabContent">
 					<div class="tab-pane fade show active" id="pills-home1"
 						role="tabpanel" aria-labelledby="pills-home-tab1">
-						<ul class="sidebar-scrollable  hover mt-4">
-							<li class="sidebar-item "><a href="#" class="image-link">
+						<ul class="sidebar-scrollable mt-3">
+							<li class="sidebar-item notification mt-1" ng-repeat="notify in notification"><a href="#" class="image-link">
 									<img src="images/duyQuy.jpg" alt="" width="55" height="55"
 									class="rounded-circle">
 									<div class="content">
-										<span><b>Trần Trung</b> và 69 người khác vừa thích bài
-											viết của bạn</span>
+										<b>{{ notify.notificationContent }}</b>
 									</div>
 							</a></li>
 						</ul>
@@ -931,7 +933,7 @@ div.dropdown-menu.baoCao {
                 $scope.postDetails = {};
                 $scope.postComments =[];
                 $scope.replyContent = {}; // Khởi tạo replyContent      
-                
+                $scope.notification = [];
                 
 
                 $http.get('/findfollowing')
@@ -1175,9 +1177,46 @@ div.dropdown-menu.baoCao {
                 			        $scope.sendReplyForComment(receiverId,commentId, replyContent);
                 			    }
                 			};
+                			
+                			$http.get('/loadnotification')
+                            .then(function (response) {
+                            	$scope.notification = response.data;    
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                			
+							$scope.ConnectNotification = function(){
 
+								var socket = new SockJS('/private-notification');
+					            var stompClient = Stomp.over(socket);
 
-
+					            stompClient.connect({}, function (frame) {
+					                stompClient.subscribe('/private-chat', function (response) {
+					                    // Làm rỗng mảng notification
+					                   // $scope.notification.splice(0, $scope.notification.length);
+										var data = JSON.parse(response.body)				
+					                    // Thêm dữ liệu mới vào mảng notification
+					                    for(var i = 0; i < data.length; i++){
+					                    	// Kiểm tra nếu thông báo chưa tồn tại trong mảng, thì mới thêm vào
+									        if (!$scope.isNotificationExists(data[i])) {
+									        	console.log("-----------------------")
+									            $scope.notification.push(data[i]);
+									            $scope.$apply(); // Cập nhật giao diện khi có dữ liệu mới
+									        } 	
+					                    }
+										
+					                });
+					            });
+							};
+							
+							$scope.isNotificationExists = function(newNotification) {
+								return $scope.notification.some(function (notification) {
+									
+							        return notification.notificationId === newNotification.notificationId;
+							    });
+							}
+							$scope.ConnectNotification();
 
             });            
     </script>
