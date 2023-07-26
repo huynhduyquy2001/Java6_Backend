@@ -7,6 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -37,6 +39,10 @@
 
 <title>Trang chủ</title>
 <style type="text/css">
+body {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
 .dropdown-item {
 	padding-top: 0;
 	padding-bottom: 0;
@@ -96,6 +102,27 @@ div.dropdown-menu.baoCao {
 	max-width: 100%;
 	height: auto;
 	margin-bottom: 7px;
+}
+
+.image-link {
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: #989692;
+	display: flex;
+}
+
+.hover:hover {
+	background-color: rgba(93, 135, 255, 0.1);
+	color: #5D87FF;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	margin-left: 10px;
+	display: flex;
 }
 </style>
 
@@ -228,46 +255,23 @@ div.dropdown-menu.baoCao {
 										<ul
 											class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 											<li class="nav-item dropdown"><a
-												class="nav-link nav-icon-hover" href="#" id="drop2"
-												data-bs-toggle="dropdown" aria-expanded="false"> <svg
-														class="svg-inline--fa fa-bell" aria-hidden="true"
-														focusable="false" data-prefix="far" data-icon="bell"
-														role="img" xmlns="http://www.w3.org/2000/svg"
-														viewBox="0 0 448 512" data-fa-i2svg="">
-                                                        <path
-															fill="currentColor"
-															d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z">
-                                                        </path>
-                                                    </svg>
-													<div class="circle mb-2"></div>
-											</a>
-												<div style="background: whitesmoke;"
-													class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
-													aria-labelledby="drop2">
-													<div class="message-body">
-														<a href="#"
-															class="d-flex align-items-center gap-2 dropdown-item">
-															<i class="ti ti-user fs-6"></i>
-															<p class="mb-0 fs-3">Thông báo 1</p>
-														</a> <a href="#"
-															class="d-flex align-items-center gap-2 dropdown-item">
-															<i class="ti ti-user fs-6"></i>
-															<p class="mb-0 fs-3">Thông báo 2</p>
-														</a> <a href="#"
-															class="d-flex align-items-center gap-2 dropdown-item">
-															<i class="ti ti-user fs-6"></i>
-															<p class="mb-0 fs-3">Thông báo 3</p>
-														</a>
+												data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+												aria-controls="offcanvasRight"
+												class="nav-link nav-icon-hover" href="#">
+													<div class="notification-icon">
+														<i class="fa-regular fa-bell fa-lg"></i>
+														<div class="circle">
+															<span>5+</span>
+														</div>
 													</div>
-												</div></li>
+											</a></li>
 											<li class="nav-item dropdown"><a
 												class="nav-link nav-icon-hover" href="#" id="drop2"
 												data-bs-toggle="dropdown" aria-expanded="false"> <img
 													src="images/duyQuy.jpg" alt="" width="35" height="35"
 													class="rounded-circle">
 											</a>
-												<div style="background: whitesmoke;"
-													class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
+												<div class="dropdown-menu dropdown-menu-end"
 													aria-labelledby="drop2">
 													<div class="message-body">
 														<a href="/changepassword"
@@ -706,7 +710,8 @@ div.dropdown-menu.baoCao {
 														phản hồi</small>
 												</label> &nbsp; <small style="font-size: 10px; cursor: pointer;">
 													<label> <input type="checkbox" ng-model="o_reply"
-														hidden="true"> <i class="fa-sharp fa-regular fa-reply"></i> Trả lời
+														hidden="true"> <i
+														class="fa-sharp fa-regular fa-reply"></i> Trả lời
 												</label>
 												</small>
 											</div>
@@ -721,9 +726,11 @@ div.dropdown-menu.baoCao {
 											<small style="font-size: 12px;" class="ng-binding"> <i
 												class="fa-regular fa-tag"></i> <label
 												class="nhan ng-binding"
-												style="font-size: 13px; color: #313131; font-weight: bolder;"><span class="nhan">Bạn đang trả lời: </span> {{comment.user.username}}</label>
+												style="font-size: 13px; color: #313131; font-weight: bolder;"><span
+													class="nhan">Bạn đang trả lời: </span>
+													{{comment.user.username}}</label>
 											</small><br>
-											<div >
+											<div>
 												<form>
 													<div class="input-group">
 														<input type="text" class="form-control"
@@ -742,7 +749,8 @@ div.dropdown-menu.baoCao {
 										</div>
 									</div>
 									<div ng-show="o_checkbox">
-										<div ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
+										<div
+											ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
 											<div
 												class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
 												style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 3rem; width: 85%">
@@ -778,7 +786,8 @@ div.dropdown-menu.baoCao {
 													<small style="font-size: 12px;" class="ng-binding">
 														<i class="fa-regular fa-tag"></i> <label
 														class="nhan ng-binding"
-														style="font-size: 13px; color: #313131; font-weight: bolder;"><span class="nhan">Bạn đang trả lời: </span>{{obj.responder.username}}</label>
+														style="font-size: 13px; color: #313131; font-weight: bolder;"><span
+															class="nhan">Bạn đang trả lời: </span>{{obj.responder.username}}</label>
 													</small><br>
 													<div>
 														<form>
@@ -810,6 +819,60 @@ div.dropdown-menu.baoCao {
 						</div>
 
 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Thông báo -->
+	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+		aria-labelledby="offcanvasRightLabel">
+		<div class="offcanvas-header">
+			<h4 id="offcanvasRightLabel">Thông báo</h4>
+			<button type="button" class="btn-close text-reset"
+				data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<div class="bd-example">
+				<ul class="nav nav-pills" data-toggle="slider-tab" id="myTab"
+					role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+							data-bs-target="#pills-home1" type="button" role="tab"
+							aria-controls="home" aria-selected="true">Mới nhất</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+							data-bs-target="#pills-profile1" type="button" role="tab"
+							aria-controls="profile" aria-selected="false">Chưa đọc</button>
+					</li>
+				</ul>
+				<div class="tab-content" id="pills-tabContent">
+					<div class="tab-pane fade show active" id="pills-home1"
+						role="tabpanel" aria-labelledby="pills-home-tab1">
+						<ul class="sidebar-scrollable  hover mt-4">
+							<li class="sidebar-item "><a href="#" class="image-link">
+									<img src="images/duyQuy.jpg" alt="" width="55" height="55"
+									class="rounded-circle">
+									<div class="content">
+										<span><b>Trần Trung</b> và 69 người khác vừa thích bài
+											viết của bạn</span>
+									</div>
+							</a></li>
+						</ul>
+					</div>
+					<div class="tab-pane fade" id="pills-profile1" role="tabpanel"
+						aria-labelledby="pills-profile-tab1">
+						<ul class="sidebar-scrollable  hover mt-4">
+							<li class="sidebar-item "><a href="#" class="image-link">
+									<img src="images/duyQuy.jpg" alt="" width="55" height="55"
+									class="rounded-circle">
+									<div class="content">
+										<span><b>Trần Trung</b> và 69 người khác vừa thích bài
+											viết của bạn</span>
+									</div>
+							</a></li>
+						</ul>
 					</div>
 				</div>
 			</div>

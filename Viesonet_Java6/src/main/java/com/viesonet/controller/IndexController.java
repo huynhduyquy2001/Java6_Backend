@@ -32,6 +32,8 @@ import com.viesonet.entity.Comments;
 import com.viesonet.entity.Favorites;
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.Images;
+import com.viesonet.entity.Interaction;
+import com.viesonet.entity.Notifications;
 import com.viesonet.entity.Posts;
 import com.viesonet.entity.Reply;
 import com.viesonet.entity.ReplyRequest;
@@ -41,6 +43,8 @@ import com.viesonet.service.CookieService;
 import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
+import com.viesonet.service.InteractionService;
+import com.viesonet.service.NotificationsService;
 import com.viesonet.service.PostsService;
 import com.viesonet.service.ReplyService;
 import com.viesonet.service.SessionService;
@@ -66,25 +70,31 @@ public class IndexController {
 
 	@Autowired
 	ServletContext context;
-	
+
 	@Autowired
 	ImagesService imagesService;
-	
+
 	@Autowired
 	CommentsService commentsService;
-	
+
+	@Autowired
+	InteractionService interactionService;
+
 	@Autowired
 	private ServletContext servletContext;
-	
+
 	@Autowired
 	SessionService session;
-	
+
 	@Autowired
 	CookieService cookieService;
-	
+
 	@Autowired
 	ReplyService replyService;
-	
+
+	@Autowired
+	NotificationsService notificationsService;
+
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
 		List<Follow> followList = followService.getFollowing(session.get("id"));
@@ -102,45 +112,61 @@ public class IndexController {
 
 	@ResponseBody
 	@GetMapping("/findmyaccount")
-	public AccountAndFollow findMyAccount() {	
-		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
+	public AccountAndFollow findMyAccount() {
+		return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
 	}
 
 	@ResponseBody
 	@PostMapping("/likepost/{postId}")
 	public void likePost(@PathVariable("postId") int postId) {
+		// thêm tương tác
+		Posts post = postsService.findPostById(postId);
+		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
+
+		// thêm thông báo
+		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
+				post.getUser().getUserId(), post, 3);
+
 		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
 
 	@ResponseBody
 	@PostMapping("/didlikepost/{postId}")
 	public void didlikePost(@PathVariable("postId") int postId) {
+		Posts post = postsService.findPostById(postId);
+		interactionService.minusInteraction(session.get("id"), post.getUser().getUserId());
 		favoritesService.didlikepost(session.get("id"), postId);
 	}
-	
-	
+
 	@GetMapping("/postdetails/{postId}")
 	public Posts postDetails(@PathVariable("postId") int postId) {
 		return postsService.findPostById(postId);
 	}
-	
-	
-	@PostMapping("/addcomment/{postId}")
-	public Comments addComment(@PathVariable("postId") int postId , @RequestParam("myComment") String content) { 
-		return commentsService.addComment(postsService.findPostById(postId), usersService.findUserById(session.get("id")), content);
-	}
-	
 
+	@PostMapping("/addcomment/{postId}")
+	public Comments addComment(@PathVariable("postId") int postId, @RequestParam("myComment") String content) {
+		// thêm tương tác
+		Posts post = postsService.findPostById(postId);
+		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
+
+		// thêm thông báo
+		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getCommentCount(),
+				post.getUser().getUserId(), post, 4);
+
+		return commentsService.addComment(postsService.findPostById(postId),
+				usersService.findUserById(session.get("id")), content);
+	}
 
 	@PostMapping("/addreply")
 	public ResponseEntity<Reply> addReply(@RequestBody ReplyRequest request) {
-	    // Lấy các tham số từ request
-	    String receiverId = request.getReceiverId();
-	    String replyContent = request.getReplyContent();
-	    int commentId = request.getCommentId();
+		// Lấy các tham số từ request
+		String receiverId = request.getReceiverId();
+		String replyContent = request.getReplyContent();
+		int commentId = request.getCommentId();
 
-	    return ResponseEntity.ok(replyService.addReply( usersService.findUserById(session.get("id")), replyContent, commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
-		
+		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(session.get("id")), replyContent,
+				commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
+
 	}
 
 	@GetMapping("/findpostcomments/{postId}")
@@ -150,7 +176,8 @@ public class IndexController {
 
 	@ResponseBody
 	@PostMapping("/post")
-	public String dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles, @RequestParam("content") String content ) {
+	public String dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles,
+			@RequestParam("content") String content) {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
 		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
@@ -172,25 +199,37 @@ public class IndexController {
 							double quality = 0.6;
 							String outputPath = pathUpload;
 							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
-						}											
-						imagesService.saveImage(myPost, newFileName);						
+						}
+						imagesService.saveImage(myPost, newFileName);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		}
+		
+//		//thêm thông báo
+//		List<Interaction> interaction = interactionService.findListInteraction(session.get("id"));
+//
+//		if(interaction == null) {
+//			System.out.println("Chưa có ai tương tác với account này");
+//		}else {
+//			for(Interaction it : interaction) {
+//				notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, it.getInteractedPerson(), myPost, 1);
+//			}
+//			
+//		}
+		
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 		return "success";
 	}
 
-	
 	@GetMapping("/")
 	public ModelAndView getHomePage() {
-        ModelAndView modelAndView = new ModelAndView("Index");
-        return modelAndView;
-    }
-	
+		ModelAndView modelAndView = new ModelAndView("Index");
+		return modelAndView;
+	}
+
 	@GetMapping("/logout")
 	public ModelAndView logout() {
 		session.remove("id");
@@ -199,5 +238,5 @@ public class IndexController {
 		cookieService.delete("pass");
 		return new ModelAndView("redirect:/login");
 	}
-	
+
 }

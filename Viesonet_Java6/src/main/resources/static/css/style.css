@@ -455,13 +455,13 @@ ul {
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-    color: #fff;
-    background-color: #A59565;
-    border-radius: 0px;
+    color: black;
+    border-radius: 20px;
+	background-color: rgba(93, 135, 255, 0.4);
 }
 
 .nav-link {
-    color: #A89386;
+  	color: #A89386;
     transition: 0.5s ease-in-out;
     
 }
@@ -1346,12 +1346,25 @@ img {
     font-size: 20px;
     z-index: 2;
 }
-.circle {
-    width: 7px;
-    height: 7px;
-    background-color: rgb(225, 15, 15);
-    border-radius: 50%;
+.notification-icon {
+  position: relative; /* Đảm bảo thẻ cha có vị trí tương đối */
+  display: inline-block; /* Hiển thị theo chiều ngang */
 }
+
+.circle {
+  position: absolute; /* Đảm bảo thẻ con có vị trí tuyệt đối */
+  top: 14px; /* Điều chỉnh vị trí theo chiều dọc để đặt số chính giữa chuông */
+  right: -16px; /* Điều chỉnh vị trí theo chiều ngang để đặt số chính giữa chuông */
+  background-color: red; /* Màu nền của hình tròn */
+  color: white; /* Màu chữ số */
+  width: 20px; /* Kích thước chiều rộng của hình tròn */
+  height: 20px; /* Kích thước chiều cao của hình tròn */
+  border-radius: 50%; /* Đảm bảo hình dạng là hình tròn */
+  text-align: center; /* Căn giữa chữ số trong hình tròn */
+  font-size: 13px; /* Kích thước chữ số */
+  line-height: 19px; /* Đảm bảo chữ số được căn giữa theo chiều dọc */
+}
+
 .mb-2 {
     margin-bottom: 0.5rem !important;
 }

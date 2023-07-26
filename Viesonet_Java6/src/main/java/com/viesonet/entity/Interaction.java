@@ -2,12 +2,11 @@ package com.viesonet.entity;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -18,33 +17,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Notifications")
+@Table(name = "Interactions")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-public class Notifications {
+@Getter @Setter
+public class Interaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer notificationId;
-
-	private String notificationContent;
-	
-	@ManyToOne
-	@JoinColumn(name = "receiverId")
-	private Users receiver;
-	
-	@ManyToOne
-	@JoinColumn(name = "postId")
-	private Posts post;
-	
-	@ManyToOne
-	@JoinColumn(name = "notificationTypeId")
-	private NotificationType notificationType;
-
+	private int InteracId;
+	private String interactingPerson;
+	private String interactedPerson;
+	private int interactionCount;
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date notificationDate;
-
-	private Boolean notificationStatus;
+	private Date mostRecentInteractionDate;
 }
