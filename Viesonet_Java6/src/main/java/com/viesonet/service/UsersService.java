@@ -62,10 +62,16 @@ public class UsersService {
 		return usersDao.saveAndFlush(user);
 	}
 	
-	public void updateUserInfo(Users user) {
-        usersDao.saveAndFlush(user);
+	public void updateUserInfo(Users user,String userId) {
+		Users currentUser = usersDao.findByuserId(userId);
+		currentUser.setUsername(user.getUsername());
+        currentUser.setBirthday(user.getBirthday());
+        currentUser.setGender(user.isGender());
+        currentUser.setAddress(user.getAddress());
+        currentUser.setRelationship(user.getRelationship());
+		usersDao.saveAndFlush(user);
     }
 	 public Users getUserById(String userId) {
 	        return usersDao.findById(userId).orElse(null);
-	    }
+	}
 }

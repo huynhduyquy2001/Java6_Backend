@@ -446,12 +446,14 @@ div.dropdown-menu.baoCao {
 								</div>
 							</div>
 							<div class="col-lg-4 order-last">
-								<ul
-									class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3">
-
+								<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3">
 									<li><button class="btn btn-primary text-end"
-											data-bs-toggle="modal" data-bs-target="#exampleModal">
-											<i class="fa-light fa-pen-to-square"></i> Chỉnh sửa thông tin
+											data-bs-toggle="modal" data-bs-target="#exampleModal1">
+											<i class="fa-light fa-pen-to-square"></i> Thông tin
+										</button></li>
+										<li><button class="btn btn-secondary text-end"
+											data-bs-toggle="modal" data-bs-target="#exampleModal2">
+											<i class="fa-light fa-pen-to-square"></i> Tài khoản
 										</button></li>
 								</ul>
 							</div>
@@ -1045,12 +1047,12 @@ div.dropdown-menu.baoCao {
 			</div>
 
 			<!-- Modal chỉnh sửa thông tin -->
-			<div class="modal fade" id="exampleModal" tabindex="-1"
+			<div class="modal fade" id="exampleModal1" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa
+							<h5 class="modal-title" id="exampleModalLabel"><i class="fa-light fa-pen-to-square"></i> Chỉnh sửa
 								thông tin cá nhân</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal"
 								aria-label="Close"></button>
@@ -1060,15 +1062,16 @@ div.dropdown-menu.baoCao {
 								<p>Họ và tên</p>
 								<input type="text" class="form-control" id="nametext"
 									aria-describedby="name" placeholder="Name" value="{{UserInfo.username}}" ng-model="UpdateUser.username"> <br>
-								<p>Ngày sinh</p>
-								<input type="date" class="form-control" id="nametext" aria-describedby="name" placeholder="Name" value="{{UserInfo.birthday | date:'yyyy-MM-dd'}}" ng-model="UpdateUser.birthday ">
+								
+								<p>Ngày sinh</p> 
+								<input type="date" class="form-control" id="nametext" aria-describedby="name" placeholder="Name" ng-model="birthday"> <br>
 								<p>Giới tính</p>
 								<div class="form-check">
-				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio1" value="Nam" ng-model="UserInfo.gender">
+				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio1" ng-value="true" ng-model="UpdateUser.gender">
 				                    <label class="form-check-label" for="exampleRadio1">Nam</label>
 				                </div>
 				                <div class="mb-3 form-check">
-				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio2" value="Nữ" ng-model="UserInfo.gender">
+				                    <input type="radio" name="radios" class="form-check-input" id="exampleRadio2" ng-value="false" ng-model="UpdateUser.gender">
 				                    <label class="form-check-label" for="exampleRadio2">Nữ</label>
 				                </div>
 								 <br>
@@ -1081,8 +1084,44 @@ div.dropdown-menu.baoCao {
 							<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Hủy</button>
-							<button type="submit" class="btn btn-primary">Lưu</button>
+							<button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
 						</div>
+							
+							</form>
+						
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Modal chỉnh sửa thông tin bảo mật-->
+			<div class="modal fade" id="exampleModal2" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel"><i class="fa-light fa-pen-to-square"></i> Chỉnh sửa
+								thông tin bảo mật</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form ng-submit="updateAccInfo()">
+								<p>Email</p>
+								<input type="email" class="form-control" id="nametext"
+									aria-describedby="name" value="{{AccInfo.email}}" ng-model="AccInfo.email"> <br>
+								<p>Trạng thái tài khoản</p>
+							    <select class="form-select" ng-model="AccInfo.accountStatus.statusName">
+							        <option value="Công khai" >Công khai</option>
+							        <option value="Chỉ theo dõi">Chỉ theo dõi</option>
+							        <option value="Tạm ẩn" >Tạm ẩn</option>
+							    </select>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Hủy</button>
+								<button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
+							</div>
 							
 							</form>
 						
@@ -1102,268 +1141,7 @@ div.dropdown-menu.baoCao {
           });
         });
       </script>
-			<script>
-        angular.module('myApp', [])
-          .controller('myCtrl', function ($scope, $http) {
-        	
-            $scope.Posts = [];
-            $scope.likedPosts = [];
-            $scope.myAccount = {};
-            $scope.postData = {};
-            $scope.postDetails = {};
-            $scope.postComments = [];
-            $scope.followers = [];
-            $scope.followings = [];
-            $scope.myPostImage = [];
-         // Khởi tạo mảng để lưu trữ thông tin người dùng cập nhật
-            $scope.updatedUsers = [];
-            
-            $http.get('/findusers')
-            .then(function (response) {
-              var UserInfo = response.data;
-              $scope.UserInfo = UserInfo;
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-            
-            
-         // Khởi tạo mảng để lưu trữ thông tin người dùng cập nhật
-            $scope.updatedUsers = [];
-
-            // Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
-            $http.get('/getUserInfo').then(function(response) {
-                $scope.UserInfo = response.data;
-                // Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
-                $scope.UpdateUser = angular.copy($scope.UserInfo);
-            });
-
-            // Hàm cập nhật thông tin người dùng
-            $scope.updateUserInfo = function() {
-                // Thêm thông tin cập nhật từ biến $scope.UpdateUser vào mảng $scope.updatedUsers
-                
-                // Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
-                $http.post('/updateUserInfo', $scope.UpdateUser).then(function(response) {
-                    console.log('User info updated successfully.');
-                }).catch(function(error) {
-                    console.error('Error while updating user info:', error);
-                });
-            };
-            
-            
-          $http.get('/findaccounts')
-            .then(function (response) {
-              var AccInfo = response.data;
-              $scope.AccInfo = AccInfo;
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-            $http.get('/findmyfollowers')
-              .then(function (response) {
-                $scope.followers = response.data;
-                //console.log($scope.followers); // Kiểm tra dữ liệu trong console log
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-            $http.get('/findmyfollowing')
-              .then(function (response) {
-                $scope.followings = response.data;
-                //console.log($scope.followings); // Kiểm tra dữ liệu trong console log
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-
-            $http.get('/findfollowing')
-              .then(function (response) {
-                var Posts = response.data;
-                $scope.Posts = Posts;
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-            
-            $http.get('/findlikedposts')
-              .then(function (response) {
-                var likedPosts = response.data;
-                $scope.likedPosts = likedPosts;
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-
-            $http.get('/findmyfollow')
-              .then(function (response) {
-                var myAccount = response.data;
-                $scope.myAccount = myAccount;
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-            $http.get('/getmypost')
-              .then(function (response) {
-                var myPosts = response.data;
-                $scope.myPosts = myPosts;
-               
-              });
-            $http.get('/find9post')
-            .then(function (response) {
-              var ninePost = response.data;
-              $scope.ninePost = ninePost;
-            });
-
-            $http.get('/countmypost')
-              .then(function (response) {
-                var sumPost = response.data;
-                $scope.sumPost = sumPost;
-              })
-			
-
-            $scope.saveImages = function () {
-
-            }
-            $scope.likePost = function (postId) {
-              var likedIndex = $scope.likedPosts.indexOf(postId.toString());
-              var likeEndpoint = '/likepost/' + postId;
-              var dislikeEndpoint = '/didlikepost/' + postId;
-
-              // Nếu postId chưa tồn tại trong mảng likedPosts
-              if (likedIndex === -1) {
-                // Thêm postId vào mảng likedPosts
-                $scope.likedPosts.push(postId.toString());
-
-                // Gửi yêu cầu POST để like bài viết và cập nhật likeCount+1
-                $http.post(likeEndpoint)
-                  .then(function (response) {
-
-                    // Cập nhật thuộc tính likeCount+1 trong đối tượng post
-                    var post = $scope.Posts.find(function (item) {
-                      return item.postId === postId;
-                    });
-                    if (post) {
-                      post.likeCount++;
-
-                    }
-                  })
-                  .catch(function (error) {
-                    // Xử lý lỗi
-                    console.log(error);
-                  });
-              } else {
-
-                // Xóa postId khỏi mảng likedPosts
-                $scope.likedPosts.splice(likedIndex, 1);
-
-                // Gửi yêu cầu POST để dislike bài viết và cập nhật likeCount-1
-                $http.post(dislikeEndpoint)
-                  .then(function (response) {
-                    // Xử lý thành công
-                    //console.log(response.data);
-
-                    // Cập nhật thuộc tính likeCount-1 trong đối tượng post
-                    var post = $scope.Posts.find(function (item) {
-                      return item.postId === postId;
-                    });
-                    if (post) {
-                      post.likeCount--;
-
-                    }
-                  })
-                  .catch(function (error) {
-                    // Xử lý lỗi
-                    console.log(error);
-                  });
-              }
-            };
-            $scope.getFormattedTimeAgo = function (date) {
-              var currentTime = new Date();
-              var activityTime = new Date(date);
-              var timeDiff = currentTime.getTime() - activityTime.getTime();
-              var seconds = Math.floor(timeDiff / 1000);
-              var minutes = Math.floor(timeDiff / (1000 * 60));
-              var hours = Math.floor(timeDiff / (1000 * 60 * 60));
-              var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-              if (days === 0) {
-                if (hours === 0 && minutes < 60) {
-                  return minutes + ' phút trước';
-                } else if (hours < 24) {
-                  return hours + ' giờ trước';
-                }
-              } else if (days === 1) {
-                return 'hôm qua';
-              } else {
-                return days + ' ngày trước';
-              }
-            };
-            $scope.post = function () {
-              var content = $scope.postData.text;
-
-              var formData = new FormData();
-              var fileInput = document.getElementById('inputGroupFile01');
-
-              for (var i = 0; i < fileInput.files.length; i++) {
-                formData.append('photoFiles', fileInput.files[i]);
-                alert(fileInput.files[i])
-              }
-              formData.append('content', content.content);
-
-              $http.post('/post', formData, {
-                transformRequest: angular.identity,
-                headers: { 'Content-Type': undefined }
-              }).then(function (response) {
-                alert("ok")
-                // Xử lý phản hồi thành công từ máy chủ
-                console.log(response.data);
-              }, function (error) {
-                // Xử lý lỗi
-                console.log(error);
-              });
-            };
-
-            $scope.getPostDetails = function (postId) {
-
-              $http.get('/findpostcomments/' + postId)
-                .then(function (response) {
-                  var postComments = response.data;
-                  $scope.postComments = postComments;
-
-
-                  console.log(response.data);
-                }, function (error) {
-                  // Xử lý lỗi
-                  console.log(error);
-                });
-
-              $http.get('/postdetails/' + postId)
-                .then(function (response) {
-                  var postDetails = response.data;
-                  $scope.postDetails = postDetails;
-                  // Xử lý phản hồi thành công từ máy chủ
-                  $('#chiTietBaiViet').modal('show');
-                  console.log(response.data);
-                }, function (error) {
-                  // Xử lý lỗi
-                  console.log(error);
-                });
-            };
-
-
-            $scope.addComment = function (postId) {
-              var myComment = $scope.myComment;
-              $http.post('/addcomment/' + postId + '?myComment=' + myComment)
-                .then(function (response) {
-                  $scope.postComments.unshift(response.data);
-                  $scope.myComment = '';
-
-                }, function (error) {
-                  console.log(error);
-                });
-            };
-          });            
-      </script>
+		<script type="text/javascript" src="/js/profile.js"></script>
 			<script type="text/javascript">
 		// Bắt sự kiện cuộn trang
 		window.addEventListener("scroll", function() {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.viesonet.dao.AccountsDao;
+import com.viesonet.entity.AccountStatus;
 import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Roles;
 import com.viesonet.entity.Users;
@@ -42,4 +43,20 @@ public class AccountsService {
 		return accountsDao.saveAndFlush(accounts);
 	}
 	
+	public void updateAccInfo(String userId,String email, int statusId) {
+		Accounts currentAcc = accountsDao.findByUserId(userId);
+		AccountStatus status = new AccountStatus();
+		currentAcc.setEmail(email);
+		status.setStatusId(statusId);
+        currentAcc.setAccountStatus(status);
+		accountsDao.saveAndFlush(currentAcc);
+    }
+	
+	 public Accounts getAccountById(String userId) {
+	        return accountsDao.findById(userId).orElse(null);
+	}
+	
+	 public Accounts findByUserId(String userId) {
+		 return accountsDao.findByUserId(userId);
+	 }
 }
