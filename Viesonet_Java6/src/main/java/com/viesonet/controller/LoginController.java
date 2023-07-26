@@ -18,6 +18,7 @@ import com.viesonet.entity.Accounts;
 import com.viesonet.service.AccountsService;
 import com.viesonet.service.CookieService;
 import com.viesonet.service.SessionService;
+import com.viesonet.service.UsersService;
 
 @RestController
 public class LoginController {
@@ -32,6 +33,10 @@ public class LoginController {
 	public ModelAndView getLoginPage() {
 		String user = cookieService.getValue("user");
 		if (user != null) {
+			Accounts accounts = accountsService.findByphoneNumber(user);
+			sessionService.set("role", accounts.getRole().getRoleId());
+			sessionService.set("id", accounts.getUser().getUserId());
+			sessionService.set("phone", accounts.getPhoneNumber());
 			return new ModelAndView("redirect:/");
 		} else if (sessionService.get("id") != null) {
 			return new ModelAndView("redirect:/");

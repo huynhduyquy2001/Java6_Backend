@@ -16,6 +16,7 @@ public class AccountsService {
 		return accountDAO.findByPhoneNumber(phoneNumber);
 	}
 	
+	
 	public Accounts setRole(String sdt, int role) {
 		Roles roles = new Roles();
 		roles.setRoleId(role);
@@ -26,6 +27,10 @@ public class AccountsService {
 
 	public Accounts findByPhoneNumber(String phoneNumber) {
 		return accountDAO.findByPhoneNumber(phoneNumber);
+	}
+	
+	public Accounts findByEmail(String email) {
+		return accountDAO.findByEmail(email);
 	}
 	
 	public boolean existById(String phoneNumber) {

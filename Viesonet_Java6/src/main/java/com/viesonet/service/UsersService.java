@@ -20,6 +20,10 @@ public class UsersService {
 		Optional<Users> user = usersDao.findById(userId);
 		return user.orElse(null);
 	}
+	
+	public boolean existById(String userId) {
+		return usersDao.existsById(userId);
+	}
 
 	public Users save(Users users) {
 		return usersDao.save(users);
