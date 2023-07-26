@@ -239,7 +239,7 @@ public class IndexController {
 	@Scheduled(fixedRate = 1000)  // Lặp lại theo thời gian
     public void sendRealTimeThongBao() {
         List<Notifications> thongBao = notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
-        messagingTemplate.convertAndSend("/private-chat", thongBao);
+        messagingTemplate.convertAndSend("/private-user", thongBao);
 
 	}
 	
@@ -253,12 +253,6 @@ public class IndexController {
     public List<Notifications> getThongBao() {
         return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
     }
-
-	@GetMapping("/")
-	public ModelAndView getHomePage() {
-		ModelAndView modelAndView = new ModelAndView("Index");
-		return modelAndView;
-	}
 
 	@GetMapping("/logout")
 	public ModelAndView logout() {

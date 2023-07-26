@@ -127,6 +127,9 @@ div.dropdown-menu.baoCao {
 	margin-left: 10px;
 	display: flex;
 }
+.content p { 
+	margin-bottom: 0;
+}
 </style>
 
 <script
@@ -747,11 +750,13 @@ div.dropdown-menu.baoCao {
 					<div class="tab-pane fade show active" id="pills-home1"
 						role="tabpanel" aria-labelledby="pills-home-tab1">
 						<ul class="sidebar-scrollable mt-3">
-							<li class="sidebar-item notification mt-1" ng-repeat="notify in notification"><a href="#" class="image-link">
+							<li class="sidebar-item notification mt-1" ng-repeat="notify in notification">
+							<a href="#" ng-click="seen()" class="image-link" ng-if="notify.receiver.userId == myAccount.user.userId">
 									<img src="images/duyQuy.jpg" alt="" width="55" height="55"
 									class="rounded-circle">
 									<div class="content">
 										<b>{{ notify.notificationContent }}</b>
+										<p>{{ getFormattedTimeAgo(notify.notificationDate) }}<p>
 									</div>
 							</a></li>
 						</ul>
