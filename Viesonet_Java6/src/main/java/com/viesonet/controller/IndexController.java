@@ -164,8 +164,11 @@ public class IndexController {
 					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 					String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 					String newFileName = originalFileName + "-" + timestamp + extension;
-					String pathUpload = context.getRealPath("/images/" + newFileName);
 
+					String rootPath = servletContext.getRealPath("/");
+					String parentPath = new File(rootPath).getParent();
+					String pathUpload = parentPath + "/resources/static/images/" + newFileName;
+					
 					try {
 						photoFile.transferTo(new File(pathUpload));
 
@@ -174,11 +177,12 @@ public class IndexController {
 							double quality = 0.6;
 							String outputPath = pathUpload;
 							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
-						}											
-						imagesService.saveImage(myPost, newFileName);						
+						}
+						imagesService.saveImage(myPost, newFileName);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
 				}
 			}
 		}

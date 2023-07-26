@@ -57,9 +57,6 @@ public class MessController {
 		String senderId = messageRequest.getSenderId();
         String receiverId = messageRequest.getReceiverId();
         String content = messageRequest.getContent();
-        System.out.println(senderId);
-        System.out.println(receiverId);
-        System.out.println(content);
         // Thêm tin nhắn vào cơ sở dữ liệu
         Message newMessage = messageService.addMess(usersService.findUserById(senderId), usersService.findUserById(receiverId), content);
              
@@ -87,7 +84,8 @@ public class MessController {
 	}
 	
 	@PostMapping("/seen/{messId}")
-	public void seen(@PathVariable("messId")int messId) {
-		 messageService.seen(messId);
+	public Message seen(@PathVariable("messId")int messId) {
+		 
+		 return messageService.seen(messId);
 	}
 }
