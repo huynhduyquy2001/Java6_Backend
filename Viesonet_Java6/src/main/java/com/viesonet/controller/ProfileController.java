@@ -75,10 +75,10 @@ public class ProfileController {
 		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
 	}
 	//Lấy thông tin chi tiết các followers
-	@GetMapping("/findmyfollowers")
-    public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
-        return followService.getFollowersInfoByUserId(session.get("id"));
-    }
+//	@GetMapping("/findmyfollowers")
+//    public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
+//        return followService.getFollowersInfoByUserId(session.get("id"));
+//    }
 	//Lấy thông tin chi tiết các followings
 	@GetMapping("/findmyfollowing")
     public List<Users> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
