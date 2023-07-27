@@ -33,12 +33,12 @@ public class Users {
 	private String relationship;
 	private String introduction;
 	private boolean gender;
-	private Date birthday;
 	private String avatar;
 	private String background;
 	private int violationCount;
 	private Date createDate;
-	
+	@Temporal(TemporalType.DATE)
+	private Date birthday;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date accessTime;
 	

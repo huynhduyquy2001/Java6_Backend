@@ -1,5 +1,7 @@
 package com.viesonet.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +15,12 @@ public class ImagesService {
 	@Autowired
 	ImagesDao imagesDao;
 	
-public void saveImage(Posts post, String imageUrl) {
-	Images image = new Images();
-	image.setImageUrl(imageUrl);
-	image.setPost(post);
-	imagesDao.saveAndFlush(image);
-}
+	public void saveImage(Posts post, String imageUrl) {
+		Images image = new Images();
+		image.setImageUrl(imageUrl);
+		image.setPost(post);
+		imagesDao.saveAndFlush(image);
+	}
+	
+
 }

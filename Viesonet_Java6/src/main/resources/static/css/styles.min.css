@@ -54419,3 +54419,44 @@ ul {
 margin: 0;
 padding:0;
 }
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile span {
+   margin-left: 0.3rem !important;
+   
+}
+
+.user-profile img {
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 5px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.user-profile p {
+    font-size: 20px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.user-profile small {
+    font-size: 16px;
+}
+.activity-icons div span {
+  display: inline-block;
+  transition: transform 0.5s;
+}
+
+.activity-icons div span:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.activity-icons div img {
+    width: 18px;
+    margin-right: 10px;
+}
