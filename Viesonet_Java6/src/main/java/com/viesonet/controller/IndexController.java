@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -220,38 +221,36 @@ public class IndexController {
 			}
 		}
 		
-//		//thêm thông báo
-//		List<Interaction> interaction = interactionService.findListInteraction(session.get("id"));
-//
-//		if(interaction == null) {
-//			System.out.println("Chưa có ai tương tác với account này");
-//		}else {
-//			for(Interaction it : interaction) {
-//				notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, it.getInteractedPerson(), myPost, 1);
-//			}
-//			
-//		}
+		//thêm thông báo
 		
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 		return "success";
 	}
 	
-	@Scheduled(fixedRate = 1000)  // Lặp lại theo thời gian
-    public void sendRealTimeThongBao() {
-        List<Notifications> thongBao = notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
-        messagingTemplate.convertAndSend("/private-user", thongBao);
-
+	@Scheduled(fixedRate = 500)  // Lặp lại theo thời gian
+    public void sendRealTimeNotification() {
+           messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
 	}
+	
+	@GetMapping("/loadnotification")
+    public List<Notifications> getNotification() {
+        return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
+    }
+	
+	@GetMapping("/loadallnotification")
+    public List<Notifications> getAllNotification() {
+        return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
+    }
+	
+	@PutMapping("/seennotification/{notificationId}")
+    public void seenNotification(@PathVariable int notificationId) {
+         notificationsService.seenNotification(notificationId);
+    }
 	
 	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
 	public ModelAndView getHomePage() {
         ModelAndView modelAndView = new ModelAndView("Index");
         return modelAndView;
-    }
-	
-	@GetMapping("/loadnotification")
-    public List<Notifications> getThongBao() {
-        return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
     }
 
 	@GetMapping("/logout")

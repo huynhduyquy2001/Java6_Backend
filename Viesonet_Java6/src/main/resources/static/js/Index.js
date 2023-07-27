@@ -10,6 +10,7 @@ angular.module('myApp', [])
 		$scope.replyContent = {}; // Khởi tạo replyContent      
 		$scope.check = false;
 		$scope.notification = [];
+		$scope.allNotification = [];
 
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')
@@ -305,6 +306,16 @@ angular.module('myApp', [])
 			.catch(function(error) {
 				console.log(error);
 			});
+			
+		$http.get('/loadallnotification')
+			.then(function(response) {
+				$scope.allNotification = response.data;
+				console.log($scope.allNotification.receiver.avatar)
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+			
 		$scope.ConnectNotification = function() {
 			
 			var socket = new SockJS('/private-notification');
@@ -312,8 +323,7 @@ angular.module('myApp', [])
 			stompClient.debug = false;
 			stompClient.connect({}, function(frame) {
 				stompClient.subscribe('/private-user', function(response) {
-					// Làm rỗng mảng notification
-					// $scope.notification.splice(0, $scope.notification.length);
+					
 					var data = JSON.parse(response.body)
 					// Thêm dữ liệu mới vào mảng notification
 					for (var i = 0; i < data.length; i++) {
@@ -338,6 +348,16 @@ angular.module('myApp', [])
 				return notification.notificationId === newNotification.notificationId;
 			});
 		}
+		
+		$scope.seen = function(notificationId){
+			$http.put('/seennotification/' + notificationId)
+				.then(function(response) {
+
+				}, function(error) {
+					console.log(error);
+				});
+		}
+		
 		$scope.ConnectNotification();
 	});
 

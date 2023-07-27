@@ -2,6 +2,7 @@ package com.viesonet.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,22 @@ public class NotificationsService {
 		return notificationsDao.saveAndFlush(notifications);
 	}
 	
+	public List<Notifications> findAllByReceiver(String userId){
+		return notificationsDao.findAllByReceiver(userId);
+	}
+	
 	public List<Notifications> findNotificationByReceiver(){
 		return notificationsDao.findNotificationTrue();
+	}
+	
+	public Notifications findNotificationById(int notificationId) {
+		Optional<Notifications> optionalNotification = notificationsDao.findById(notificationId);
+		return optionalNotification.orElse(null);
+	}
+	
+	public void seenNotification(int notificationId) {
+		Notifications notifications = notificationsDao.findByNotificationId(notificationId);
+		notifications.setNotificationStatus(false);
+		notificationsDao.saveAndFlush(notifications);
 	}
 }
