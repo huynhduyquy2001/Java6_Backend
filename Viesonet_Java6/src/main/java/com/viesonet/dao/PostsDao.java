@@ -21,7 +21,7 @@ public interface PostsDao extends JpaRepository<Posts, Integer>{
 	
 	@Query("SELECT b FROM Posts b WHERE b.user.userId = ?1 AND b.isActive=true")
 	Page<Object> find9Post(Pageable pageable, String userId);
-	
+
 	@Query("SELECT COUNT(b) FROM Posts b WHERE b.user.userId = :userId")
     Integer countMyPosts(String userId);
 	

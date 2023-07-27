@@ -138,6 +138,7 @@ angular.module('myApp', [])
 			.then(function(response) {
 				var ninePost = response.data;
 				$scope.ninePost = ninePost;
+				console.log($scope.nitePost);
 			});
 
 		$http.get('/countmypost')
