@@ -30,9 +30,9 @@ public class FollowService {
 
 	}
 
-//	public List<Users> getFollowersInfoByUserId(String userId) {
-//		return followDao.findFollowersInfoByUserId(userId);
-//	}
+	public List<Users> getFollowersInfoByUserId(String userId) {
+		return followDao.findFollowersInfoByUserId(userId);
+	}
 
 	public List<Follow> getAllFollowers() {
 		return followDao.findAll();

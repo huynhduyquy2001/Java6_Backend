@@ -301,7 +301,7 @@ div.dropdown-menu.baoCao {
 						<!--Tìm kiếm-->
 						<div style="width: 85%; text-align: left;" data-bs-toggle="modal">
 							<form class="position-relative">
-								<input type="search" class="form-control search-chat py-2 ps-5" ng-blur="checkInput()" ng-focus="resetError()"
+								<input type="search" class="form-control search-chat py-2 ps-5" ng-blur="checkInput()" ng-focus="resetError()" ng-submit="LS(	)"
 									ng-keyup="searchUser()" ng-model="username" id="text-srh"
 									placeholder="Search" style="border: 1px solid #ccc;"> 
 									<a ng-click="LS()"><i style="cursor: pointer;" class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
@@ -313,7 +313,6 @@ div.dropdown-menu.baoCao {
 						</div>
 						
 				</center>
-
 				<center>
 					<div ng-repeat="user in users" class="col-md-10"
 						style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; margin-top: 20px">
