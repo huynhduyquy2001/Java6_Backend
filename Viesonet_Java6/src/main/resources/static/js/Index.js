@@ -8,6 +8,7 @@ angular.module('myApp', [])
 	$scope.postComments = [];
 	$scope.replyContent = {}; // Khởi tạo replyContent      
 	$scope.check = false;
+	$scope.unseenmess=0;
 
 //kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get('/getunseenmessage')
@@ -15,6 +16,7 @@ angular.module('myApp', [])
 			var count = response.data;
 			if (count > 0) {
 				$scope.check = true;
+				$scope.unseenmess = count;
 			}
 		})
 		.catch(function(error) {
