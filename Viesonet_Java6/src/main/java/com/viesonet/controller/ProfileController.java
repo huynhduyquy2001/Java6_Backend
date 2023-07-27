@@ -82,7 +82,7 @@ public class ProfileController {
 	//Lấy thông tin chi tiết các followings
 	@GetMapping("/findmyfollowing")
     public List<Users> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
-        return followService.getFollowingInfoByUserId(session.get("id"));
+        return followService.getFollowersInfoByUserId(session.get("id"));
     }
 	//Lấy thông tin chi tiết của người dùng trong bảng Users
 	@GetMapping("/findusers")
