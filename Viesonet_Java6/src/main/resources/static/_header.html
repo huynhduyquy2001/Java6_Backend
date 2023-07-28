@@ -9,17 +9,17 @@
 						id="navbarNav">
 						<ul
 							class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-							<li class="nav-item dropdown"><a data-bs-toggle="offcanvas"
+							<li class="nav-item dropdown"><a data-bs-toggle="offcanvas" ng-click="hideNotification()"
 								data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
 								class="nav-link nav-icon-hover" href="#">
 									<div class="notification-icon">
 										<i class="fa-regular fa-bell fa-lg"></i>
-										<div class="circle" ng-if="(filteredNotifications.length > 0)">
+										<div class="circle" ng-if="hasNewNotification == true">
 											<!-- Hiển thị tối đa 5 thông báo -->
-											<span ng-if="filteredNotifications.length <= 5">{{
-												filteredNotifications.length }}</span>
+											<span ng-if="hasNewNotification == true && notification.length <=5">{{
+												 notification.length}}</span>
 											<!-- Hiển thị "5+" nếu số lượng thông báo lớn hơn 5 -->
-											<span ng-if="filteredNotifications.length > 5">5+</span>
+											<span ng-if="hasNewNotification == true && notification.length > 5">5+</span>
 										</div>
 									</div>
 							</a></li>

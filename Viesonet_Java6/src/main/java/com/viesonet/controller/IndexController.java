@@ -58,6 +58,7 @@ import com.viesonet.service.UsersService;
 
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
+
 @EnableScheduling
 @RestController
 public class IndexController {
@@ -100,9 +101,9 @@ public class IndexController {
 
 	@Autowired
 	NotificationsService notificationsService;
-	
+
 	@Autowired
-    private SimpMessagingTemplate messagingTemplate;
+	private SimpMessagingTemplate messagingTemplate;
 
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
@@ -133,8 +134,11 @@ public class IndexController {
 		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
-				post.getUser().getUserId(), post, 3);
+		Notifications ns = notificationsService.findNotificationByPostId(post.getUser().getUserId(), 3, postId);
+		if(ns == null) {
+			notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
+					post.getUser().getUserId(), post, 3);	
+		}
 
 		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
@@ -173,6 +177,10 @@ public class IndexController {
 		String replyContent = request.getReplyContent();
 		int commentId = request.getCommentId();
 
+		// thêm thông báo
+		Posts post = postsService.findPostById(commentsService.getCommentById(commentId).getPost().getPostId());
+		notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, receiverId, post, 6);
+
 		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(session.get("id")), replyContent,
 				commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
 
@@ -190,6 +198,21 @@ public class IndexController {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
 		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
+
+		// Thêm thông báo
+		List<Follow> fl = followService.getFollowing(session.get("id"));
+		List<Interaction> itn = interactionService.findListInteraction(session.get("id"));
+		if (itn.size() == 0) {
+			for (Follow list : fl) {
+				notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, list.getFollower().getUserId(), myPost, 1);
+			}
+		} else {
+			for (Interaction it : itn) {
+				notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0,
+						it.getInteractingPerson(), myPost, 1);
+			}
+		}
+
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -202,7 +225,7 @@ public class IndexController {
 					String rootPath = servletContext.getRealPath("/");
 					String parentPath = new File(rootPath).getParent();
 					String pathUpload = parentPath + "/resources/static/images/" + newFileName;
-					
+
 					try {
 						photoFile.transferTo(new File(pathUpload));
 
@@ -216,42 +239,38 @@ public class IndexController {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
+
 				}
 			}
 		}
-		
-		//thêm thông báo
-		
+
+		// thêm thông báo
+
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 		return "success";
 	}
-	
-	@Scheduled(fixedRate = 500)  // Lặp lại theo thời gian
-    public void sendRealTimeNotification() {
-           messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
+
+	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
+	public void sendRealTimeNotification() {
+		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
 	}
-	
-	@GetMapping("/loadnotification")
-    public List<Notifications> getNotification() {
-        return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
-    }
-	
+
 	@GetMapping("/loadallnotification")
-    public List<Notifications> getAllNotification() {
-        return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
-    }
-	
+	public List<Notifications> getAllNotification() {
+		return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
+	}
+
 	@PutMapping("/seennotification/{notificationId}")
-    public void seenNotification(@PathVariable int notificationId) {
-         notificationsService.seenNotification(notificationId);
-    }
-	
+	public List<Notifications> seenNotification(@PathVariable int notificationId) {
+		notificationsService.seenNotification(notificationId);
+	    return notificationsService.findAllByReceiver(session.get("id"));
+	}
+
 	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
 	public ModelAndView getHomePage() {
-        ModelAndView modelAndView = new ModelAndView("Index");
-        return modelAndView;
-    }
+		ModelAndView modelAndView = new ModelAndView("Index");
+		return modelAndView;
+	}
 
 	@GetMapping("/logout")
 	public ModelAndView logout() {
