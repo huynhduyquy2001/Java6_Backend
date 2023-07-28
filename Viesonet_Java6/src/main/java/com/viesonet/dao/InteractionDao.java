@@ -10,6 +10,6 @@ public interface InteractionDao extends JpaRepository<Interaction, String> {
 	@Query("SELECT i FROM Interaction i WHERE i.interactingPerson =:id and i.interactedPerson=:id2")
 	Interaction findUserInteraction(String id, String id2);
 	
-	@Query("SELECT i.interactingPerson FROM Interaction i WHERE i.interactedPerson =:id")
-	List<Interaction> findListInteraction(String id);
+	@Query("SELECT i FROM Interaction i WHERE i.interactedPerson =:interactedPerson")
+	List<Interaction> findListInteraction(String interactedPerson);
 }

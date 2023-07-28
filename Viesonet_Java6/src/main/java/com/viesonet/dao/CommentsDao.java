@@ -11,4 +11,5 @@ import com.viesonet.entity.Comments;
 public interface CommentsDao extends JpaRepository<Comments, Integer> {
 	@Query("SELECT obj from Comments obj where obj.post.postId=?1")
 	List<Comments> findCommentsByPostId(int postId, Sort sort);
+	
 }

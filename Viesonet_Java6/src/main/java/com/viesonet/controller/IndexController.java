@@ -133,8 +133,11 @@ public class IndexController {
 		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
-				post.getUser().getUserId(), post, 3);
+		Notifications ns = notificationsService.findNotificationByPostId(post.getUser().getUserId(), 3, postId);
+		if(ns == null) {
+			notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
+					post.getUser().getUserId(), post, 3);	
+		}
 
 		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
@@ -159,8 +162,8 @@ public class IndexController {
 		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getCommentCount(),
-				post.getUser().getUserId(), post, 4);
+			notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getCommentCount(),
+					post.getUser().getUserId(), post, 4);
 
 		return commentsService.addComment(postsService.findPostById(postId),
 				usersService.findUserById(session.get("id")), content);
@@ -172,6 +175,10 @@ public class IndexController {
 		String receiverId = request.getReceiverId();
 		String replyContent = request.getReplyContent();
 		int commentId = request.getCommentId();
+		
+		//thêm thông báo
+		Posts post = postsService.findPostById(commentsService.getCommentById(commentId).getPost().getPostId());
+		notificationsService.createNotifications(session.get("id"), 0, receiverId, post, 6);
 
 		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(session.get("id")), replyContent,
 				commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
@@ -190,6 +197,19 @@ public class IndexController {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
 		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
+		
+		// Thêm thông báo
+		List<Follow> fl = followService.getFollowing(session.get("id"));
+		List<Interaction> itn = interactionService.findListInteraction(session.get("id"));
+		if(itn.size() == 0) {
+			for(Follow list : fl) {
+				notificationsService.createNotifications(session.get("id"), 0, list.getFollower().getUserId(), myPost, 1);
+			}
+		}else {
+			for(Interaction it: itn) {
+				notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, it.getInteractingPerson(), myPost, 1);
+			}
+		}
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {

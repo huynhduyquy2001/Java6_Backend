@@ -14,5 +14,8 @@ public interface NotificationsDao extends JpaRepository<Notifications, Integer> 
 	@Query("SELECT n FROM Notifications n WHERE n.receiver.userId =:userId")
 	List<Notifications> findAllByReceiver(String userId);
 	
+	@Query("SELECT n FROM Notifications n WHERE n.receiver.userId = :userId AND n.notificationType.typeId = :notificationType AND n.post.postId = :postId")
+	Notifications findNotificationByPostId(String userId, int notificationType, int postId);
+	
 	Notifications findByNotificationId(int notificationId);
 }

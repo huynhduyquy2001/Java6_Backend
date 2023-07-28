@@ -43,6 +43,8 @@ public class NotificationsService {
 			}
 		}else if(notificationType == 5) {
 			notifications.setNotificationContent("Bài viết của bạn đã bị phạm!");
+		}else if(notificationType == 6) {
+			notifications.setNotificationContent(username.getUsername() + " đã trả lời bình luận của bạn");
 		}
 		user.setUserId(receiverId);
 		notifications.setReceiver(user);
@@ -55,6 +57,10 @@ public class NotificationsService {
 		notifications.setNotificationStatus(true);
 		
 		return notificationsDao.saveAndFlush(notifications);
+	}
+	
+	public Notifications findNotificationByPostId(String userId, int notificationType, int postId) {
+		return notificationsDao.findNotificationByPostId(userId, notificationType, postId);
 	}
 	
 	public List<Notifications> findAllByReceiver(String userId){
