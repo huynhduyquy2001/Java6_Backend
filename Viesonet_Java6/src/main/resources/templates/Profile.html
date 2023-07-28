@@ -446,12 +446,14 @@ div.dropdown-menu.baoCao {
 								</div>
 							</div>
 							<div class="col-lg-4 order-last">
-								<ul
-									class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3">
-
+								<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3">
 									<li><button class="btn btn-primary text-end"
-											data-bs-toggle="modal" data-bs-target="#exampleModal">
-											<i class="fa-light fa-pen-to-square"></i> Chỉnh sửa thông tin
+											data-bs-toggle="modal" data-bs-target="#exampleModal1">
+											<i class="fa-light fa-pen-to-square"></i> Thông tin
+										</button></li>
+										<li><button class="btn btn-secondary text-end"
+											data-bs-toggle="modal" data-bs-target="#exampleModal2">
+											<i class="fa-light fa-pen-to-square"></i> Tài khoản
 										</button></li>
 								</ul>
 							</div>
@@ -543,11 +545,11 @@ div.dropdown-menu.baoCao {
 									</div>
 								</div>
 								<div class="card shadow-none border"
-									ng-repeat="myPost in ninePost.content">
+									>
 									<div class="card-body" style="padding: 15px;">
 										<h4 class="fw-semibold mb-3">Hình ảnh</h4>
-										<div class="row">
-											<div class="col-4 mb-2" ng-repeat="img in myPost.images">
+										<div class="row" ng-repeat="nine in ninePost.content">
+											<div class="col-4 mb-2" ng-repeat="img in nine.images">
 												<img src="/images/{{img.imageUrl}}" width="100" height="120"
 													class="rounded-2" style="object-fit: cover;">
 											</div>
@@ -1045,12 +1047,12 @@ div.dropdown-menu.baoCao {
 			</div>
 
 			<!-- Modal chỉnh sửa thông tin -->
-			<div class="modal fade" id="exampleModal" tabindex="-1"
+			<div class="modal fade" id="exampleModal1" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa
+							<h5 class="modal-title" id="exampleModalLabel"><i class="fa-light fa-pen-to-square"></i> Chỉnh sửa
 								thông tin cá nhân</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal"
 								aria-label="Close"></button>
@@ -1083,6 +1085,42 @@ div.dropdown-menu.baoCao {
 								data-bs-dismiss="modal">Hủy</button>
 							<button type="submit"  data-bs-dismiss="modal" class="btn btn-primary">Lưu</button>
 						</div>
+							
+							</form>
+						
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Modal chỉnh sửa thông tin bảo mật-->
+			<div class="modal fade" id="exampleModal2" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel"><i class="fa-light fa-pen-to-square"></i> Chỉnh sửa
+								thông tin bảo mật</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form ng-submit="updateAccInfo()">
+								<p>Email</p>
+								<input type="email" class="form-control" id="nametext"
+									aria-describedby="name" value="{{AccInfo.email}}" ng-model="AccInfo.email"> <br>
+								<p>Trạng thái tài khoản</p>
+							    <select class="form-select" ng-model="AccInfo.accountStatus.statusName">
+							        <option value="Công khai" >Công khai</option>
+							        <option value="Chỉ theo dõi">Chỉ theo dõi</option>
+							        <option value="Tạm ẩn" >Tạm ẩn</option>
+							    </select>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Hủy</button>
+								<button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
+							</div>
 							
 							</form>
 						

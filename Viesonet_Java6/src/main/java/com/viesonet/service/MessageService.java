@@ -35,12 +35,13 @@ public class MessageService {
 		return obj;
 	}
 
-	public Message seen(int messId) {
-		Optional<Message> obj = messageDao.findById(messId);
-		Message obj2 = obj.orElse(null);
-		obj2.setStatus("Đã xem");
-		messageDao.saveAndFlush(obj2);
-		return obj2;
+	public List<Message> seen(String senderId, String receiverId) {
+		List<Message> messages = messageDao.getListMessByReceiverId(senderId, receiverId, "Đã gửi");
+		for(Message mess : messages) {
+			mess.setStatus("Đã xem");
+			messageDao.saveAndFlush(mess);
+		}
+		return messages;
 	}
 
 	// Trong phương thức trong service hoặc controller

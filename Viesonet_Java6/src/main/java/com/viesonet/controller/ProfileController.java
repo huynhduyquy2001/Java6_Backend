@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,10 +75,10 @@ public class ProfileController {
 		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
 	}
 	//Lấy thông tin chi tiết các followers
-	@GetMapping("/findmyfollowers")
-    public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
-        return followService.getFollowersInfoByUserId(session.get("id"));
-    }
+//	@GetMapping("/findmyfollowers")
+//    public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
+//        return followService.getFollowersInfoByUserId(session.get("id"));
+//    }
 	//Lấy thông tin chi tiết các followings
 	@GetMapping("/findmyfollowing")
     public List<Users> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
@@ -130,7 +131,6 @@ public class ProfileController {
         usersService.updateUserInfo(currentUser);
         return ResponseEntity.ok("User info updated successfully.");
     }
-
 
 	
 	//Hiển thị trang cá nhân
