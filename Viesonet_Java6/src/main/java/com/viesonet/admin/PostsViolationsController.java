@@ -65,6 +65,7 @@ public class PostsViolationsController {
 	@RequestMapping("/admin/postsviolations/delete")
 	@Transactional
 	public Page<Object> getPostId(@RequestBody List<String> listPostId) {
+		 
 		violationsService.deleteByPostViolations(listPostId);
         return violationsService.findAllListFalse(0, 9);
 	}
