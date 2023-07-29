@@ -9,6 +9,9 @@ import java.util.Optional;
 import javax.swing.SortOrder;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
@@ -57,6 +60,11 @@ public class PostsService {
 
 	public int countPost(String userId) {
 		return postsDao.countMyPosts(userId);
+	}
+	
+	public Page<Object> find9Post(int page, int size, String userId){
+		Pageable pageable = PageRequest.of(page, size);
+		return postsDao.find9Post(pageable, userId);
 	}
 
 }

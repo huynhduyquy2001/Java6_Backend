@@ -24,7 +24,7 @@ public interface FollowDao extends JpaRepository<Follow, Integer> {
     int getFollowingById(Users user);
 	
 	@Query("SELECT f.follower FROM Follow f JOIN f.following u WHERE u.userId = :userId")
-	List<Users> findFollowersInfoByUserId(String userId);	
+	List<Users> findFollowersInfoByUserId(String userId);
 	
 	@Query("SELECT f.following FROM Follow f JOIN f.follower u JOIN f.following WHERE u.userId = :userId")
 	List<Users> findFollowingInfoByUserId(String userId);	
@@ -33,5 +33,7 @@ public interface FollowDao extends JpaRepository<Follow, Integer> {
     List<String> findUserIdsOfFollowing(@Param("userId") String userId);
 	
 	void deleteByFollowerAndFollowing(Users follower, Users following);
+	
+	
 	
 }
