@@ -407,14 +407,23 @@ div.dropdown-menu.baoCao {
 	
 	// Hàm làm mới danh sách follow
 	$scope.refreshFollowList = function() {
-		$http.get('/getfollow')
-			.then(function(response) {
-				var listFollow = response.data;
-				$scope.listFollow = listFollow;
-			})
-			.catch(function(error) {
-				console.log(error);
-			});
+		$http.get('/ListFollower')
+	      .then(function(response) {
+	          $scope.users = response.data;
+	          console.log("User",$scope.users); // Kiểm tra dữ liệu trong console log
+	        })
+	        .catch(function(error) {
+	          console.log("Lỗi load user",error);
+	    });
+	      
+	      $http.get('/ListFollowing')
+	          .then(function(response) {
+	            $scope.followings = response.data;
+	            console.log("ListFollowing1",$scope.followings); // Kiểm tra dữ liệu trong console log
+	          })
+	          .catch(function(error) {
+	            console.log(error);
+	      });
 	};
 
       $scope.getFormattedTimeAgo = function(date) {
