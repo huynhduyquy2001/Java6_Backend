@@ -46,4 +46,5 @@ public class Notifications {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date notificationDate;
 
+	private Boolean notificationStatus;
 }

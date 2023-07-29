@@ -31,9 +31,9 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/angular-emoji-picker@0.2.0/dist/css/emoji-picker.min.css">
+<link rel="stylesheet" href="/css/emoji.min.css">
 <title>Trang chủ</title>
 <style type="text/css">
 .dropdown-item {
@@ -114,53 +114,54 @@ div.dropdown-menu.baoCao {
 		<div class="row ">
 			<div ng-include="'_menuLeft.html'"></div>
 			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
-				style="padding: 0; position: fixed; top: 0; z-index: 101">
-				
-			</nav>
-			<div class="col-md-6 offset-md-3" style="z-index: 10;">
-				<div class="msger animate__animated animate__zoomIn">
-					<header class="msger-header">
-						<div class="msger-header-title">
-							<a href="#"><img ng-src="/images/{{ userMess.avatar }}"
-								style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;"
-								alt=""></a> {{ userMess.username }}
-						</div>
-
-					</header>
-					<main class="msger-chat">
-						<div class="msg"
-							ng-class="{'left-msg': mess.sender.userId !== 'myAccount.user.userId', 'right-msg': mess.sender.userId === myAccount.user.userId}"
-							ng-repeat="mess in ListMess">
-							<div class="msg-img"
-								style="background-image: url(images/{{mess.sender.avatar}})"></div>
-							<div class="msg-bubble">
-								<div class="msg-info">
-									<div class="msg-info-name">{{mess.sender.username}}</div>
-									<div class="msg-info-time">{{
-										getFormattedTimeAgo(mess.sendDate) }}</div>
-								</div>
-								<div class="msg-text">{{mess.content}}</div>
+				style="padding: 0; position: fixed; top: 0; z-index: 101"></nav>
+			<div class="col-md-7 offset-md-2" style="z-index: 10; padding-left: 4rem">
+				<center>
+					<div class="msger animate__animated animate__zoomIn"
+						style="width: 93%; text-align: left;">
+						<header class="msger-header">
+							<div class="msger-header-title">
+								<a href="#"><img ng-src="/images/{{ userMess.avatar }}"
+									style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;"
+									alt=""></a> {{ userMess.username }}
 							</div>
-						</div>
 
-					</main>
+						</header>
+						<main class="msger-chat">
+							<div class="msg"
+								ng-class="{'left-msg': mess.sender.userId !== myAccount.user.userId, 'right-msg': mess.sender.userId === myAccount.user.userId}"
+								ng-repeat="mess in ListMess">
+								<div class="msg-img"
+									style="background-image: url(images/{{mess.sender.avatar}})"></div>
+								<div class="msg-bubble">
+									<div class="msg-info">
+										<div class="msg-info-name">{{mess.sender.username}}</div>
+										<div class="msg-info-time">{{
+											getFormattedTimeAgo(mess.sendDate) }}</div>
+									</div>
+									<div class="msg-text">{{mess.content}}</div>
+								</div>
+							</div>
 
-					<form ng-show="ListMess.length>0" class="msger-inputarea">
-						<input ng-model="newMess" type="text" class=" form-control"
-							placeholder="Nhập tin nhắn của bạn...">
-						<button type="submit" class="msger-send-btn"
-							ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">Gửi</button>
+						</main>
 
-					</form>
+						<form ng-show="ListMess.length>0" class="msger-inputarea">
+							<emoji-picker ng-model="emoji" on-select="addEmoji(emoji)"></emoji-picker>
+							<input ng-model="newMess" type="text" class=" form-control"
+								placeholder="Nhập tin nhắn của bạn...">
+							<button type="submit" class="msger-send-btn"
+								ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">Gửi</button>
 
-				</div>
+						</form>
+
+					</div>
+				</center>
 
 			</div>
 			<div class="col-md-3 menuLeft animate__animated animate__backInRight"
 				style="position: fixed; right: 0; top: 70px;">
-				<input class="form-control" placeholder="Tìm kiếm"
-					style="margin-left: 5px">
-				<ul class="list-unstyled mb-0" style="padding-left: 8px">
+				<input class="form-control" placeholder="Tìm kiếm">
+				<ul class="list-unstyled mb-0">
 					<li ng-repeat="UsersMess in ListUsersMess"
 						class="p-2 border-bottom" style="background-color: white;">
 
@@ -173,7 +174,9 @@ div.dropdown-menu.baoCao {
 							<div style="width: 100%; line-height: 0.7rem;">
 								<div style="display: flex;">
 									<label class="ng-binding">{{ UsersMess[3] }}</label>
-									<div ng-show = "UsersMess[8] == 'Đã gửi' && UsersMess[0] != myAccount.user.userId" class="circle mb-2" style="margin-left: 2rem"></div>
+									<div
+										ng-show="UsersMess[8] == 'Đã gửi' && UsersMess[0] != myAccount.user.userId"
+										class="circle mb-2" style="margin-left: 2rem"></div>
 								</div>
 								<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 								<br>
@@ -194,7 +197,8 @@ div.dropdown-menu.baoCao {
 							<div style="width: 100%; line-height: 0.7rem">
 								<div style="display: flex;">
 									<label class="ng-binding">{{ UsersMess[1] }}</label>
-									<div ng-show = "UsersMess[8] == 'Đã gửi'" class="circle mb-2" style="margin-left: 2rem"></div>
+									<div ng-show="UsersMess[8] == 'Đã gửi'" class="circle2 mb-2"
+										style="margin-left: 2rem"></div>
 								</div>
 								<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 								<br>
@@ -231,245 +235,15 @@ div.dropdown-menu.baoCao {
 </script>
 
 	<script
+		src="https://cdn.jsdelivr.net/npm/angular-emoji-picker@0.2.0/Gruntfile.min.js"></script>
+	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<script type="text/javascript">
-angular.module('myApp', [])
-.controller('myCtrl', function ($scope, $window, $http, $timeout) {
-	$scope.LikePost = [];
-    $scope.ListUsersMess = [];
-    $scope.ListMessWith=[];
-    $scope.myAccount={};
-    $scope.ListMess=[];
-    $scope.userMess={};
-  //tìm acc của mình
-    $http.get('/findmyaccount')
-    .then(function (response) {
-        var myAccount = response.data;
-        $scope.myAccount = myAccount;
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-  
-    $http.get('/getunseenmessage')
-	.then(function(response) {
-		var count = response.data;
-		if (count > 0) {
-			$scope.check = true;
-		}
-	})
-	.catch(function(error) {
-		console.log(error);
-	});
-  
-    //sử dụng $http như trước đây để lấy danh sách người đã từng nhắn tin
-    $http.get('/getusersmess')
-      .then(function (response) {
-        var ListUsersMess = response.data;
-        $scope.ListUsersMess = ListUsersMess;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-   
 
-    
+	<script src="js/Message.js"></script>
 
-//Thay đổi URL SockJS tại đây nếu cần thiết
-var sockJSUrl = '/chat';
 
-// Tạo một đối tượng SockJS bằng cách truyền URL SockJS
-var socket = new SockJS(sockJSUrl);
-
-// Tạo một kết nối thông qua Stomp over SockJS
-var stompClient = Stomp.over(socket);
-
-// Khi kết nối WebSocket thành công
-stompClient.connect({}, function (frame) {
-    console.log('Connected: ' + frame);
-
-    // Đăng ký hàm xử lý khi nhận thông điệp từ server
-    // Lắng nghe các tin nhắn được gửi về cho người dùng
-    stompClient.subscribe('/user/'+$scope.myAccount.user.userId+'/queue/receiveMessage', function (message) {
-        try {
-            var newMess = JSON.parse(message.body);
-            // Xử lý tin nhắn mới nhận được ở đây
-            if($scope.userMess.userId==newMess.sender.userId){
-            	$scope.ListMess.push(newMess);
-            	
-            	$http.get('/getusersmess')
-                .then(function (response) {
-                  var ListUsersMess = response.data;
-                  $scope.ListUsersMess = ListUsersMess;
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-                $scope.$apply();
-            }           	        
-        } catch (error) {
-            alert('Error handling received message:', error);
-        }
-    });
-}, function (error) {
-    console.error('Lỗi kết nối WebSocket:', error);
-});
-
-//hàm gửi tin nhắn
-$scope.sendMessage = function (senderId, content, receiverId) {
-    if (stompClient && stompClient.connected) {
-        var message = {
-            senderId: senderId,
-            receiverId: receiverId,
-            content: content
-        };
-        //lưu tin nhắn vào cơ sở dữ liệu
-        $http.post('/savemess', message)
-        .then(function(response) {
-        	stompClient.send('/app/sendnewmess', {}, JSON.stringify(response.data));
-        	var check = response.data;
-        	var ObjUpdate = $scope.ListUsersMess.find(function(obj) {        		
-    			return check.receiver.userId === obj[0]||check.receiver.userId === obj[2] ;
-    		});     	
-        	ObjUpdate[0]=check.sender.userId;
-        	ObjUpdate[1]=check.sender.username;
-        	ObjUpdate[2]=check.receiver.userId;
-        	ObjUpdate[3]=check.receiver.username;
-        	ObjUpdate[4]=check.sender.avatar;
-        	ObjUpdate[5]=check.receiver.avatar;
-        	ObjUpdate[6]=check.content;
-        	ObjUpdate[7]=new Date();
-        	ObjUpdate[8]="Đã gửi";
-        	ObjUpdate[9]=check.messId;
-            
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-        
-        // Gửi tin nhắn thông qua kết nối WebSocket
-        
-        console.log('Tin nhắn đã được gửi thành công!');
-        $scope.newMess = '';
-        var newMess = {
-                sender: { userId: senderId, username: $scope.myAccount.user.username, avatar: $scope.myAccount.user.avatar },
-                receiver: { userId: receiverId },
-                content: content,
-                sendDate: new Date()
-            };
-            $scope.ListMess.push(newMess);
-            for (var i = 0; i < $scope.ListUsersMess.length; i++) {
-                if ($scope.ListUsersMess[i].userId === receiverId) {
-                    $scope.ListUsersMess[i].status = 'Đã gửi';
-                    break;
-                }
-            }
-            $timeout(function () {
-                $scope.scrollToBottom();
-            }, 100);
-    } else {
-        console.error('Kết nối WebSocket chưa mở. Không thể gửi tin nhắn.');
-    }
-};
-	//tìm người đang nhắn với mình
-    $scope.getmess2 = function (userId, messId) {
-        $http.post('/getUser/' + userId)
-        .then(function (response) {
-            var userMess = response.data;
-            $scope.userMess = userMess;
-            // Tiếp tục request để lấy danh sách tin nhắn sau khi đã lấy thông tin người nhắn tin thành công
-            return $http.get('/getmess2/' + userId);
-        })
-        .then(function (response) {
-            var ListMess = response.data;
-            $scope.ListMess = ListMess;
-            
-            // Gọi hàm scrollToBottom() sau khi cả hai request đều đã hoàn thành
-            $timeout(function () {
-                $scope.scrollToBottom();
-            }, 100); // Thời gian chờ 100ms (có thể điều chỉnh số này tùy ý)
-        })
-        .catch(function (error) {
-            console.log(error);
-        });       
-        
-        if(messId != -1){
-        	var messToUpdate = $scope.ListUsersMess.find(function(mess) {        		
-    			return mess[9]=== messId;
-    		});     	
-            messToUpdate[8]="Đã xem";
-            $http.post('/seen/'+messId)
-            .then(function(response) {
-            	 $http.get('/getunseenmessage')
-            		.then(function(response) {
-            			var count = response.data;
-            			if (count > 0) {
-            				$scope.check = true;
-            			}else{
-            				$scope.check = false;
-            			}
-            		})
-            		.catch(function(error) {
-            			console.log(error);
-            		});
-    		})
-    		
-        }
-        
-    };
-    
-    $scope.scrollToBottom = function() {
-    	  var chatContainer = document.querySelector('.msger-chat');
-    	  chatContainer.scrollTop = chatContainer.scrollHeight;
-    	};
-
-    $scope.getFormattedTimeAgo = function(date) {
-    	  var currentTime = new Date();
-    	  var activityTime = new Date(date);
-    	  var timeDiff = currentTime.getTime() - activityTime.getTime();
-    	  var seconds = Math.floor(timeDiff / 1000);
-    	  var minutes = Math.floor(timeDiff / (1000 * 60));
-    	  var hours = Math.floor(timeDiff / (1000 * 60 * 60));
-    	  var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-    	  if (days === 0) {
-    	    if (hours === 0 && minutes === 0) {
-    	      return seconds + ' giây trước';
-    	    } else if (hours === 0) {
-    	      return minutes + ' phút trước';
-    	    } else {
-    	      return hours + ' giờ trước';
-    	    }
-    	  } else if (days === 1) {
-    	    var formattedTime = 'Hôm qua';
-    	    var hours = String(activityTime.getHours()).padStart(2, '0');
-    	    var minutes = String(activityTime.getMinutes()).padStart(2, '0');
-    	    var seconds = String(activityTime.getSeconds()).padStart(2, '0');
-    	    formattedTime += ' ' + hours + ':' + minutes ;
-    	    return formattedTime;
-
-    	  } else {
-    		  var formattedTime = activityTime.getDate() + '-' + (activityTime.getMonth() + 1) + '-' + activityTime.getFullYear();
-      	    var hours = String(activityTime.getHours()).padStart(2, '0');
-      	    var minutes = String(activityTime.getMinutes()).padStart(2, '0');
-      	    var seconds = String(activityTime.getSeconds()).padStart(2, '0');
-      	    formattedTime += ' ' + hours + ':' + minutes ;
-      	    return formattedTime;
-    	  }
-    	};
-    	
-    	$scope.logout = function() {
-    		$http.get('/logout')
-    			.then(function() {
-    				window.location.href = '/login';
-    			}, function(error) {
-    				console.log(error);
-    			});
-    	};
-});     
-</script>
 
 </body>
 

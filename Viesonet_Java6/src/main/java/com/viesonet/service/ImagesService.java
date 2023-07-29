@@ -20,10 +20,11 @@ public class ImagesService {
 	@Autowired
 	PostsDao postsDao;
 	
-	public void saveImage(Posts post, String imageUrl) {
+	public void saveImage(Posts post, String imageUrl, boolean type) {
 		Images image = new Images();
 		image.setImageUrl(imageUrl);
 		image.setPost(post);
+		image.setType(type);
 		imagesDao.saveAndFlush(image);
 	}
 	
@@ -47,4 +48,5 @@ public class ImagesService {
 	public List<Images> getImagesByUserId(String userId) {
         return imagesDao.findImagesByUserId(userId);
     }
+
 }

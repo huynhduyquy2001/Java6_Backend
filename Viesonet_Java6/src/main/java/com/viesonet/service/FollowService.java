@@ -18,30 +18,46 @@ public class FollowService {
 
 	@Autowired
 	FollowDao followDao;
-    
-	public List<Follow> getFollowing(String followingId){
+
+	public List<Follow> getFollowing(String followingId) {
 		return followDao.findByFollowingId(followingId);
 	}
 	public List<Follow> getFollowers(String followerId){
 		return followDao.findByFollowersId(followerId);
 	}
-	public AccountAndFollow getFollowingFollower(Users user){
+
+	public AccountAndFollow getFollowingFollower(Users user) {
 		AccountAndFollow obj = new AccountAndFollow();
 		obj.setUser(user);
 		obj.setFollowers(followDao.getFollowersById(user));
 		obj.setFollowing(followDao.getFollowingById(user));
 		return obj;
-		
+
+	}
+
+	public List<Users> getFollowersInfoByUserId(String userId) {
+		return followDao.findFollowersInfoByUserId(userId);
+	}
+
+	public List<Follow> getAllFollowers() {
+		return followDao.findAll();
+	}
+
+	public List<Users> getFollowingInfoByUserId(String userId) {
+		return followDao.findFollowingInfoByUserId(userId);
+	}
+
+	public List<String> findUserIdsOfFollowing(String userId) {
+		return followDao.findUserIdsOfFollowing(userId);
 	}
 	
-	public List<Users> getFollowersInfoByUserId(String userId) {
-        return followDao.findFollowersInfoByUserId(userId);
+	public Follow saveFollow(Follow follow) {
+        return followDao.save(follow);
     }
-	
-	public List<Users> getFollowingInfoByUserId(String userId) {
-        return followDao.findFollowingInfoByUserId(userId);
+	@Transactional
+    public void deleteFollowByFollowerAndFollowing(Users follower, Users following) {
+        followDao.deleteByFollowerAndFollowing(follower, following);
     }
-	
 	public List<Follow> findAllFollow() {
         return followDao.findAll();
     }

@@ -40,7 +40,7 @@ public class MessController {
 
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
-	
+
 	@GetMapping("/mess")
 	public ModelAndView getHomePage() {
 		ModelAndView modelAndView = new ModelAndView("Message");
@@ -49,20 +49,18 @@ public class MessController {
 
 	@MessageMapping("/sendnewmess")
 	@SendToUser("/queue/receiveMessage")
-    public void addMess(Message newMessage) {		
-         messagingTemplate.convertAndSendToUser(newMessage.getReceiver().getUserId(), "/queue/receiveMessage", newMessage);              
-    }
+	public void addMess(Message newMessage) {
+		messagingTemplate.convertAndSendToUser(newMessage.getReceiver().getUserId(), "/queue/receiveMessage",
+				newMessage);
+	}
+
 	@PostMapping("/savemess")
 	public Message saveMess(@RequestBody MessageRequest messageRequest) {
-		String senderId = messageRequest.getSenderId();
-        String receiverId = messageRequest.getReceiverId();
-        String content = messageRequest.getContent();
-        // Thêm tin nhắn vào cơ sở dữ liệu
-        Message newMessage = messageService.addMess(usersService.findUserById(senderId), usersService.findUserById(receiverId), content);
-             
-         return newMessage;
-    }
-	
+		// Thêm tin nhắn vào cơ sở dữ liệu
+		Message newMessage = messageService.addMess(usersService.findUserById(messageRequest.getSenderId()),
+				usersService.findUserById(messageRequest.getReceiverId()), messageRequest.getContent());
+		return newMessage;
+	}
 
 	@GetMapping("/getmess2/{userId}")
 	public List<Message> getListMess2(@PathVariable("userId") String userId) {
@@ -78,14 +76,14 @@ public class MessController {
 	public Users findUserById(@PathVariable("userId") String userId) {
 		return usersService.findUserById(userId);
 	}
+
 	@GetMapping("/getunseenmessage")
 	public int getListUnseenMessage() {
 		return messageService.getListUnseenMessage(sessionService.get("id"));
 	}
-	
-	@PostMapping("/seen/{messId}")
-	public Message seen(@PathVariable("messId")int messId) {
-		 
-		 return messageService.seen(messId);
+
+	@PostMapping("/seen/{userId}")
+	public List<Message> seen(@PathVariable("userId") String senderId) {
+		return messageService.seen(senderId, sessionService.get("id"));
 	}
 }

@@ -20,3 +20,4 @@ public class FollowDTO {
 
     // Các phương thức getter và setter cho các trường
 }
+
