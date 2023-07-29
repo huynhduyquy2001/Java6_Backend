@@ -209,14 +209,22 @@ public class ProfileController {
 					
 					try {
 						photoFile.transferTo(new File(pathUpload));
-						//Giảm size ảnh lưu trữ
-						long fileSize = photoFile.getSize();
-						if (fileSize > 1 * 1024 * 1024) {
-							double quality = 0.6;
-							String outputPath = pathUpload;
-							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+						String contentType = photoFile.getContentType();
+						boolean type = true;
+						if (contentType.startsWith("image")) {
+
+						} else if (contentType.startsWith("video")) {
+							type = false;
 						}
-						imagesService.saveImage(myPost, newFileName);
+						if (type == true) {
+							long fileSize = photoFile.getSize();
+							if (fileSize > 1 * 1024 * 1024) {
+								double quality = 0.6;
+								String outputPath = pathUpload;
+								Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+							}
+						}
+						imagesService.saveImage(myPost, newFileName, type);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -255,14 +263,22 @@ public class ProfileController {
 					
 					try {
 						photoFile.transferTo(new File(pathUpload));
-						//Giảm size
-						long fileSize = photoFile.getSize();
-						if (fileSize > 1 * 1024 * 1024) {
-							double quality = 0.6;
-							String outputPath = pathUpload;
-							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+						String contentType = photoFile.getContentType();
+						boolean type = true;
+						if (contentType.startsWith("image")) {
+
+						} else if (contentType.startsWith("video")) {
+							type = false;
 						}
-						imagesService.saveImage(myPost, newFileName);
+						if (type == true) {
+							long fileSize = photoFile.getSize();
+							if (fileSize > 1 * 1024 * 1024) {
+								double quality = 0.6;
+								String outputPath = pathUpload;
+								Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+							}
+						}
+						imagesService.saveImage(myPost, newFileName, type);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

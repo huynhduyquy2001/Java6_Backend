@@ -62,11 +62,4 @@ public class FollowService {
         return followDao.findAll();
     }
 
-    public Follow saveFollow(Follow follow) {
-        return followDao.save(follow);
-    }
-    @Transactional
-    public void deleteFollowByFollowerAndFollowing(Users follower, Users following) {
-        followDao.deleteByFollowerAndFollowing(follower, following);
-    }
 }
