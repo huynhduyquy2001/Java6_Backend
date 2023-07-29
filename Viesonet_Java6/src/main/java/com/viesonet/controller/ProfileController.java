@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -111,12 +112,6 @@ public class ProfileController {
 	@GetMapping("/countmypost")
 	public int countMyPosts() {
 		return postsService.countPost(session.get("id"));
-	}
-	//Không hoạt động
-	//Hiển thị 9 bức hình trên trang cá nhân 
-	@GetMapping("/find9post")
-	public Page<Object> find9Post(@SessionAttribute("id") String userId){
-		return postsService.find9Post(0, 9, userId);
 	}
 	// Phương thức này trả về thông tin người dùng (Users) dựa vào session attribute "id".
 	@GetMapping("/getUserInfo")
@@ -214,7 +209,7 @@ public class ProfileController {
 					
 					try {
 						photoFile.transferTo(new File(pathUpload));
-
+						//Giảm size ảnh lưu trữ
 						long fileSize = photoFile.getSize();
 						if (fileSize > 1 * 1024 * 1024) {
 							double quality = 0.6;
@@ -248,18 +243,19 @@ public class ProfileController {
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
 				if (!photoFile.isEmpty()) {
+					//Tạo tên file ảnh
 					String originalFileName = photoFile.getOriginalFilename();
 					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 					String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 					String newFileName = originalFileName + "-" + timestamp + extension;
-
+					//Tạo đường dẫn để lưu trữ
 					String rootPath = servletContext.getRealPath("/");
 					String parentPath = new File(rootPath).getParent();
 					String pathUpload = parentPath + "/resources/static/images/" + newFileName;
 					
 					try {
 						photoFile.transferTo(new File(pathUpload));
-
+						//Giảm size
 						long fileSize = photoFile.getSize();
 						if (fileSize > 1 * 1024 * 1024) {
 							double quality = 0.6;
@@ -287,11 +283,50 @@ public class ProfileController {
     public List<Images> getImagesByUserIdFromSession(@SessionAttribute("id") String userId) {
          return imagesService.getImagesByUserId(userId);
     }
+	
+    //Cập nhật bài viết
+    @PutMapping("/updatePost/{postId}")
+    public void updatePost(@PathVariable int postId, @RequestBody Posts posts) {
+    	Posts existingPost = postsService.getPostById(postId);
+
+
+        existingPost.setContent(posts.getContent());
+        postsService.savePost(existingPost);
+    }
+    //Ẩn bài viết
+    @PutMapping("/hide/{postId}")
+    public void hidePost(@PathVariable int postId) {
+        postsService.hidePost(postId);
+    }
 	//Hiển thị trang cá nhân
 	@GetMapping("/profile")
 	public ModelAndView profile() {
 		ModelAndView modelAndView = new ModelAndView("Profile");
         return modelAndView;
 	}
+	
+	@GetMapping("/otherProfile/{userId}")
+	public ModelAndView otherProfile(@PathVariable String userId) {
+	    ModelAndView modelAndView = new ModelAndView("otherProfile");
+	    
+	    // Lấy thông tin người dùng theo userId
+	    Users userInfo = usersService.getUserById(userId);
+	    modelAndView.addObject("userInfo", userInfo);
+	    
+	    // Lấy thông tin tài khoản của người dùng theo userId
+	    Accounts accountInfo = accountsService.getAccountById(userId);
+	    modelAndView.addObject("accountInfo", accountInfo);
+	    
+	    // Lấy danh sách bài viết của người dùng theo userId
+	    List<Posts> userPosts = postsService.getMyPost(userId);
+	    modelAndView.addObject("userPosts", userPosts);
+	    
+	    // Lấy danh sách ảnh của người dùng theo userId
+	    List<Images> userImages = imagesService.getImagesByUserId(userId);
+	    modelAndView.addObject("userImages", userImages);
+	    
+	    return modelAndView;
+	}
+
 	
 }

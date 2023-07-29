@@ -1,5 +1,5 @@
-angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $http) {
+angular.module('myApp', ['ngRoute'])
+	.controller('myCtrl', function($scope, $http, $window, $routeParams) {
 
 		$scope.Posts = [];
 		$scope.likedPosts = [];
@@ -11,6 +11,8 @@ angular.module('myApp', [])
 		$scope.followings = [];
 		$scope.myPostImage = [];
 		$scope.myListFollow = 0;
+		var otherUser = null;
+		
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;
@@ -427,6 +429,17 @@ angular.module('myApp', [])
 				console.log(error);
 			});
 
+		// Khởi tạo biến selectedPost
+		$scope.selectedPost = {};
+
+		// Hàm mở modal chỉnh sửa bài viết
+		$scope.openEditModal = function(myPost) {
+			// Gán giá trị cho selectedPost từ myPost được chọn
+			$scope.selectedPost = myPost;
+			console.log($scope.selectedPost);
+			// Hiển thị modal
+			$('#editModal').modal('show');
+		};
 		$scope.showImageModal = function(imageUrl) {
 			// Gán đường dẫn ảnh vào thuộc tính src của thẻ img trong modal
 			document.getElementById('modalImage').src = '/images/' + imageUrl;
@@ -434,5 +447,102 @@ angular.module('myApp', [])
 			// Hiển thị modal
 			$('#imageModal').modal('show');
 		};
+		$scope.updatePost = function(selectedPost) {
+			$http.put('/updatePost/' + selectedPost.postId, selectedPost)
+				.then(function(response) {
+					// Xử lý phản hồi thành công từ server
+					alert("Cập nhật bài viết thành công!");
 
-	});        
+					// Cập nhật lại bài viết trong mảng myPosts
+					var index = $scope.myPosts.findIndex(function(MyPosts) {
+						return MyPosts.postId === selectedPost.postId;
+					});
+
+					if (index !== -1) {
+						$scope.myPosts[index].content = selectedPost.content;
+					}
+
+					// Đóng modal
+					$('#editModal').modal('hide');
+				})
+				.catch(function(error) {
+					// Xử lý lỗi
+					console.log(error);
+					alert("Có lỗi xảy ra khi cập nhật bài viết.");
+				});
+		};
+
+		$scope.hidePost = function(postId) {
+			$http.put('/hide/' + postId)
+				.then(function(response) {
+					// Cập nhật trạng thái của bài viết trong danh sách myPosts
+					var index = $scope.myPosts.findIndex(function(post) {
+						return post.postId === postId;
+					});
+
+					if (index !== -1) {
+						$scope.myPosts[index].isActive = false;
+					}
+					$http.get('/getmypost')
+						.then(function(response) {
+							var myPosts = response.data;
+							$scope.myPosts = myPosts;
+
+							$scope.totalImagesCount = myPosts.reduce(function(total, post) {
+								return total + post.images.length;
+							}, 0);
+
+						});
+				})
+				.catch(function(error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+		};
+		$scope.goToProfile = function(userId) {
+			// Sử dụng $window.location.href để chuyển đến trang otherProfile.html với userId truyền vào
+			$window.location.href = '/otherProfile/' + userId;
+			$scope.otherUser = userId;
+		};
+		
+	})
+	.controller('OtherProfileController', function($scope, $http, $routeParams) {
+        // Lấy thông tin người dùng khác dựa vào userId từ $routeParams
+        var userId = $routeParams.userId;
+        
+        // Gọi API để lấy thông tin người dùng khác
+        $http.get('/getUserInfo')
+            .then(function(response) {
+                $scope.userInfo = response.data;
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+
+        // Gọi API để lấy thông tin tài khoản người dùng khác
+        $http.get('/getAccInfo' )
+            .then(function(response) {
+                $scope.accountInfo = response.data;
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+
+        // Gọi API để lấy danh sách bài viết của người dùng khác
+        $http.get('/getmypost' )
+            .then(function(response) {
+                $scope.userPosts = response.data;
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+
+        // Gọi API để lấy danh sách ảnh của người dùng khác
+        $http.get('/getListImage' )
+            .then(function(response) {
+                $scope.userImages = response.data;
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+          });  

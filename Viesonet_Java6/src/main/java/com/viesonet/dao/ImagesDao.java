@@ -12,7 +12,7 @@ import com.viesonet.entity.Posts;
 public interface ImagesDao extends JpaRepository<Images, Integer> {
 	
 	// Custom query to find images by userId
-    @Query("SELECT i FROM Images i JOIN i.post p JOIN p.user u WHERE u.userId = :userId")
+    @Query("SELECT i FROM Images i JOIN i.post p JOIN p.user u WHERE u.userId = :userId AND post.isActive = true")
     List<Images> findImagesByUserId(String userId);
 
 }
