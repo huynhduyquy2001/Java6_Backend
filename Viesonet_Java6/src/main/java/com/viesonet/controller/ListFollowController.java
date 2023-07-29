@@ -99,10 +99,6 @@ public class ListFollowController {
 		// Xóa dữ liệu follow từ cơ sở dữ liệu
 		followService.deleteFollowByFollowerAndFollowing(follower, following);
 	}
-	@GetMapping("/getUserInfo")
-	public Users getUserInfo(@SessionAttribute("id") String userId) {
-	    return UsersService.getUserById(userId);
-	}
 	//Lấy danh sách follow
 		@GetMapping("/getfollow")
 		public List<FollowDTO> getFollow() {
