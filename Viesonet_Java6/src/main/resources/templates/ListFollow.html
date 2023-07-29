@@ -299,17 +299,21 @@ div.dropdown-menu.baoCao {
 			<label style="font-size: 25px; font: bold;">Gợi ý theo dõi</label>			
 				<center>
 					<div class="row">
-						<div class="col-md-6" ng-repeat="user in users" ng-if="followings.indexOf(user[0].toString())===-1"  
+						<div class="col-md-6" ng-repeat="user in users" ng-if="followings.indexOf(user.userId	.toString())===-1"
 							style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px">
 							<div class="user-profile">
-								<img src="images/{{user[1]}}" class="img-thumbnail" alt="" style="border-radius: 35%; width:25%; height: auto;">
+								<img src="images/{{user.avatar}}" class="img-thumbnail" alt="" style="border-radius: 35%; width:25%; height: auto;">
 								<div>
-									<label>{{ user[2] }}</label> <br> 
+									<label>{{ user.username }}</label> <br> 
 								</div>
 							</div>
 							<div> 
-								<a href="" role="button" class="btn btn-primary"  ng-click="toggleFollow(user)"
-									style="background-color: #5D87FF; color: #fff; margin-right: 50px "> {{ user.isFollowing ? 'Unfollow' : 'Follow' }}</a>
+								<a href="" role="button" class="btn btn-primary"  ng-if="!isFollowing(follower.userId)"
+																				ng-click="followUser(user.userId)"
+									style="background-color: #5D87FF; color: #fff; margin-right: 50px ">Follow</a>
+									<a href="" role="button" class="btn btn-primary"  ng-if="isFollowing(follower.userId)"
+																				ng-click="unfollowUser(user.userId)"
+									style="background-color: #5D87FF; color: #fff; margin-right: 50px ">Unfollow</a>
 							</div>
 						</div>
 					</div>
@@ -333,8 +337,8 @@ div.dropdown-menu.baoCao {
       $scope.followers =[];
       $scope.followings =[];
       $scope.users = [];
-      
-      $http.get('/users')
+      $scope.listFollow=[];
+      $http.get('/ListFollower')
       .then(function(response) {
           $scope.users = response.data;
           console.log("User",$scope.users); // Kiểm tra dữ liệu trong console log
@@ -351,30 +355,67 @@ div.dropdown-menu.baoCao {
           .catch(function(error) {
             console.log(error);
       });
-      
-      
-   // Hàm thực hiện theo dõi hoặc hủy theo dõi người dùng
-      $scope.toggleFollow = function(user) {
-          if (user.isFollowing) {
-              // Thực hiện hủy theo dõi
-              $http.delete('/unfollow/' + user.userId)
-                  .then(function(response) {
-                      user.isFollowing = false;
-                  })
-                  .catch(function(error) {
-                      console.log('Lỗi khi hủy theo dõi:', error);
-                  });
-          } else {
-              // Thực hiện theo dõi
-              $http.post('/follow/' + user.userId)
-                  .then(function(response) {
-                      user.isFollowing = true;
-                  })
-                  .catch(function(error) {
-                      console.log('Lỗi khi theo dõi:', error);
-                  });
-          }
-      };
+      $http.get('/getUserInfo').then(function(response) {
+			$scope.UserInfo = response.data;
+			$scope.birthday = new Date($scope.UserInfo.birthday)
+			// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
+
+			$scope.UpdateUser = angular.copy($scope.UserInfo);	
+		});
+      $scope.myGallary = function() {
+			var currentUserId = $scope.UserInfo.userId;
+
+		}
+	$scope.followUser = function(followingId) {
+		var currentUserId = $scope.UserInfo.userId;
+		var data = {
+			followerId: currentUserId,
+			followingId: followingId
+		};
+		$http.post('/follow', data)
+			.then(function(response) {
+				// Thêm follow mới thành công, cập nhật trạng thái trong danh sách và chuyển nút thành "Unfollow"
+				$scope.listFollow.push(response.data);
+				console.log("Success Follow!");
+
+				// Cập nhật lại danh sách follow sau khi thêm mới thành công
+				$scope.refreshFollowList();
+			})
+			.catch(function(error) {
+				console.log("Lỗi F",error);
+			});
+	};
+
+	$scope.unfollowUser = function(followingId) {
+		var currentUserId = $scope.UserInfo.userId;
+		var data = {
+			followerId: currentUserId,
+			followingId: followingId
+		};
+		$http.delete('/unfollow', { data: data, headers: { 'Content-Type': 'application/json' } })
+			.then(function(response) {
+				// Cập nhật lại danh sách follow sau khi xóa thành công
+				$scope.listFollow = $scope.listFollow.filter(function(follow) {
+
+					return !(follow.followerId === currentUserId && follow.followingId === followingId);
+				});
+			}, function(error) {
+				console.log("Lỗi ÙnF",error);
+			});
+	};
+
+	
+	// Hàm làm mới danh sách follow
+	$scope.refreshFollowList = function() {
+		$http.get('/getfollow')
+			.then(function(response) {
+				var listFollow = response.data;
+				$scope.listFollow = listFollow;
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+	};
 
       $scope.getFormattedTimeAgo = function(date) {
         var currentTime = new Date();
