@@ -1,6 +1,6 @@
 angular.module('myApp', [])
 	.controller('myCtrl', function($scope, $http) {
-	
+
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -10,7 +10,7 @@ angular.module('myApp', [])
 		$scope.followers = [];
 		$scope.followings = [];
 		$scope.myPostImage = [];
-
+		$scope.myListFollow = 0;
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;
@@ -21,47 +21,45 @@ angular.module('myApp', [])
 			});
 
 
-	
+
 		// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
 		$http.get('/getUserInfo').then(function(response) {
 			$scope.UserInfo = response.data;
 			$scope.birthday = new Date($scope.UserInfo.birthday)
 			// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
-			
+
 			$scope.UpdateUser = angular.copy($scope.UserInfo);
-			 
-			console.log($scope.UserInfo.birthday);
 
 		});
-	
+
 		// Hàm cập nhật thông tin người dùng
 		$scope.updateUserInfo = function() {
 			// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
 			$scope.UpdateUser.birthday = $scope.birthday;
 			$http.post('/updateUserInfo', $scope.UpdateUser).then(function(response) {
 				$http.get('/findusers')
-			.then(function(response) {
-				var UserInfo = response.data;
-				$scope.UserInfo = UserInfo;
-			})
-			.catch(function(error) {
-				console.log(error);
-			});
+					.then(function(response) {
+						var UserInfo = response.data;
+						$scope.UserInfo = UserInfo;
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
 				console.log('User info updated successfully.');
 			}).catch(function(error) {
 				console.error('Error while updating user info:', error);
 			});
 		};
-		
+
 
 		// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
-		$http.get('/getAccInfo').then(function(response) {		
+		$http.get('/getAccInfo').then(function(response) {
 			$scope.AccInfo = response.data;
 			// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
-			
+
 			$scope.UpdateAcc = angular.copy($scope.AccInfo);
-			
-			
+
+
 		});
 
 		// Hàm cập nhật thông tin người dùng
@@ -78,13 +76,12 @@ angular.module('myApp', [])
 			.then(function(response) {
 				var AccInfo = response.data;
 				$scope.AccInfo = AccInfo;
-				$scope.accountStatus = $scope.AccInfo.accountStatus;
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
-			
-			
+
+
 		$http.get('/findmyfollowers')
 			.then(function(response) {
 				$scope.followers = response.data;
@@ -133,12 +130,16 @@ angular.module('myApp', [])
 				var myPosts = response.data;
 				$scope.myPosts = myPosts;
 
+				$scope.totalImagesCount = myPosts.reduce(function(total, post) {
+					return total + post.images.length;
+				}, 0);
+
 			});
 		$http.get('/find9post')
 			.then(function(response) {
 				var ninePost = response.data;
 				$scope.ninePost = ninePost;
-				console.log($scope.nitePost);
+
 			});
 
 		$http.get('/countmypost')
@@ -166,7 +167,7 @@ angular.module('myApp', [])
 					.then(function(response) {
 
 						// Cập nhật thuộc tính likeCount+1 trong đối tượng post
-						var post = $scope.Posts.find(function(item) {
+						var post = $scope.myPosts.find(function(item) {
 							return item.postId === postId;
 						});
 						if (post) {
@@ -190,7 +191,7 @@ angular.module('myApp', [])
 						//console.log(response.data);
 
 						// Cập nhật thuộc tính likeCount-1 trong đối tượng post
-						var post = $scope.Posts.find(function(item) {
+						var post = $scope.myPosts.find(function(item) {
 							return item.postId === postId;
 						});
 						if (post) {
@@ -226,29 +227,30 @@ angular.module('myApp', [])
 			}
 		};
 		$scope.post = function() {
-			var content = $scope.postData.text;
-
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile01');
 
 			for (var i = 0; i < fileInput.files.length; i++) {
 				formData.append('photoFiles', fileInput.files[i]);
-				alert(fileInput.files[i])
 			}
-			formData.append('content', content.content);
+			formData.append('content', $scope.content);
 
 			$http.post('/post', formData, {
 				transformRequest: angular.identity,
-				headers: { 'Content-Type': undefined }
+				headers: {
+					'Content-Type': undefined
+				}
 			}).then(function(response) {
-				alert("ok")
 				// Xử lý phản hồi thành công từ máy chủ
-				console.log(response.data);
+
 			}, function(error) {
 				// Xử lý lỗi
 				console.log(error);
 			});
+			alert("ok");
+			$scope.content = '';
 		};
+
 
 		$scope.getPostDetails = function(postId) {
 
@@ -289,4 +291,148 @@ angular.module('myApp', [])
 					console.log(error);
 				});
 		};
+		$scope.isFollowing = function(followingId) {
+			// Lấy id của người dùng hiện tại
+			var currentUserId = $scope.UserInfo.userId;
+			// Kiểm tra xem người dùng hiện tại đã follow người dùng với id tương ứng (followingId) chưa
+			// Dựa vào danh sách các người dùng mà người dùng hiện tại đã follow
+			// Trong ví dụ này, danh sách này có thể được lưu trữ trong cơ sở dữ liệu hoặc được lấy từ API
+			var myListFollow = $scope.listFollow;
+			for (var i = 0; i < myListFollow.length; i++) {
+				if (myListFollow[i].followingId === followingId && myListFollow[i].followerId === currentUserId) {
+					// Người dùng hiện tại đã follow người dùng với id tương ứng
+					return true;
+				}
+			}
+			// Người dùng hiện tại chưa follow người dùng với id tương ứng
+			return false;
+		},
+			$scope.myGallary = function() {
+				var currentUserId = $scope.UserInfo.userId;
+
+			}
+		$scope.followUser = function(followingId) {
+			var currentUserId = $scope.UserInfo.userId;
+			var data = {
+				followerId: currentUserId,
+				followingId: followingId
+			};
+			$http.post('/follow', data)
+				.then(function(response) {
+					// Thêm follow mới thành công, cập nhật trạng thái trong danh sách và chuyển nút thành "Unfollow"
+					$scope.listFollow.push(response.data);
+					console.log("Success Follow!");
+
+					// Cập nhật lại danh sách follow sau khi thêm mới thành công
+					$scope.refreshFollowList();
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+		};
+
+		$scope.unfollowUser = function(followingId) {
+			var currentUserId = $scope.UserInfo.userId;
+			var data = {
+				followerId: currentUserId,
+				followingId: followingId
+			};
+			$http.delete('/unfollow', { data: data, headers: { 'Content-Type': 'application/json' } })
+				.then(function(response) {
+					// Cập nhật lại danh sách follow sau khi xóa thành công
+					$scope.listFollow = $scope.listFollow.filter(function(follow) {
+
+						return !(follow.followerId === currentUserId && follow.followingId === followingId);
+					});
+				}, function(error) {
+					console.log(error);
+				});
+		};
+
+		$http.get('/getfollow')
+			.then(function(response) {
+				var listFollow = response.data;
+				$scope.listFollow = listFollow;
+			}, function(error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+		// Hàm làm mới danh sách follow
+		$scope.refreshFollowList = function() {
+			$http.get('/getfollow')
+				.then(function(response) {
+					var listFollow = response.data;
+					$scope.listFollow = listFollow;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+		};
+		$scope.changeBackground = function() {
+			var formData = new FormData();
+			var fileInput = document.getElementById('inputGroupFile02');
+
+			for (var i = 0; i < fileInput.files.length; i++) {
+				formData.append('photoFiles2', fileInput.files[i]);
+			}
+			formData.append('content', $scope.content);
+
+			$http.post('/updateBackground', formData, {
+				transformRequest: angular.identity,
+				headers: {
+					'Content-Type': undefined
+				}
+			}).then(function(response) {
+				// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh bìa)
+				$scope.content = '';
+				alert("Đăng bài và cập nhật ảnh bìa thành công!");
+			}, function(error) {
+				// Xử lý lỗi
+				console.log(error);
+				alert("Đăng bài và cập nhật ảnh bìa thành công!");
+			});
+		};
+		$scope.changeAvatar = function() {
+			var formData = new FormData();
+			var fileInput = document.getElementById('inputGroupFile03');
+
+			for (var i = 0; i < fileInput.files.length; i++) {
+				formData.append('photoFiles3', fileInput.files[i]);
+			}
+			formData.append('content', $scope.content);
+
+			$http.post('/updateAvatar', formData, {
+				transformRequest: angular.identity,
+				headers: {
+					'Content-Type': undefined
+				}
+			}).then(function(response) {
+				// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh bìa)
+				$scope.content = '';
+				alert("Đăng bài và cập nhật ảnh đại diện thành công!");
+			}, function(error) {
+				// Xử lý lỗi
+				console.log(error);
+				alert("Đăng bài và cập nhật ảnh đại diện thành công1!");
+			});
+		};
+
+		$http.get('/getListImage')
+			.then(function(response) {
+				// Dữ liệu trả về từ API sẽ nằm trong response.data
+				$scope.imageList = response.data;
+				$scope.displayedImages = $scope.imageList.slice(0, 9);
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
+		$scope.showImageModal = function(imageUrl) {
+			// Gán đường dẫn ảnh vào thuộc tính src của thẻ img trong modal
+			document.getElementById('modalImage').src = '/images/' + imageUrl;
+
+			// Hiển thị modal
+			$('#imageModal').modal('show');
+		};
+
 	});        

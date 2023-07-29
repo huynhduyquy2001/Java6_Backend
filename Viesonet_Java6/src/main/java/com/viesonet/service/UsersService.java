@@ -74,4 +74,20 @@ public class UsersService {
 	 public Users getUserById(String userId) {
 	        return usersDao.findById(userId).orElse(null);
 	}
+	 
+	 public void updateBackground(String userId, String newBackgroundImageUrl) {
+		    Users user = usersDao.findById(userId).orElse(null);
+		    if (user != null) {
+		        user.setBackground(newBackgroundImageUrl);
+		        usersDao.save(user);
+		    }
+	}
+	 
+	 public void updateAvatar(String userId, String newAvatarImageUrl) {
+		    Users user = usersDao.findById(userId).orElse(null);
+		    if (user != null) {
+		        user.setAvatar(newAvatarImageUrl);
+		        usersDao.save(user);
+		    }
+	}
 }

@@ -11,6 +11,8 @@ import com.viesonet.entity.AccountAndFollow;
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.Users;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class FollowService {
 
@@ -19,6 +21,9 @@ public class FollowService {
     
 	public List<Follow> getFollowing(String followingId){
 		return followDao.findByFollowingId(followingId);
+	}
+	public List<Follow> getFollowers(String followerId){
+		return followDao.findByFollowersId(followerId);
 	}
 	public AccountAndFollow getFollowingFollower(Users user){
 		AccountAndFollow obj = new AccountAndFollow();
@@ -37,4 +42,15 @@ public class FollowService {
         return followDao.findFollowingInfoByUserId(userId);
     }
 	
+	public List<Follow> findAllFollow() {
+        return followDao.findAll();
+    }
+
+    public Follow saveFollow(Follow follow) {
+        return followDao.save(follow);
+    }
+    @Transactional
+    public void deleteFollowByFollowerAndFollowing(Users follower, Users following) {
+        followDao.deleteByFollowerAndFollowing(follower, following);
+    }
 }

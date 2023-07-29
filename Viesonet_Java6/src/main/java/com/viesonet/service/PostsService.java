@@ -55,7 +55,7 @@ public class PostsService {
 	}
 
 	public List<Posts> getMyPost(String userId) {
-		return postsDao.getMyPosts(userId);
+		return postsDao.getMyPosts(userId, Sort.by(Sort.Direction.DESC, "postDate"));
 	}
 
 	public int countPost(String userId) {
