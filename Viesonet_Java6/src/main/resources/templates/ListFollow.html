@@ -34,7 +34,7 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
 .dropdown-item {
@@ -317,6 +317,13 @@ div.dropdown-menu.baoCao {
 							</div>
 						</div>
 					</div>
+					<h1>{{ 'TITLE' | translate }}</h1>
+        			<p>{{ 'GREETING' | translate }}</p>
+        
+        <div>
+            <button ng-click="changeLanguage('en')">English</button>
+            <button ng-click="changeLanguage('fr')">Français</button>
+        </div>
 				</center>
 			</div>
 		</div>
@@ -327,8 +334,22 @@ div.dropdown-menu.baoCao {
 </script>
 
 	<script>
-  angular.module('myApp', [])
-    .controller('myCtrl', function ($scope, $http) {
+  angular.module('myApp', ['pascalprecht.translate'])
+   .config(function ($translateProvider) {
+        $translateProvider.translations('en', {
+            'TITLE': 'Welcome to My App',
+            'GREETING': 'Hello, how are you?'
+        });
+
+        $translateProvider.translations('fr', {
+            'TITLE': 'Bienvenue sur Mon Application',
+            'GREETING': 'Bonjour, comment ça va?'
+        });
+
+        // Set the default language
+        $translateProvider.preferredLanguage('en');
+    })
+    .controller('myCtrl', function ($scope, $http, $translate) {
       $scope.Posts = [];
       $scope.likedPosts = [];
       $scope.myAccount = {};
@@ -346,6 +367,12 @@ div.dropdown-menu.baoCao {
         .catch(function(error) {
           console.log("Lỗi load user",error);
     });
+      
+      //Đa ngôn ngữ	
+      $scope.changeLanguage = function (langKey) {
+          $translate.use(langKey);
+      };
+      
       
       $http.get('/ListFollowing')
           .then(function(response) {
