@@ -61,4 +61,7 @@ public class UsersService {
 		user.setViolationCount(0);
 		return usersDao.saveAndFlush(user);
 	}
+	public Users getUserById(String userId) {
+        return usersDao.findById(userId).orElse(null);
+		}
 }
