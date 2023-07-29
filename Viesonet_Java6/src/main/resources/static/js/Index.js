@@ -72,6 +72,24 @@ angular.module('myApp', [])
 		};
 
 		$scope.report = function(postId) {
+			if($scope.selectedViolationType === null || $scope.selectedViolationType === undefined){
+				const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 1000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'warning',
+						title: 'Bạn phải chọn nội dung báo cáo'
+					})
+				return;
+			}
 			$http.post('/report/' + postId + '/' + $scope.selectedViolationType)
 				.then(function(response) {
 					const Toast = Swal.mixin({
@@ -216,9 +234,6 @@ angular.module('myApp', [])
 				console.log(error);
 			});
 
-		$scope.saveImages = function() {
-
-		}
 		$scope.likePost = function(postId) {
 			var likedIndex = $scope.likedPosts.indexOf(postId.toString());
 			var likeEndpoint = '/likepost/' + postId;
@@ -392,6 +407,24 @@ angular.module('myApp', [])
 
 		$scope.addComment = function(postId) {
 			var myComment = $scope.myComment;
+			if(myComment === null || myComment === undefined){
+				const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 1000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'warning',
+						title: 'Bạn phải nhập nội dung bình luận'
+					})
+				return;
+			}
 			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
 				.then(function(response) {
 					$scope.postComments.unshift(response.data);
