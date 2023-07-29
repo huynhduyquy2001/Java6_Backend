@@ -56,13 +56,9 @@ public class MessController {
 
 	@PostMapping("/savemess")
 	public Message saveMess(@RequestBody MessageRequest messageRequest) {
-		String senderId = messageRequest.getSenderId();
-		String receiverId = messageRequest.getReceiverId();
-		String content = messageRequest.getContent();
 		// Thêm tin nhắn vào cơ sở dữ liệu
-		Message newMessage = messageService.addMess(usersService.findUserById(senderId),
-				usersService.findUserById(receiverId), content);
-
+		Message newMessage = messageService.addMess(usersService.findUserById(messageRequest.getSenderId()),
+				usersService.findUserById(messageRequest.getReceiverId()), messageRequest.getContent());
 		return newMessage;
 	}
 

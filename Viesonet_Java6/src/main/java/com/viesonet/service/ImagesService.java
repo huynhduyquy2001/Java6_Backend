@@ -15,10 +15,11 @@ public class ImagesService {
 	@Autowired
 	ImagesDao imagesDao;
 	
-	public void saveImage(Posts post, String imageUrl) {
+	public void saveImage(Posts post, String imageUrl, boolean type) {
 		Images image = new Images();
 		image.setImageUrl(imageUrl);
 		image.setPost(post);
+		image.setType(type);
 		imagesDao.saveAndFlush(image);
 	}
 	

@@ -44,9 +44,12 @@ import com.viesonet.entity.Posts;
 import com.viesonet.entity.Reply;
 import com.viesonet.entity.ReplyRequest;
 import com.viesonet.entity.Users;
+import com.viesonet.entity.ViolationTypes;
+import com.viesonet.entity.Violations;
 import com.viesonet.service.CommentsService;
 import com.viesonet.service.CookieService;
 import com.viesonet.service.FavoritesService;
+import com.viesonet.service.FileChecker;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
 import com.viesonet.service.InteractionService;
@@ -55,9 +58,12 @@ import com.viesonet.service.PostsService;
 import com.viesonet.service.ReplyService;
 import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
+import com.viesonet.service.ViolationTypesService;
+import com.viesonet.service.ViolationsService;
 
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
+
 @EnableScheduling
 @RestController
 public class IndexController {
@@ -100,9 +106,15 @@ public class IndexController {
 
 	@Autowired
 	NotificationsService notificationsService;
-	
+
 	@Autowired
-    private SimpMessagingTemplate messagingTemplate;
+	private SimpMessagingTemplate messagingTemplate;
+
+	@Autowired
+	private ViolationTypesService violationTypesService;
+
+	@Autowired
+	private ViolationsService violationService;
 
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
@@ -202,56 +214,64 @@ public class IndexController {
 					String rootPath = servletContext.getRealPath("/");
 					String parentPath = new File(rootPath).getParent();
 					String pathUpload = parentPath + "/resources/static/images/" + newFileName;
-					
+
 					try {
 						photoFile.transferTo(new File(pathUpload));
+						String contentType = photoFile.getContentType();
+						boolean type = true;
+						if (contentType.startsWith("image")) {
 
-						long fileSize = photoFile.getSize();
-						if (fileSize > 1 * 1024 * 1024) {
-							double quality = 0.6;
-							String outputPath = pathUpload;
-							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+						} else if (contentType.startsWith("video")) {
+							type = false;
 						}
-						imagesService.saveImage(myPost, newFileName);
+						if (type == true) {
+							long fileSize = photoFile.getSize();
+							if (fileSize > 1 * 1024 * 1024) {
+								double quality = 0.6;
+								String outputPath = pathUpload;
+								Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+							}
+						}
+						imagesService.saveImage(myPost, newFileName, type);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
+
 				}
 			}
 		}
-		
-		//thêm thông báo
-		
+
+		// thêm thông báo
+
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 		return "success";
 	}
-	
-	@Scheduled(fixedRate = 500)  // Lặp lại theo thời gian
-    public void sendRealTimeNotification() {
-           messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
+
+	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
+	public void sendRealTimeNotification() {
+		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
 	}
-	
+
 	@GetMapping("/loadnotification")
-    public List<Notifications> getNotification() {
-        return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
-    }
-	
+	public List<Notifications> getNotification() {
+		return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
+	}
+
 	@GetMapping("/loadallnotification")
-    public List<Notifications> getAllNotification() {
-        return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
-    }
-	
+	public List<Notifications> getAllNotification() {
+		return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
+	}
+
 	@PutMapping("/seennotification/{notificationId}")
-    public void seenNotification(@PathVariable int notificationId) {
-         notificationsService.seenNotification(notificationId);
-    }
-	
+	public void seenNotification(@PathVariable int notificationId) {
+		notificationsService.seenNotification(notificationId);
+	}
+
 	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
 	public ModelAndView getHomePage() {
-        ModelAndView modelAndView = new ModelAndView("Index");
-        return modelAndView;
-    }
+		ModelAndView modelAndView = new ModelAndView("Index");
+		return modelAndView;
+	}
 
 	@GetMapping("/logout")
 	public ModelAndView logout() {
@@ -260,6 +280,17 @@ public class IndexController {
 		cookieService.delete("user");
 		cookieService.delete("pass");
 		return new ModelAndView("redirect:/login");
+	}
+
+	@GetMapping("/getviolations")
+	public List<ViolationTypes> getViolations() {
+		return violationTypesService.getViolations();
+	}
+
+	@PostMapping("/report/{postId}/{violationTypeId}")
+	public Violations report(@PathVariable("postId") int postId, @PathVariable("violationTypeId") int violationTypeId) {
+		return violationService.report(usersService.getUserById(session.get("id")), postsService.findPostById(postId),
+				violationTypesService.getById(violationTypeId));
 	}
 
 }
