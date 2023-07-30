@@ -336,6 +336,9 @@ public class ProfileController {
         // Lấy thông tin người dùng theo userId
         Users userInfo = usersService.getUserById(userId);
         responseData.put("userInfo", userInfo);
+        
+        // Lấy id của người dùng hiện tại
+        responseData.put("currentUserId", session.get("id"));
 
         // Lấy thông tin tài khoản của người dùng theo userId
         Accounts accountInfo = accountsService.getAccountByUsers(userId);
@@ -357,7 +360,7 @@ public class ProfileController {
         List<Users> followers = followService.getFollowersInfoByUserId(userId);
         responseData.put("followers", followers);
         
-        // Lấy danh sách following
+        // Lấy danh sách chi tiết các following
         List<Users> followings = followService.getFollowingInfoByUserId(userId);
         responseData.put("followings", followings);
         

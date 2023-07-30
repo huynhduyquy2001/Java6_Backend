@@ -1,7 +1,6 @@
-angular.module('myApp', ['ngRoute']).controller('myCtrl2', function($scope, $http, $routeParams) {
+angular.module('myApp', []).controller('myCtrl2', function($scope, $http, dataService) {
 	var userId = 'UI006'; // Thay YOUR_USER_ID bằng user ID bạn muốn truy vấn
 	// Gọi service để lấy dữ liệu người dùng khác
-
 	$http.get('/getInfoOtherProfile/' + userId)
 		.then(function(response) {
 			var data = response.data;
@@ -16,9 +15,10 @@ angular.module('myApp', ['ngRoute']).controller('myCtrl2', function($scope, $htt
 			$scope.imageList = data.userImages;
 			$scope.totalImagesCount = $scope.imageList.length;
 			$scope.displayedImages = $scope.imageList.slice(0, 9);
-
+			$scope.currentUserId = data.currentUserId;
+			
 			$scope.followUser = function(followingId) {
-				var currentUserId = $scope.UserInfo.userId;
+				var currentUserId = $scope.currentUserId;
 				var data = {
 					followerId: currentUserId,
 					followingId: followingId
@@ -38,7 +38,7 @@ angular.module('myApp', ['ngRoute']).controller('myCtrl2', function($scope, $htt
 			};
 
 			$scope.unfollowUser = function(followingId) {
-				var currentUserId = $scope.UserInfo.userId;
+				var currentUserId = $scope.currentUserId;
 				var data = {
 					followerId: currentUserId,
 					followingId: followingId
@@ -230,7 +230,7 @@ angular.module('myApp', ['ngRoute']).controller('myCtrl2', function($scope, $htt
 			};
 			$scope.isFollowing = function(followingId) {
 				// Lấy id của người dùng hiện tại
-				var currentUserId = $scope.UserInfo.userId;
+				var currentUserId = $scope.currentUserId;
 				// Kiểm tra xem người dùng hiện tại đã follow người dùng với id tương ứng (followingId) chưa
 				// Dựa vào danh sách các người dùng mà người dùng hiện tại đã follow
 				// Trong ví dụ này, danh sách này có thể được lưu trữ trong cơ sở dữ liệu hoặc được lấy từ API

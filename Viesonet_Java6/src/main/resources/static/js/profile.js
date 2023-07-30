@@ -1,5 +1,5 @@
 angular.module('myApp', ['ngRoute'])
-	.controller('myCtrl', function($scope, $http, $window, $routeParams) {
+	.controller('myCtrl', function($scope, $http, $window, dataService) {
 
 		$scope.Posts = [];
 		$scope.likedPosts = [];
@@ -11,19 +11,23 @@ angular.module('myApp', ['ngRoute'])
 		$scope.followings = [];
 		$scope.myPostImage = [];
 		$scope.myListFollow = 0;
-		var otherUser = null;
+		$scope.UserInfo = {};
 
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;
 				$scope.UserInfo = UserInfo;
+				
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
-
-
-
+			
+		
+				// Truyền dữ liệu vào Service
+				var currentUserId = $scope.UserInfo.userId;
+				dataService.setData(currentUserId);
+		
 		// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
 		$http.get('/getUserInfo').then(function(response) {
 			$scope.UserInfo = response.data;
@@ -218,7 +222,7 @@ angular.module('myApp', ['ngRoute'])
 				return days + ' ngày trước';
 			}
 		};
-$scope.post = function() {
+		$scope.post = function() {
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile01');
 
@@ -525,9 +529,11 @@ $scope.post = function() {
 		};
 		$scope.goToProfile = function(userId) {
 			// Sử dụng $window.location.href để chuyển đến trang otherProfile.html với userId truyền vào
-			$window.location.href = '/otherProfile/' + userId;
 			$scope.otherUser = userId;
+			$window.location.href = '/otherProfile/' + userId;
+		
+		
 		};
 
 	})
-	
+

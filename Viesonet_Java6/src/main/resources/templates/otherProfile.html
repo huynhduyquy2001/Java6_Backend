@@ -668,7 +668,8 @@ div.dropdown-menu.baoCao {
 						</div>
 						<div class="row">
 							<div class=" col-md-6 col-xl-4" ng-repeat="follower in followers">
-								<div class="card">
+							
+								<div class="card" ng-if="follower.userId !=  ">
 									<div class="card-body p-4 d-flex align-items-center gap-3">
 										<img ng-src="/images/{{follower.avatar}}" alt=""
 											class="rounded-circle" width="40" height="40"
@@ -1390,6 +1391,7 @@ div.dropdown-menu.baoCao {
 			</script>
 			<script type="text/javascript" src="/js/profile.js"></script>
 			<script type="text/javascript" src="/js/otherProfile.js"></script>
+			<script type="text/javascript" src="/js/service.js"></script>
 			<script type="text/javascript">
 				// Bắt sự kiện cuộn trang
 				window.addEventListener("scroll", function() {

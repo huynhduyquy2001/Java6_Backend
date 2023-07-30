@@ -81,15 +81,17 @@ ul>.active {
 	overflow-y: auto;
 	/* Tạo thanh cuộn dọc */
 }
+
 #dropArea {
-    height: 200px;
-    border: 2px dashed #ccc;
-    text-align: center;
-    line-height: 200px;
-    font-size: 16px;
-    color: #666;
-    margin: 20px auto;
+	height: 200px;
+	border: 2px dashed #ccc;
+	text-align: center;
+	line-height: 200px;
+	font-size: 16px;
+	color: #666;
+	margin: 20px auto;
 }
+
 .sidebar-scrollable::-webkit-scrollbar {
 	width: 5px;
 	/* Độ rộng của thanh cuộn */
@@ -936,60 +938,62 @@ div.dropdown-menu.baoCao {
 					</div>
 				</div>
 
-	<!-- Modal đăng bài -->
-	<div class="modal fade" id="exampleModalToggle" aria-hidden="true"
-		aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content"
-				style="background-color: rgba(246, 245, 244, 1);">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalToggleLabel">
-						<b style="margin-left: 170px;">Đăng bài viết</b>
-					</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form id="postForm" enctype="multipart/form-data">
-						<div class="user-profile">
-							<img ng-src="images/{{ myAccount.user.avatar }}" alt="">
-							<div>
-								<label>{{myAccount.user.username}}</label> <br>
-								<div style="display: flex; align-items: center;">
-									<div class="circle2 mb-2"
-										style="margin-bottom: 0 !important; background-color: green"></div>
-									&nbsp; <small style="font-size: 12px"> Đang hoạt động </small>
-								</div>
+				<!-- Modal đăng bài -->
+				<div class="modal fade" id="exampleModalToggle" aria-hidden="true"
+					aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content"
+							style="background-color: rgba(246, 245, 244, 1);">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalToggleLabel">
+									<b style="margin-left: 170px;">Đăng bài viết</b>
+								</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form id="postForm" enctype="multipart/form-data">
+									<div class="user-profile">
+										<img ng-src="images/{{ myAccount.user.avatar }}" alt="">
+										<div>
+											<label>{{myAccount.user.username}}</label> <br>
+											<div style="display: flex; align-items: center;">
+												<div class="circle2 mb-2"
+													style="margin-bottom: 0 !important; background-color: green"></div>
+												&nbsp; <small style="font-size: 12px"> Đang hoạt
+													động </small>
+											</div>
+										</div>
+									</div>
+									<br>
+									<textarea name="content" placeholder="Bạn đang nghĩ gì?"
+										id="content" ng-model="content" cols="30" rows="3"
+										style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
+									<br>
+									<div id="dropArea" ondrop="dropHandler(event);"
+										ondragover="dragOverHandler(event);"
+										ondragleave="dragLeaveHandler(event);">Chọn hoặc kéo thả
+										để tải hình ảnh/video.</div>
+
+									<div class="input-group mb-3">
+										<label class="input-group-text" for="inputGroupFile01">
+											<i class="fa-regular fa-image"></i>Hình ảnh và video
+										</label> <input hidden type="file" class="form-control"
+											name="mediaFiles" id="inputGroupFile01" multiple>
+									</div>
+
+									<div id="mediaList"></div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button ng-click="post()" style="width: 500px; border: none;"
+									class="btn-blue" data-bs-target="#exampleModalToggle2"
+									data-bs-toggle="modal" data-bs-dismiss="modal">Đăng
+									bài</button>
 							</div>
 						</div>
-						<br>
-						<textarea name="content" placeholder="Bạn đang nghĩ gì?"
-							id="content" ng-model="content" cols="30" rows="3"
-							style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
-						<br>
-						<div id="dropArea" ondrop="dropHandler(event);"
-							ondragover="dragOverHandler(event);"
-							ondragleave="dragLeaveHandler(event);">Chọn hoặc kéo thả để
-							tải hình ảnh/video.</div>
-
-						<div class="input-group mb-3">
-							<label class="input-group-text" for="inputGroupFile01"> <i
-								class="fa-regular fa-image"></i>Hình ảnh và video
-							</label> <input hidden type="file" class="form-control" name="mediaFiles"
-								id="inputGroupFile01" multiple>
-						</div>
-
-						<div id="mediaList"></div>
-					</form>
+					</div>
 				</div>
-				<div class="modal-footer">
-					<button ng-click="post()" style="width: 500px; border: none;"
-						class="btn-blue" data-bs-target="#exampleModalToggle2"
-						data-bs-toggle="modal" data-bs-dismiss="modal">Đăng bài</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 				<!-- Modal chỉnh sửa ảnh đại diện -->
 				<div class="modal fade" id="ChinhSuaAnhDaiDien" aria-hidden="true"
@@ -1461,7 +1465,7 @@ div.dropdown-menu.baoCao {
 				});
 			</script>
 			<script type="text/javascript" src="/js/profile.js"></script>
-
+			<script type="text/javascript" src="/js/service.js"></script>
 			<script type="text/javascript">
 				// Bắt sự kiện cuộn trang
 				window.addEventListener("scroll", function() {
