@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>otherProfile</title>
+<title>Viesonet</title>
 <link rel="stylesheet" href="/css/styles.min.css" />
 <link rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap">
@@ -30,8 +30,9 @@
 	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+	
 </head>
 <style>
 body {
@@ -158,7 +159,7 @@ div.dropdown-menu.baoCao {
 }
 </style>
 
-<body ng-controller="OtherProfileController">
+<body ng-controller="myCtrl2">
 	<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
 		data-navbarbg="skin6" data-sidebartype="full"
 		data-sidebar-position="fixed" data-header-position="fixed">
@@ -348,7 +349,7 @@ div.dropdown-menu.baoCao {
 										<li class="nav-item dropdown"><a
 											class="nav-link nav-icon-hover" href="#" id="drop2"
 											data-bs-toggle="dropdown" aria-expanded="false"> <img
-												src="/images/{{myAccount.user.avatar}}" alt="" width="35"
+												src="/images/{{UserInfo.avatar}}" alt="" width="35"
 												height="35" class="rounded-circle"
 												style="object-fit: cover;">
 										</a>
@@ -394,7 +395,7 @@ div.dropdown-menu.baoCao {
 					<div class="card-body p-0">
 						<a href="#" data-bs-toggle="modal"
 							data-bs-target="#ChinhSuaAnhBia"> <img
-							ng-src="/images/{{myAccount.user.background}}" alt=""
+							ng-src="/images/{{UserInfo.background}}" alt=""
 							height="300" width="1440" style="object-fit: cover;"></a>
 						<div class="row align-items-center">
 							<div class="col-lg-4 order-lg-1 order-2">
@@ -407,12 +408,12 @@ div.dropdown-menu.baoCao {
 									</div>
 									<div class="text-center">
 										<i class="fas fa-users fa-sm"></i>
-										<h4 class="mb-0 fw-semibold lh-1">{{myAccount.followers}}</h4>
+										<h4 class="mb-0 fw-semibold lh-1">{{myFollowersAndFollowing.followers}}</h4>
 										<p class="mb-0 fs-4">Người theo dõi</p>
 									</div>
 									<div class="text-center">
 										<i class="fa-solid fa-user-group-crown fa-sm"></i>
-										<h4 class="mb-0 fw-semibold lh-1">{{myAccount.following}}</h4>
+										<h4 class="mb-0 fw-semibold lh-1">{{myFollowersAndFollowing.following}}</h4>
 										<p class="mb-0 fs-4">Theo dõi</p>
 									</div>
 								</div>
@@ -426,7 +427,7 @@ div.dropdown-menu.baoCao {
 											style="width: 155px; height: 155px;">
 											<div
 												class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
-												style="width: 150px; height: 150px;";="">
+												style="width: 150px; height: 150px;">
 												<a href="#" data-bs-toggle="modal"
 													data-bs-target="#ChinhSuaAnhDaiDien"> <img
 													ng-src="/images/{{UserInfo.avatar}}" alt=""
@@ -437,7 +438,7 @@ div.dropdown-menu.baoCao {
 										</div>
 									</div>
 									<div class="text-center">
-										<h5 class="fs-5 mb-0 fw-semibold">{{myAccount.user.username}}</h5>
+										<h5 class="fs-5 mb-0 fw-semibold">{{UserInfo.username}}</h5>
 
 									</div>
 								</div>
@@ -445,14 +446,7 @@ div.dropdown-menu.baoCao {
 							<div class="col-lg-4 order-last">
 								<ul
 									class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3">
-									<li><button class="btn btn-primary text-end"
-											data-bs-toggle="modal" data-bs-target="#exampleModal1">
-											<i class="fa-light fa-pen-to-square"></i> Thông tin
-										</button></li>
-									<li><button class="btn btn-secondary text-end"
-											data-bs-toggle="modal" data-bs-target="#exampleModal2">
-											<i class="fa-light fa-pen-to-square"></i> Tài khoản
-										</button></li>
+									ssss
 								</ul>
 							</div>
 						</div>
@@ -556,33 +550,7 @@ div.dropdown-menu.baoCao {
 								</div>
 							</div>
 							<div class="col-lg-8">
-								<div class="card shadow-none border">
-									<div class="card-body">
-										<div class="mb-3">
-											<textarea class="form-control"
-												placeholder=" Bạn muốn đăng gì?" style="height: 137px"
-												data-bs-toggle="modal" href="#exampleModalToggle"></textarea>
-
-										</div>
-										<div class="d-flex align-items-center gap-2">
-											<div
-												class="text-white d-flex align-items-center justify-content-center bg-primary p-2 fs-4 rounded-circle"
-												href="javascript:void(0)">
-												<i class="fa-solid fa-image fa-xs"></i>
-											</div>
-											<a href="javascript:void(0)" class="text-dark py-2 nav-link">Chọn
-												ảnh</a> <a href="javascript:void(0)"
-												class="d-flex align-items-center gap-2">
-												<div
-													class="text-white d-flex align-items-center justify-content-center bg-secondary p-2 fs-4 rounded-circle">
-													<i class="fa-solid fa-shop fa-xs"></i>
-												</div> <a href="javascript:void(0)"
-												class="text-dark py-2 nav-link">Cửa hàng</a>
-											</a>
-
-										</div>
-									</div>
-								</div>
+	
 								<div class="post" style="margin-bottom: 20px"
 									ng-repeat="myPost in myPosts">
 									<div class="card">
@@ -603,9 +571,8 @@ div.dropdown-menu.baoCao {
 													<ul class="dropdown-menu"
 														aria-labelledby="dropdownMenuLink">
 														<li><a class="dropdown-item" href="#"
-															ng-click="hidePost(myPost.postId)">Xóa bài viết</a></li>
-														<li><a class="dropdown-item" href="#"
-															ng-click="openEditModal(myPost)">Chỉnh sửa bài viết</a></li>
+															>Tố cáo bài viết</a></li>
+														
 													</ul>
 												</div>
 											</div>
@@ -691,7 +658,7 @@ div.dropdown-menu.baoCao {
 							class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
 							<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
 								Người theo dõi <span
-									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.followers}}</span>
+									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myFollowersAndFollowing.followers}}</span>
 							</h3>
 							<form class="position-relative">
 								<input type="text" class="form-control search-chat py-2 ps-5"
@@ -737,7 +704,7 @@ div.dropdown-menu.baoCao {
 							class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
 							<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
 								Theo dõi <span
-									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.following}}</span>
+									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myFollowersAndFollowing.following}}</span>
 							</h3>
 							<form class="position-relative">
 								<input type="text" class="form-control search-chat py-2 ps-5"
@@ -1422,6 +1389,7 @@ div.dropdown-menu.baoCao {
 				});
 			</script>
 			<script type="text/javascript" src="/js/profile.js"></script>
+			<script type="text/javascript" src="/js/otherProfile.js"></script>
 			<script type="text/javascript">
 				// Bắt sự kiện cuộn trang
 				window.addEventListener("scroll", function() {

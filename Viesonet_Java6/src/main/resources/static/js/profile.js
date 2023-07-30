@@ -12,7 +12,7 @@ angular.module('myApp', ['ngRoute'])
 		$scope.myPostImage = [];
 		$scope.myListFollow = 0;
 		var otherUser = null;
-		
+
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;
@@ -137,12 +137,6 @@ angular.module('myApp', ['ngRoute'])
 				}, 0);
 
 			});
-		$http.get('/find9post')
-			.then(function(response) {
-				var ninePost = response.data;
-				$scope.ninePost = ninePost;
-
-			});
 
 		$http.get('/countmypost')
 			.then(function(response) {
@@ -150,10 +144,6 @@ angular.module('myApp', ['ngRoute'])
 				$scope.sumPost = sumPost;
 			})
 
-
-		$scope.saveImages = function() {
-
-		}
 		$scope.likePost = function(postId) {
 			var likedIndex = $scope.likedPosts.indexOf(postId.toString());
 			var likeEndpoint = '/likepost/' + postId;
@@ -228,10 +218,33 @@ angular.module('myApp', ['ngRoute'])
 				return days + ' ngày trước';
 			}
 		};
-		$scope.post = function() {
+$scope.post = function() {
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile01');
 
+			// Check if no files are selected
+			if (fileInput.files.length === 0) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải thêm ảnh vào bài viết'
+				})
+				return; // Return without doing anything
+			}
+			if ($scope.content === null || $scope.content === undefined) {
+				$scope.content = '';
+			}
 			for (var i = 0; i < fileInput.files.length; i++) {
 				formData.append('photoFiles', fileInput.files[i]);
 			}
@@ -248,9 +261,24 @@ angular.module('myApp', ['ngRoute'])
 			}, function(error) {
 				// Xử lý lỗi
 				console.log(error);
-			});
-			alert("ok");
+			})
 			$scope.content = '';
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'success',
+				title: 'Bài viết được đăng thành công'
+			})
 		};
 
 
@@ -309,29 +337,25 @@ angular.module('myApp', ['ngRoute'])
 			// Người dùng hiện tại chưa follow người dùng với id tương ứng
 			return false;
 		},
-			$scope.myGallary = function() {
+			$scope.followUser = function(followingId) {
 				var currentUserId = $scope.UserInfo.userId;
+				var data = {
+					followerId: currentUserId,
+					followingId: followingId
+				};
+				$http.post('/followOther', data)
+					.then(function(response) {
+						// Thêm follow mới thành công, cập nhật trạng thái trong danh sách và chuyển nút thành "Unfollow"
+						$scope.listFollow.push(response.data);
+						console.log("Success Follow!");
 
-			}
-		$scope.followUser = function(followingId) {
-			var currentUserId = $scope.UserInfo.userId;
-			var data = {
-				followerId: currentUserId,
-				followingId: followingId
+						// Cập nhật lại danh sách follow sau khi thêm mới thành công
+						$scope.refreshFollowList();
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
 			};
-			$http.post('/follow', data)
-				.then(function(response) {
-					// Thêm follow mới thành công, cập nhật trạng thái trong danh sách và chuyển nút thành "Unfollow"
-					$scope.listFollow.push(response.data);
-					console.log("Success Follow!");
-
-					// Cập nhật lại danh sách follow sau khi thêm mới thành công
-					$scope.refreshFollowList();
-				})
-				.catch(function(error) {
-					console.log(error);
-				});
-		};
 
 		$scope.unfollowUser = function(followingId) {
 			var currentUserId = $scope.UserInfo.userId;
@@ -339,7 +363,7 @@ angular.module('myApp', ['ngRoute'])
 				followerId: currentUserId,
 				followingId: followingId
 			};
-			$http.delete('/unfollow', { data: data, headers: { 'Content-Type': 'application/json' } })
+			$http.delete('/unfollowOther', { data: data, headers: { 'Content-Type': 'application/json' } })
 				.then(function(response) {
 					// Cập nhật lại danh sách follow sau khi xóa thành công
 					$scope.listFollow = $scope.listFollow.filter(function(follow) {
@@ -351,7 +375,7 @@ angular.module('myApp', ['ngRoute'])
 				});
 		};
 
-		$http.get('/getfollow')
+		$http.get('/getallfollow')
 			.then(function(response) {
 				var listFollow = response.data;
 				$scope.listFollow = listFollow;
@@ -361,7 +385,7 @@ angular.module('myApp', ['ngRoute'])
 			});
 		// Hàm làm mới danh sách follow
 		$scope.refreshFollowList = function() {
-			$http.get('/getfollow')
+			$http.get('/getallfollow')
 				.then(function(response) {
 					var listFollow = response.data;
 					$scope.listFollow = listFollow;
@@ -504,45 +528,6 @@ angular.module('myApp', ['ngRoute'])
 			$window.location.href = '/otherProfile/' + userId;
 			$scope.otherUser = userId;
 		};
-		
+
 	})
-	.controller('OtherProfileController', function($scope, $http, $routeParams) {
-        // Lấy thông tin người dùng khác dựa vào userId từ $routeParams
-        var userId = $routeParams.userId;
-        
-        // Gọi API để lấy thông tin người dùng khác
-        $http.get('/getUserInfo')
-            .then(function(response) {
-                $scope.userInfo = response.data;
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-
-        // Gọi API để lấy thông tin tài khoản người dùng khác
-        $http.get('/getAccInfo' )
-            .then(function(response) {
-                $scope.accountInfo = response.data;
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-
-        // Gọi API để lấy danh sách bài viết của người dùng khác
-        $http.get('/getmypost' )
-            .then(function(response) {
-                $scope.userPosts = response.data;
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-
-        // Gọi API để lấy danh sách ảnh của người dùng khác
-        $http.get('/getListImage' )
-            .then(function(response) {
-                $scope.userImages = response.data;
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-          });  
+	

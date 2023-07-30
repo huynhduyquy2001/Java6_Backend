@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -83,14 +84,14 @@ public class ProfileController {
 		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
 	}
 	//Lấy thông tin chi tiết các followers
-//	@GetMapping("/findmyfollowers")
-//    public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
-//        return followService.getFollowersInfoByUserId(session.get("id"));
-//    }
+	@GetMapping("/findmyfollowers")
+    public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
+        return followService.getFollowersInfoByUserId(session.get("id"));
+    }
 	//Lấy thông tin chi tiết các followings
 	@GetMapping("/findmyfollowing")
     public List<Users> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
-        return followService.getFollowersInfoByUserId(session.get("id"));
+        return followService.getFollowingInfoByUserId(session.get("id"));
     }
 	//Lấy thông tin chi tiết của người dùng trong bảng Users
 	@GetMapping("/findusers")
@@ -145,7 +146,7 @@ public class ProfileController {
 	    accountsService.updateAccInfo(session.get("id"), email, id);
 	}
 	//Lấy danh sách follow
-	@GetMapping("/getfollow")
+	@GetMapping("/getallfollow")
 	public List<FollowDTO> getFollow() {
 	    List<Follow> listFollow = followService.findAllFollow();
 	    List<FollowDTO> listFollowDTO = new ArrayList<>();
@@ -163,7 +164,7 @@ public class ProfileController {
 	    return listFollowDTO;	
 	}
 	//Nút follow
-	@PostMapping("/follow")
+	@PostMapping("/followOther")
 	public Follow followUser(@RequestBody FollowDTO followDTO) {
 	    // Lấy dữ liệu người dùng hiện tại và người dùng đang được follow
 	    Users follower = usersService.findUserById(followDTO.getFollowerId());
@@ -178,7 +179,7 @@ public class ProfileController {
 	}
 	//Nút unfollow
 	@ResponseBody
-	@DeleteMapping("/unfollow")
+	@DeleteMapping("/unfollowOther")
 	public void unfollowUser(@RequestBody FollowDTO followDTO) {
 	    // Lấy dữ liệu người dùng hiện tại và người dùng đang được unfollow
 	    Users follower = usersService.findUserById(followDTO.getFollowerId());
@@ -325,24 +326,45 @@ public class ProfileController {
 	public ModelAndView otherProfile(@PathVariable String userId) {
 	    ModelAndView modelAndView = new ModelAndView("otherProfile");
 	    
-	    // Lấy thông tin người dùng theo userId
-	    Users userInfo = usersService.getUserById(userId);
-	    modelAndView.addObject("userInfo", userInfo);
-	    
-	    // Lấy thông tin tài khoản của người dùng theo userId
-	    Accounts accountInfo = accountsService.getAccountById(userId);
-	    modelAndView.addObject("accountInfo", accountInfo);
-	    
-	    // Lấy danh sách bài viết của người dùng theo userId
-	    List<Posts> userPosts = postsService.getMyPost(userId);
-	    modelAndView.addObject("userPosts", userPosts);
-	    
-	    // Lấy danh sách ảnh của người dùng theo userId
-	    List<Images> userImages = imagesService.getImagesByUserId(userId);
-	    modelAndView.addObject("userImages", userImages);
-	    
 	    return modelAndView;
 	}
-
 	
+	@GetMapping("/getInfoOtherProfile/{userId}")
+    public Map<String, Object> getInfoOtherProfile(@PathVariable String userId) {
+        Map<String, Object> responseData = new HashMap<>();
+
+        // Lấy thông tin người dùng theo userId
+        Users userInfo = usersService.getUserById(userId);
+        responseData.put("userInfo", userInfo);
+
+        // Lấy thông tin tài khoản của người dùng theo userId
+        Accounts accountInfo = accountsService.getAccountByUsers(userId);
+        responseData.put("accountInfo", accountInfo);
+
+        // Lấy danh sách bài viết của người dùng theo userId
+        List<Posts> userPosts = postsService.getMyPost(userId);
+        responseData.put("userPosts", userPosts);
+
+        // Lấy danh sách ảnh của người dùng theo userId
+        List<Images> userImages = imagesService.getImagesByUserId(userId);
+        responseData.put("userImages", userImages);
+        
+        // Lấy số lượng các follow
+        AccountAndFollow follow = followService.getFollowingFollower(userInfo);
+        responseData.put("myFollowersAndFollowing", follow);
+        
+        // Lấy danh sách chi tiết các follower
+        List<Users> followers = followService.getFollowersInfoByUserId(userId);
+        responseData.put("followers", followers);
+        
+        // Lấy danh sách following
+        List<Users> followings = followService.getFollowingInfoByUserId(userId);
+        responseData.put("followings", followings);
+        
+        // Lấy tổng số lượng bài viết
+        Integer sumPost =  postsService.countPost(userId);
+        responseData.put("sumPost", sumPost);
+        return responseData;
+    }
+
 }
