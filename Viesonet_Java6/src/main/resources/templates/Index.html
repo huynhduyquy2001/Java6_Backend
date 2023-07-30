@@ -42,6 +42,8 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
 body {
@@ -190,9 +192,12 @@ div.dropdown-menu.baoCao {
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-list-check fs-6"></i>
 															<p class="mb-0 fs-3">Nâng cấp</p>
-														</a> <a ng-click="logout()"
+														</a>
+														</a> 
+														<a ng-click="logout()"
 															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
 															xuất</a>
+
 													</div>
 												</div></li>
 										</ul>
@@ -220,14 +225,14 @@ div.dropdown-menu.baoCao {
 								style="margin-bottom: 15px; background: white 0.5; border-radius: 3px 3px 0 0; padding-top: 10px; padding-bottom: 10px; background-color: transparent; background-image: url('/images/347236939_2465911110227431_5952883918790101011_n.jpg-20230616.jpg'); background-size: cover; min-height: 15rem">
 								<span
 									style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: white"><i
-									class="fa-solid fa-pencil"></i> Đăng bài viết</span>
+									class="fa-solid fa-pencil"></i> {{ 'DBV' | translate }}</span>
 								<form id="postForm">
 									<center>
 										<img id="img" src="" width="45%"
 											style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
 									</center>
 									<textarea class="form-control"
-										placeholder="Hãy viết gì đó cho ngày hôm nay..."
+										placeholder="{{ 'HV' | translate }}"
 										id="floatingTextarea2" style="height: 137px; opacity: 0.4"></textarea>
 								</form>
 								<div class="d-flex  gap-2"
@@ -270,9 +275,9 @@ div.dropdown-menu.baoCao {
 													<label>{{ post.user.username }}</label>
 													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 													<br> <small style="font-size: 12px; color: #65676b">
-														<b>Sống tại:</b> {{ post.user.address }}
+														<b>{{ 'ST' | translate }}:</b> {{ post.user.address }}
 													</small> <br> <small style="font-size: 12px; color: #65676b">
-														<b>Mối quan hệ:</b> {{ post.user.relationship }}
+														<b>{{ 'MQH' | translate }}:</b> {{ post.user.relationship }}
 													</small>
 
 												</div>
@@ -289,8 +294,7 @@ div.dropdown-menu.baoCao {
 												<div class="dropdown-menu" aria-labelledby="triggerId">
 													<a class="dropdown-item"
 														ng-click="openModalBaoCao(post.postId)"
-														style="color: #E53F31; font-size: 13px">Báo cáo vi
-														phạm</a>
+														style="color: #E53F31; font-size: 13px">{{ 'BCVP' | translate }}</a>
 												</div>
 											</div>
 										</div>
@@ -414,13 +418,13 @@ div.dropdown-menu.baoCao {
 						<ul class="followers-dts">
 							<li>
 								<div class="followers-dt-sm">
-									<h4>Người theo dõi</h4>
+									<h4>{{ 'NTD' | translate }}</h4>
 									<span>{{myAccount.followers}}</span>
 								</div>
 							</li>
 							<li>
 								<div class="followers-dt-sm">
-									<h4>Đang theo dõi</h4>
+									<h4>{{ 'DTD' | translate }}</h4>
 									<span>{{myAccount.following}}</span>
 								</div>
 							</li>
@@ -430,7 +434,7 @@ div.dropdown-menu.baoCao {
 							<a class="btn-blue" href="/profile"
 								style="background-color: #3b5998; border-radius: 2px; border: 1px solid #3b5998; box-sizing: border-box; color: white; display: inline-block; font-family: Arial, sans-serif; font-size: 14px; line-height: 16.8px; margin: 0px 3px 10px; padding: 10px 14px; text-decoration-line: none; transition: all 0.2s; width: 98%;"
 								rel="noopener noreferrer"><i
-								class="fa-light fa-address-card"></i> Xem trang cá nhân </a>
+								class="fa-light fa-address-card"></i>{{ 'XTCN' | translate }} </a>
 						</div>
 
 					</div>
@@ -443,13 +447,17 @@ div.dropdown-menu.baoCao {
 								style="background-color: rgba(0, 0, 0, 0.4); margin: 0; padding: 10px; color: #F2E5C9;">
 
 								<ul style="font-size: 13px">
-									<li><b>Thành phố:</b> <span id="city"></span></li>
-									<li><b>Nhiệt độ:</b> <span id="temperature"></span> °C</li>
-									<li><b>Mô tả:</b> <span id="description"></span></li>
-									<li><b>Độ ẩm:</b> <span id="humidity"></span>%</li>
-									<li><b>Tốc độ gió:</b> <span id="wind-speed"></span> m/s</li>
+									<li><b>{{ 'TP' | translate }}:</b> <span id="city"></span></li>
+									<li><b>{{ 'NDD' | translate }}:</b> <span id="temperature"></span> °C</li>
+									<li><b>{{ 'MT' | translate }}:</b> <span id="description"></span></li>
+									<li><b>{{ 'DA' | translate }}:</b> <span id="humidity"></span>%</li>
+									<li><b>{{ 'TDG' | translate }}:</b> <span id="wind-speed"></span> m/s</li>
 								</ul>
 							</div>
+						</div>
+						<div>
+							<button ng-click="changeLanguage('vie')">Tiếng Việt</button>
+							<button ng-click="changeLanguage('en')">English</button>
 						</div>
 					</div>
 				</div>
@@ -465,7 +473,7 @@ div.dropdown-menu.baoCao {
 				style="background-color: rgba(246, 245, 244, 1);">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalToggleLabel">
-						<b style="margin-left: 170px;">Đăng bài viết</b>
+						<b style="margin-left: 170px;">{{ 'DBV' | translate }}</b>
 					</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
@@ -479,23 +487,22 @@ div.dropdown-menu.baoCao {
 								<div style="display: flex; align-items: center;">
 									<div class="circle2 mb-2"
 										style="margin-bottom: 0 !important; background-color: green"></div>
-									&nbsp; <small style="font-size: 12px"> Đang hoạt động </small>
+									&nbsp; <small style="font-size: 12px"> {{ 'DHD' | translate }} </small>
 								</div>
 							</div>
 						</div>
 						<br>
-						<textarea name="content" placeholder="Bạn đang nghĩ gì?"
+						<textarea name="content" placeholder="{{ 'BDNG' | translate }}"
 							id="content" ng-model="content" cols="30" rows="3"
 							style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
 						<br>
 						<div id="dropArea" ondrop="dropHandler(event);"
 							ondragover="dragOverHandler(event);"
-							ondragleave="dragLeaveHandler(event);">Chọn hoặc kéo thả để
-							tải hình ảnh/video.</div>
+							ondragleave="dragLeaveHandler(event);">{{ 'KEO' | translate }}</div>
 
 						<div class="input-group mb-3">
 							<label class="input-group-text" for="inputGroupFile01"> <i
-								class="fa-regular fa-image"></i>Hình ảnh và video
+								class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
 							</label> <input hidden type="file" class="form-control" name="mediaFiles"
 								id="inputGroupFile01" multiple>
 						</div>
@@ -506,7 +513,7 @@ div.dropdown-menu.baoCao {
 				<div class="modal-footer">
 					<button ng-click="post()" style="width: 500px; border: none;"
 						class="btn-blue" data-bs-target="#exampleModalToggle2"
-						data-bs-toggle="modal" data-bs-dismiss="modal">Đăng bài</button>
+						data-bs-toggle="modal" data-bs-dismiss="modal">{{ 'DB' | translate }}</button>
 				</div>
 			</div>
 		</div>
@@ -590,7 +597,7 @@ div.dropdown-menu.baoCao {
 												id="triggerId" data-bs-toggle="dropdown"
 												aria-haspopup="true" aria-expanded="false"></span>
 											<div class="dropdown-menu" aria-labelledby="triggerId">
-												<a class="dropdown-item" href="#">Báo cáo vi phạm</a>
+												<a class="dropdown-item" href="#">{{ 'BCVP' | translate }}</a>
 											</div>
 										</div>
 									</div>
@@ -600,10 +607,10 @@ div.dropdown-menu.baoCao {
 									<div style="display: flex; flex-direction: column;">
 										<input ng-model="myComment" type="text"
 											class="ip form-control" style="width: 80%;"
-											placeholder="Bình luận của bạn" required="">
+											placeholder="{{ 'BLCB' | translate }}" required="">
 										<button class="btn01" type="submit"
 											style="background: #007ACC; color: white;"
-											ng-click="addComment(postDetails.postId)">Bình luận</button>
+											ng-click="addComment(postDetails.postId)">{{ 'BL' | translate }}</button>
 									</div>
 								</form>
 							</div>
@@ -752,7 +759,7 @@ div.dropdown-menu.baoCao {
 	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
 		aria-labelledby="offcanvasRightLabel">
 		<div class="offcanvas-header">
-			<h4 id="offcanvasRightLabel">Thông báo</h4>
+			<h4 id="offcanvasRightLabel">{{ 'TB' | translate }}</h4>
 			<button type="button" class="btn-close text-reset"
 				data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
@@ -763,12 +770,12 @@ div.dropdown-menu.baoCao {
 					<li class="nav-item" role="presentation">
 						<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
 							data-bs-target="#pills-home1" type="button" role="tab"
-							aria-controls="home" aria-selected="true">Chưa đọc</button>
+							aria-controls="home" aria-selected="true">{{ 'CD' | translate }}</button>
 					</li>
 					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
 							data-bs-target="#pills-profile1" type="button" role="tab"
-							aria-controls="profile" aria-selected="false">Tất cả</button>
+							aria-controls="profile" aria-selected="false">{{ 'TC' | translate }}</button>
 					</li>
 				</ul>
 				<div class="tab-content" id="pills-tabContent">
@@ -817,7 +824,7 @@ div.dropdown-menu.baoCao {
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="modalTitleId">Nội dung tố cáo</h5>
+					<h5 class="modal-title" id="modalTitleId">{{ 'NDTC' | translate }}</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -833,8 +840,9 @@ div.dropdown-menu.baoCao {
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Đóng</button>
-					<button type="button" class="btn btn-primary" ng-click=report(selectedPostId)>Báo cáo</button>
+						data-bs-dismiss="modal">{{ 'D' | translate }}</button>
+					<button type="button" class="btn btn-primary"
+						ng-click=report(selectedPostId)>{{ 'BC' | translate }}</button>
 				</div>
 			</div>
 		</div>
@@ -949,9 +957,8 @@ div.dropdown-menu.baoCao {
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 	<script src="js/Index.js">
-		
 	</script>
-
+	
 
 </body>
 

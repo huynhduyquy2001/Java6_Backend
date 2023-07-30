@@ -1,6 +1,14 @@
 
-angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $http) {
+angular.module('myApp', ['pascalprecht.translate'])
+	.config(function($translateProvider) {
+		$translateProvider.useStaticFilesLoader({
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			suffix: '.json'
+		});
+		// Set the default language
+		$translateProvider.preferredLanguage('vie');
+	})
+	.controller('myCtrl', function($scope, $http, $translate) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -14,7 +22,10 @@ angular.module('myApp', [])
 		$scope.allNotification = [];
 		$scope.violations = [];
 		$scope.selectedPostId = '';
-
+		//Đa ngôn ngữ	
+		$scope.changeLanguage = function(langKey) {
+			$translate.use(langKey);
+		};
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')
 			.then(function(response) {
@@ -72,22 +83,22 @@ angular.module('myApp', [])
 		};
 
 		$scope.report = function(postId) {
-			if($scope.selectedViolationType === null || $scope.selectedViolationType === undefined){
+			if ($scope.selectedViolationType === null || $scope.selectedViolationType === undefined) {
 				const Toast = Swal.mixin({
-						toast: true,
-						position: 'top-end',
-						showConfirmButton: false,
-						timer: 1000,
-						timerProgressBar: true,
-						didOpen: (toast) => {
-							toast.addEventListener('mouseenter', Swal.stopTimer)
-							toast.addEventListener('mouseleave', Swal.resumeTimer)
-						}
-					})
-					Toast.fire({
-						icon: 'warning',
-						title: 'Bạn phải chọn nội dung báo cáo'
-					})
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải chọn nội dung báo cáo'
+				})
 				return;
 			}
 			$http.post('/report/' + postId + '/' + $scope.selectedViolationType)
@@ -112,7 +123,7 @@ angular.module('myApp', [])
 					// Xử lý lỗi
 					console.log(error);
 				});
-				$('#modalBaoCao').modal('hide');
+			$('#modalBaoCao').modal('hide');
 		};
 
 
@@ -407,22 +418,22 @@ angular.module('myApp', [])
 
 		$scope.addComment = function(postId) {
 			var myComment = $scope.myComment;
-			if(myComment === null || myComment === undefined){
+			if (myComment === null || myComment === undefined) {
 				const Toast = Swal.mixin({
-						toast: true,
-						position: 'top-end',
-						showConfirmButton: false,
-						timer: 1000,
-						timerProgressBar: true,
-						didOpen: (toast) => {
-							toast.addEventListener('mouseenter', Swal.stopTimer)
-							toast.addEventListener('mouseleave', Swal.resumeTimer)
-						}
-					})
-					Toast.fire({
-						icon: 'warning',
-						title: 'Bạn phải nhập nội dung bình luận'
-					})
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải nhập nội dung bình luận'
+				})
 				return;
 			}
 			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
