@@ -1,7 +1,7 @@
 body {
 	color: black;
 	font: 400 16px/24px Macan, Helvetica Neue, Helvetica, Arial, sans-serif;
-	font-family: 'Open Sans', sans-serif;
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 	background: #fff;
 }
 
@@ -187,7 +187,6 @@ label {
 	transform: translate(-50%, -50%);
 	animation: moveUpDown 3s ease-in-out infinite;
 }
-
 
 .main-banner .caption h2 em {
 	font-style: normal;
@@ -911,7 +910,6 @@ span.psw {
 	font-size: 2em;
 }
 
-
 .toast.error {
 	--color: #f24d4c;
 	background-image: linear-gradient(to right, #f24d4c55, #22242F 30%);
@@ -1340,10 +1338,7 @@ img {
 	--right-msg-bg: #579ffb;
 }
 
-body {
-	height: 100vh;
-	font-family: Helvetica, sans-serif;
-}
+
 
 .msger {
 	display: flex;
@@ -1362,8 +1357,10 @@ body {
 	display: flex;
 	justify-content: space-between;
 	padding: 5px;
-	background: #eee;
 	color: #666;
+	padding: 10px;
+	
+    
 }
 
 .msger-chat {
@@ -1429,7 +1426,7 @@ body {
 
 .left-msg .msg-bubble {
 	border-bottom-left-radius: 0;
-	border: 1px solid #ebf1f6;
+	background-color: #efefef!important;
 }
 
 .right-msg {
@@ -1437,8 +1434,7 @@ body {
 }
 
 .right-msg .msg-bubble {
-	background: #3b5998;
-	color: #fff;
+	background: #e8f1f3;
 	border-bottom-right-radius: 0;
 }
 
@@ -1504,28 +1500,63 @@ body {
 	border-color: #00bfff;
 }
 
-#imagePreview {
-	display: flex;
+#mediaList img {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.1rem;
+	border-radius: 6px;
+	border: 1px solid gray;
+}
+
+#mediaList video {
+	width: 50%;
+	box-sizing: border-box;
+	padding: 0.1rem;
+	border-radius: 6px;
+}
+#mediaList{
 	flex-wrap: wrap;
-	max-width: 100%;
-	margin-top: 20px;
+	display: flex;
 }
-
-.previewImage {
-	max-width: 100px;
-	max-height: 100px;
+.previewMediaContainer {
+	width: 30%;
+	height: auto;
 	margin: 5px;
-}
-#mediaList img{
-	max-width: 25%;
-	box-sizing: border-box;
-	padding: 0.1rem;
-	border-radius: 6px;
+	border-radius: 5px;
+	position: relative;
 }
 
-#mediaList video{
-	max-width: 50%;
-	box-sizing: border-box;
-	padding: 0.1rem;
-	border-radius: 6px;
+.previewMediaContainer button {
+	position:absolute;
+	top:0;
+	right:0;
+	border-radius: 3px;
+	background-color: red;
+	color: white;
+	border: none;
+}
+/* Định dạng cho vùng chứa tin nhắn */
+.msg-bubble {
+    position: relative; /* Để có thể dùng position absolute cho nút */
+}
+
+/* Định dạng cho nút "Thu hồi" */
+.btn-revoke {
+    position: absolute;
+    right: -55px; /* Điều chỉnh khoảng cách nút so với tin nhắn */
+    top: 50%;
+    transform: translateY(-50%); /* Canh giữa theo chiều dọc */
+    background-color: #007ACC;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    display: none;
+}
+
+/* Hiển thị nút "Thu hồi" khi hover vào tin nhắn */
+.msg-bubble:hover .btn-revoke {
+    display: inline-block;
 }

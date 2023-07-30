@@ -224,4 +224,17 @@ angular.module('myApp', [])
 					console.log(error);
 				});
 		};
+		
+		$scope.revokeMessage = function(messId) {
+			alert(messId)
+			$http.get('/removemess/'+messId)
+				.then(function(reponse) {
+					var messToUpdate = $scope.ListMess.find(function(mess){
+						return mess.messId = messId;
+					})
+					messToUpdate.status="Đã ẩn";
+				}, function(error) {
+					console.log(error);
+				});
+		};
 	});

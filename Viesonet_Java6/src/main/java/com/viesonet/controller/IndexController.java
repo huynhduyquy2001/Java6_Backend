@@ -184,9 +184,10 @@ public class IndexController {
 		String receiverId = request.getReceiverId();
 		String replyContent = request.getReplyContent();
 		int commentId = request.getCommentId();
-
+		int postId = request.getPostId();
+		System.out.println("postId :"+postId);
 		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(session.get("id")), replyContent,
-				commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
+				commentsService.getCommentById(commentId), usersService.findUserById(receiverId), postsService.findPostById(postId)));
 
 	}
 
