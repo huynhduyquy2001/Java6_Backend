@@ -32,10 +32,33 @@ public class ViolationsService {
 		return violationsDAO.findSearchUserViolation(username);
 	}
 	
+	public List<Object> findSearchUserViolations(String username){
+		return violationsDAO.findSearchUserViolations(username);
+	}
+	
 	public void deleteByPostViolations(List<String> listPostId) {
 		for (String id : listPostId) {
 	           List<Violations> violations = violationsDAO.findByPostId(Integer.parseInt(id));
 	           violationsDAO.deleteAll(violations);
 		}
 	}
+	
+	public Page<Object> findViolationsWithStatusTrue(int page, int size){
+		Pageable pageable = PageRequest.of(page, size);
+		return violationsDAO.findViolationsWithStatusTrue(pageable);
+	}
+	
+	public void acceptByPostViolations(List<String> listPostId) {
+	    for (String id : listPostId) {
+	        int postId = Integer.parseInt(id);
+	        List<Violations> violations = violationsDAO.findByPostId(postId);
+	        for (Violations violation : violations) {
+	            violation.setViolationStatus(false);
+	            violationsDAO.saveAllAndFlush(violations);
+	        }
+	        
+	    }
+	}
+
+	
 }
