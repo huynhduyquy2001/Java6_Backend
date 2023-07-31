@@ -1,6 +1,6 @@
 
 angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $http) {
+	.controller('myCtrl', function($scope, $http, $timeout) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -460,8 +460,8 @@ angular.module('myApp', [])
 					console.log(error);
 				});
 		};
-		
-		
+
+
 
 
 		$scope.sendReply = function(receiverId, replyContent, replyId, commentId) {
@@ -471,7 +471,7 @@ angular.module('myApp', [])
 				commentId: commentId,
 				postId: $scope.postDetails.postId
 			};
-			if(replyContent===null || replyContent===undefined){
+			if (replyContent === null || replyContent === undefined) {
 				const Toast = Swal.mixin({
 					toast: true,
 					position: 'top-end',
@@ -488,14 +488,14 @@ angular.module('myApp', [])
 					title: 'Bạn phải nhập nội dung phản hồi'
 				})
 				return;
-				
+
 			}
 			var postToUpdate = $scope.Posts.find(function(post) {
-						return post.postId = $scope.postDetails.postId;
-					});
-					if (postToUpdate) {
-						postToUpdate.commentCount++;
-					}
+				return post.postId = $scope.postDetails.postId;
+			});
+			if (postToUpdate) {
+				postToUpdate.commentCount++;
+			}
 			$http.post('/addreply', requestData)
 				.then(function(response) {
 					var comment = $scope.postComments.find(function(comment) {
@@ -520,7 +520,7 @@ angular.module('myApp', [])
 				commentId: commentId,
 				postId: $scope.postDetails.postId
 			};
-			if(replyContent===null || replyContent===undefined){
+			if (replyContent === null || replyContent === undefined) {
 				const Toast = Swal.mixin({
 					toast: true,
 					position: 'top-end',
@@ -537,7 +537,7 @@ angular.module('myApp', [])
 					title: 'Bạn phải nhập nội dung phản hồi'
 				})
 				return;
-				
+
 			}
 			$http.post('/addreply', requestData)
 				.then(function(response) {
@@ -669,6 +669,8 @@ angular.module('myApp', [])
 		}
 
 		$scope.ConnectNotification();
+		// Hàm này sẽ được gọi sau khi ng-include hoàn tất nạp tập tin "_menuLeft.html"
+		
 	});
 
 
