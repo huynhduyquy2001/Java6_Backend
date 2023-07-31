@@ -393,10 +393,9 @@ div.dropdown-menu.baoCao {
 				<div class="card overflow-hidden"
 					style="border-radius: 15px 15px 15px 15px;">
 					<div class="card-body p-0">
-						<a href="#" data-bs-toggle="modal"
-							data-bs-target="#ChinhSuaAnhBia"> <img
+						<img 
 							ng-src="/images/{{UserInfo.background}}" alt=""
-							height="300" width="1440" style="object-fit: cover;"></a>
+							height="300" width="1440" style="object-fit: cover;">
 						<div class="row align-items-center">
 							<div class="col-lg-4 order-lg-1 order-2">
 								<div
@@ -427,12 +426,10 @@ div.dropdown-menu.baoCao {
 											style="width: 155px; height: 155px;">
 											<div
 												class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
-												style="width: 150px; height: 150px;">
-												<a href="#" data-bs-toggle="modal"
-													data-bs-target="#ChinhSuaAnhDaiDien"> <img
+												style="width: 150px; height: 150px;"> <img
 													ng-src="/images/{{UserInfo.avatar}}" alt=""
 													class="w-100 h-100" style="object-fit: cover;">
-												</a>
+												
 											</div>
 
 										</div>
@@ -444,9 +441,15 @@ div.dropdown-menu.baoCao {
 								</div>
 							</div>
 							<div class="col-lg-4 order-last">
-								<ul
-									class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3">
-									ssss
+								<ul class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3">
+							<button class="btn btn-outline-primary py-1 px-2 ms-auto" ng-if="!isFollowing(userId)" 
+							ng-click="followUser(userId)">
+							  <span>Follow</span>
+							</button>
+							<button class="btn btn-outline-danger py-1 px-2 ms-auto" ng-if="isFollowing(userId)" 
+							ng-click="unfollowUser(userId)">
+							  <span>Unfollow</span>
+							</button>
 								</ul>
 							</div>
 						</div>
@@ -578,14 +581,14 @@ div.dropdown-menu.baoCao {
 											</div>
 											<p class="text-dark my-3" style="padding-left: 10px;">
 												{{myPost.content}}</p>
-											<center>
+												<center>
 												<div ng-if="myPost.images.length > 1">
 													<!-- Carousel HTML code -->
-													<div id="carouselId" class="carousel slide"
-														data-bs-ride="carousel">
+													<div id="carouselId{{myPost.postId}}"
+														class="carousel slide" data-bs-ride="carousel">
 														<!-- Carousel indicators -->
 														<ol class="carousel-indicators">
-															<li data-bs-target="#carouselId"
+															<li data-bs-target="#carouselId{{myPost.postId}}"
 																ng-repeat="image in myPost.images track by $index"
 																ng-class="{ 'active': $index === 0 }"
 																data-bs-slide-to="{{$index}}"
@@ -593,33 +596,52 @@ div.dropdown-menu.baoCao {
 																aria-label="Slide {{$index + 1}}"></li>
 														</ol>
 														<!-- Carousel items -->
-														<div ng-click="getPostDetails(myPost.postId)"
-															class="carousel-inner" role="listbox">
+														<div class="carousel-inner" role="listbox">
 															<div class="carousel-item"
 																style="background-color: #313131; height: 90vh;"
 																ng-repeat="image in myPost.images track by $index"
 																ng-class="{ 'active': $index === 0 }">
-																<img ng-src="/images/{{ image.imageUrl }}"
+
+																<img ng-click="getPostDetails(myPost.postId)"
+																	ng-if="image.type === true"
+																	ng-src="/images/{{ image.imageUrl }}"
 																	class="w-100 d-block" alt="Slide {{$index + 1}}"
 																	style="max-height: 90vh; object-fit: contain; width: 100%; transform: translateY(-50%); top: 50%; position: absolute;">
+
+																<video ng-if="image.type === false" autoplay controls
+																	style="max-height: 90vh; object-fit: contain; width: 100%; transform: translate(-50%, -50%); top: 50%; position: absolute;">
+																	<source ng-src="images/{{ image.imageUrl }}"
+																		type="video/mp4">
+																	Your browser does not support the video tag.
+																</video>
 															</div>
 														</div>
 														<!-- Carousel controls -->
 														<button class="carousel-control-prev" type="button"
-															data-bs-target="#carouselId" data-bs-slide="prev">
+															data-bs-target="#carouselId{{myPost.postId}}"
+															data-bs-slide="prev">
 															<span class="carousel-control-prev-icon"
 																aria-hidden="true"></span> <span class="visually-hidden">Previous</span>
 														</button>
 														<button class="carousel-control-next" type="button"
-															data-bs-target="#carouselId" data-bs-slide="next">
+															data-bs-target="#carouselId{{myPost.postId}}"
+															data-bs-slide="next">
 															<span class="carousel-control-next-icon"
 																aria-hidden="true"></span> <span class="visually-hidden">Next</span>
 														</button>
 													</div>
 												</div>
 												<div ng-if="myPost.images.length === 1">
+													<video ng-if="myPost.images[0].type === false"
+														ng-click="getPostDetails(myPost.postId)" autoplay controls
+														style="width: 100%;">
+														<source ng-src="images/{{ myPost.images[0].imageUrl }}"
+															type="video/mp4">
+														Your browser does not support the video tag.
+													</video>
 													<!-- Single image HTML code -->
-													<img ng-click="getPostDetails(myPost.postId)"
+													<img ng-if="myPost.images[0].type === true"
+														ng-click="getPostDetails(myPost.postId)"
 														ng-src="/images/{{ myPost.images[0].imageUrl }}"
 														class="w-100" alt="Single image">
 												</div>
@@ -667,11 +689,11 @@ div.dropdown-menu.baoCao {
 							</form>
 						</div>
 						<div class="row">
-							<div class=" col-md-6 col-xl-4" ng-repeat="follower in followers">
-							
-								<div class="card" ng-if="follower.userId !=  ">
-									<div class="card-body p-4 d-flex align-items-center gap-3">
-										<img ng-src="/images/{{follower.avatar}}" alt=""
+							<div class=" col-md-6 col-xl-4" ng-repeat="follower in followers"  ng-if="follower.userId != currentUserId ">
+								<div class="card" >
+									<a href="#" ng-click="goToProfiles(follower.userId)">
+									<div class="card-body p-4 d-flex align-items-center gap-3" >
+										<img ng-src="/images/{{follower.avatar}}" 
 											class="rounded-circle" width="40" height="40"
 											style="object-fit: cover;">
 										<div>
@@ -680,6 +702,7 @@ div.dropdown-menu.baoCao {
 												class="fa-regular fa-location-dot fa-sm"></i> &nbsp;
 												{{follower.address}}</span>
 										</div>
+										
 										<button class="btn btn-outline-primary py-1 px-2 ms-auto"
 											ng-if="!isFollowing(follower.userId)"
 											ng-click="followUser(follower.userId)">
@@ -690,12 +713,10 @@ div.dropdown-menu.baoCao {
 											ng-click="unfollowUser(follower.userId)">
 											<span>Unfollow</span>
 										</button>
-
-									</div>
+									</div></a>
+									
 								</div>
 							</div>
-
-
 						</div>
 					</div>
 
@@ -714,20 +735,19 @@ div.dropdown-menu.baoCao {
 							</form>
 						</div>
 						<div class="row">
-							<a href="#">
-								<div class="col-sm-6 col-lg-4"
-									ng-repeat="following in followings">
-									<div class="card hover-img">
-										<div class="card-body p-4 text-center border-bottom">
-											<img src="/images/{{following.avatar}}" alt=""
+								<div class="col-sm-6 col-lg-4" ng-repeat="following in followings" ng-if="following.userId != currentUserId ">
+									<div class="card hover-img" >
+										<a href="#"  ng-click="goToProfiles(following.userId)"> <div class="card-body p-4 text-center border-bottom">
+											<img src="/images/{{following.avatar}}"  alt=""
 												class="rounded-circle mb-3" width="80" height="80"
 												style="object-fit: cover;">
 											<h5 class="fw-semibold mb-0">{{following.username}}</h5>
-											<span class="text-dark fs-2">{{following.introduction}}</span>
-										</div>
+											<span class="text-dark fs-2">{{following.userId}}</span>
+										</div></a>
 										<div
 											class="px-2 py-2 list-unstyled d-flex align-items-center justify-content-center mb-0"
 											style="background-color: #f6f9fc;">
+											<div>
 											<button class="btn btn-outline-primary py-1 px-2 ms-auto"
 												ng-if="!isFollowing(following.userId)"
 												ng-click="followUser(following.userId)">
@@ -738,12 +758,11 @@ div.dropdown-menu.baoCao {
 												ng-click="unfollowUser(following.userId)">
 												<span>Unfollow</span>
 											</button>
-											<a></a>
-
+											</div>
+											<a disabled></a>
 										</div>
 									</div>
 								</div>
-							</a>
 						</div>
 					</div>
 					<div class="tab-pane fade" id="pills-gallery" role="tabpanel"
@@ -1392,6 +1411,7 @@ div.dropdown-menu.baoCao {
 			<script type="text/javascript" src="/js/profile.js"></script>
 			<script type="text/javascript" src="/js/otherProfile.js"></script>
 			<script type="text/javascript" src="/js/service.js"></script>
+			<script type="text/javascript" src="js/addActive.js"></script>
 			<script type="text/javascript">
 				// Bắt sự kiện cuộn trang
 				window.addEventListener("scroll", function() {

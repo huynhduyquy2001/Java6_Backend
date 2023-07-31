@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viesonet.dao.FollowDao;
 import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.AccountAndFollow;
@@ -78,6 +80,7 @@ public class ProfileController {
 	@Autowired
 	private ServletContext servletContext;
 	
+	private String temporaryUserId;
 	//Lấy thông tin về follow người dùng hiện tại	
 	@GetMapping("/findmyfollow")
 	public AccountAndFollow findMyAccount() {	
@@ -325,20 +328,42 @@ public class ProfileController {
 	@GetMapping("/otherProfile/{userId}")
 	public ModelAndView otherProfile(@PathVariable String userId) {
 	    ModelAndView modelAndView = new ModelAndView("otherProfile");
-	    
+	    modelAndView.addObject("userId", userId);
 	    return modelAndView;
 	}
-	
+	@PostMapping("/saveUserId")
+	public void saveUserId(@RequestBody String json) {
+	    try {
+	        // Sử dụng ObjectMapper để chuyển đổi JSON thành đối tượng Map
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        Map<String, String> data = objectMapper.readValue(json, new TypeReference<Map<String, String>>() {});
+
+	        // Lấy giá trị userId từ đối tượng Map
+	        String userId = data.get("userId");
+
+	        // Lưu userId vào biến tạm thời
+	        temporaryUserId = userId;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+    @GetMapping("/getTemporaryUserId")
+    public String getTemporaryUserId() {
+        // Trả về giá trị userId trong biến tạm thời
+
+        return temporaryUserId;
+    }
 	@GetMapping("/getInfoOtherProfile/{userId}")
     public Map<String, Object> getInfoOtherProfile(@PathVariable String userId) {
         Map<String, Object> responseData = new HashMap<>();
-
+        
         // Lấy thông tin người dùng theo userId
         Users userInfo = usersService.getUserById(userId);
         responseData.put("userInfo", userInfo);
         
         // Lấy id của người dùng hiện tại
         responseData.put("currentUserId", session.get("id"));
+        responseData.put("id", temporaryUserId);
 
         // Lấy thông tin tài khoản của người dùng theo userId
         Accounts accountInfo = accountsService.getAccountByUsers(userId);
@@ -367,7 +392,9 @@ public class ProfileController {
         // Lấy tổng số lượng bài viết
         Integer sumPost =  postsService.countPost(userId);
         responseData.put("sumPost", sumPost);
+        
         return responseData;
+        
     }
 
 }

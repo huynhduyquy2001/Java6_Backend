@@ -69,6 +69,7 @@ public class UsersService {
         currentUser.setGender(user.isGender());
         currentUser.setAddress(user.getAddress());
         currentUser.setRelationship(user.getRelationship());
+        currentUser.setIntroduction(user.getIntroduction());
 		usersDao.saveAndFlush(user);
     }
 	 public Users getUserById(String userId) {

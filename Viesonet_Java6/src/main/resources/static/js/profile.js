@@ -1,4 +1,14 @@
 angular.module('myApp', ['ngRoute'])
+	angular.module('myApp').config(function($routeProvider) {
+    $routeProvider
+        .when('/otherProfile/:userId', {
+            templateUrl: 'otherProfile.html',
+            controller: 'myCtrl2'
+        })
+        .otherwise({
+            redirectTo: '/'
+        });
+})
 	.controller('myCtrl', function($scope, $http, $window, dataService) {
 
 		$scope.Posts = [];
@@ -11,22 +21,20 @@ angular.module('myApp', ['ngRoute'])
 		$scope.followings = [];
 		$scope.myPostImage = [];
 		$scope.myListFollow = 0;
-		$scope.UserInfo = {};
+		$scope.UserInfo = [];
 
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;
 				$scope.UserInfo = UserInfo;
-				
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
 			
 		
-				// Truyền dữ liệu vào Service
-				var currentUserId = $scope.UserInfo.userId;
-				dataService.setData(currentUserId);
+		// Truyền dữ liệu vào Service
+				
 		
 		// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
 		$http.get('/getUserInfo').then(function(response) {
@@ -325,6 +333,63 @@ angular.module('myApp', ['ngRoute'])
 					console.log(error);
 				});
 		};
+				$scope.sendReply = function(receiverId, replyContent, replyId, commentId) {
+			var requestData = {
+				receiverId: receiverId,
+				replyContent: replyContent,
+				commentId: commentId
+			};
+			$http.post('/addreply', requestData)
+				.then(function(response) {
+					var comment = $scope.postComments.find(function(comment) {
+						return comment.commentId === commentId;
+					});
+					comment.reply.unshift(response.data);
+					$scope.replyContent[replyId] = '';
+				})
+				.catch(function(error) {
+					// Xử lý lỗi
+					console.log('Lỗi:', error);
+				});
+
+		};
+
+
+
+		$scope.sendReplyForComment = function(receiverId, commentId, replyContent) {
+			var requestData = {
+				receiverId: receiverId,
+				replyContent: replyContent,
+				commentId: commentId
+			};
+			$http.post('/addreply', requestData)
+				.then(function(response) {
+					var comment = $scope.postComments.find(function(comment) {
+						return comment.commentId === commentId;
+					});
+					comment.reply.unshift(response.data);
+					$scope.replyContent[commentId] = '';
+
+				})
+				.catch(function(error) {
+					// Xử lý lỗi
+					console.log('Lỗi:', error);
+				});
+
+		};
+		$scope.handleKeyDown = function(event, userId, replyContent, replyId, commentId) {
+			if (event.keyCode === 13) {
+				// Người dùng đã nhấn phím Enter
+				$scope.sendReply(userId, replyContent, replyId, commentId);
+			}
+		};
+
+		$scope.handleKeyDownReplyForComment = function(event, receiverId, commentId, replyContent) {
+			if (event.keyCode === 13) {
+				// Người dùng đã nhấn phím Enter
+				$scope.sendReplyForComment(receiverId, commentId, replyContent);
+			}
+		};
 		$scope.isFollowing = function(followingId) {
 			// Lấy id của người dùng hiện tại
 			var currentUserId = $scope.UserInfo.userId;
@@ -479,7 +544,6 @@ angular.module('myApp', ['ngRoute'])
 			$http.put('/updatePost/' + selectedPost.postId, selectedPost)
 				.then(function(response) {
 					// Xử lý phản hồi thành công từ server
-					alert("Cập nhật bài viết thành công!");
 
 					// Cập nhật lại bài viết trong mảng myPosts
 					var index = $scope.myPosts.findIndex(function(MyPosts) {
@@ -489,51 +553,107 @@ angular.module('myApp', ['ngRoute'])
 					if (index !== -1) {
 						$scope.myPosts[index].content = selectedPost.content;
 					}
-
+					Swal.fire({
+                    icon: 'success',
+                    title: 'Cập nhật thành công!',
+                    text: 'Bài viết đã được cập nhật thành công.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
 					// Đóng modal
 					$('#editModal').modal('hide');
 				})
 				.catch(function(error) {
 					// Xử lý lỗi
 					console.log(error);
-					alert("Có lỗi xảy ra khi cập nhật bài viết.");
+					Swal.fire({
+                    icon: 'error',
+                    title: 'Có lỗi xảy ra!',
+                    text: 'Đã có lỗi xảy ra khi cập nhật bài viết.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
 				});
 		};
 
-		$scope.hidePost = function(postId) {
-			$http.put('/hide/' + postId)
-				.then(function(response) {
-					// Cập nhật trạng thái của bài viết trong danh sách myPosts
-					var index = $scope.myPosts.findIndex(function(post) {
-						return post.postId === postId;
-					});
 
-					if (index !== -1) {
-						$scope.myPosts[index].isActive = false;
-					}
-					$http.get('/getmypost')
-						.then(function(response) {
-							var myPosts = response.data;
-							$scope.myPosts = myPosts;
+    $scope.hidePost = function(postId) {
+        $http.put('/hide/' + postId)
+            .then(function(response) {
+                // Cập nhật trạng thái của bài viết trong danh sách myPosts
+                var index = $scope.myPosts.findIndex(function(post) {
+                    return post.postId === postId;
+                });
 
-							$scope.totalImagesCount = myPosts.reduce(function(total, post) {
-								return total + post.images.length;
-							}, 0);
+                if (index !== -1) {
+                    $scope.myPosts[index].isActive = false;
+                }
 
-						});
-				})
-				.catch(function(error) {
-					// Xử lý lỗi
-					console.log(error);
-				});
+                // Tính lại tổng số lượng ảnh
+                $scope.totalImagesCount = $scope.myPosts.reduce(function(total, post) {
+                    return total + post.images.length;
+                }, 0);
+
+                // Hiển thị thông báo SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Bài viết đã được ẩn thành công!',
+                    showConfirmButton: false,
+                    timer: 1500 // Thời gian hiển thị thông báo (1.5 giây)
+                });
+            })
+            .catch(function(error) {
+                // Xử lý lỗi
+                console.log(error);
+
+                // Hiển thị thông báo SweetAlert2 khi xảy ra lỗi
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Đã xảy ra lỗi khi ẩn bài viết!',
+                    text: 'Vui lòng thử lại sau.',
+                    showConfirmButton: true
+                });
+            });
+    };
+
+    	$scope.handleKeyDown = function(event, userId, replyContent, replyId, commentId) {
+			if (event.keyCode === 13) {
+				// Người dùng đã nhấn phím Enter
+				$scope.sendReply(userId, replyContent, replyId, commentId);
+			}
 		};
+
+		$scope.handleKeyDownReplyForComment = function(event, receiverId, commentId, replyContent) {
+			if (event.keyCode === 13) {
+				// Người dùng đã nhấn phím Enter
+				$scope.sendReplyForComment(receiverId, commentId, replyContent);
+			}
+		};
+
+
 		$scope.goToProfile = function(userId) {
 			// Sử dụng $window.location.href để chuyển đến trang otherProfile.html với userId truyền vào
-			$scope.otherUser = userId;
+			console.log(userId)
+			$http.post('/saveUserId', { userId: userId })
+           	 .then(function(response) {
+                console.log('UserId temporarily saved.');
+                // Gọi hàm để lấy userId từ máy chủ và lưu vào dataService (nếu cần thiết)
+                $http.get('/getTemporaryUserId')
+                    .then(function(response) {
+                        var temporaryUserId = response.data;
+                        dataService.setData(temporaryUserId);
+                        console.log('UserId saved in dataService:', temporaryUserId);
+                    })
+                    .catch(function(error) {
+                        console.log('Error while getting temporary userId:', error);
+                    });
+            })
+            .catch(function(error) {
+                console.log('Error while saving temporary userId:', error);
+            });
 			$window.location.href = '/otherProfile/' + userId;
-		
-		
+			
 		};
 
-	})
+	});
 

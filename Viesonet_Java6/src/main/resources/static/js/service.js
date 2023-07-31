@@ -1,13 +1,12 @@
-// Tạo một Service để lưu trữ và chia sẻ dữ liệu
 angular.module('myApp').service('dataService', function() {
-  var sharedData = {};
+    var data = {};
 
-  return {
-    setData: function(data) {
-      sharedData = data;
-    },
-    getData: function() {
-      return sharedData;
-    }
-  };
+    return {
+        getData: function() {
+            return data;
+        },
+        setData: function(userId) {
+            data.userId = userId;
+        }
+    };
 });
