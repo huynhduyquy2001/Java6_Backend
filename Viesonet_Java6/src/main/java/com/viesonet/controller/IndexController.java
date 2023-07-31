@@ -136,8 +136,9 @@ public class IndexController {
 		// thêm thông báo
 		Notifications ns = notificationsService.findNotificationByPostId(post.getUser().getUserId(), 3, postId);
 		if(ns == null) {
-			notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
+			Notifications notifications = notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
 					post.getUser().getUserId(), post, 3);	
+			messagingTemplate.convertAndSend("/private-user", notifications);
 		}
 
 		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
@@ -250,11 +251,6 @@ public class IndexController {
 		return "success";
 	}
 
-	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
-	public void sendRealTimeNotification() {
-		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
-	}
-
 	@GetMapping("/loadallnotification")
 	public List<Notifications> getAllNotification() {
 		return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
@@ -279,6 +275,6 @@ public class IndexController {
 		cookieService.delete("user");
 		cookieService.delete("pass");
 		return new ModelAndView("redirect:/login");
-	}
-
+	}				
+			
 }
