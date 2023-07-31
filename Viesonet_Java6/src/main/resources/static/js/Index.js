@@ -1,6 +1,6 @@
 
 angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $http) {
+	.controller('myCtrl', function($scope, $http, $timeout) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -9,6 +9,20 @@ angular.module('myApp', [])
 		$scope.postComments = [];
 		$scope.replyContent = {}; // Khởi tạo replyContent      
 		$scope.check = false;
+		$scope.unseenmess = 0;
+		$scope.notification = [];
+		$scope.allNotification = [];
+		$scope.violations = [];
+		$scope.selectedPostId = '';
+
+		$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
+		$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
+
+		// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
+		$scope.showMoreComments = function() {
+			$scope.numOfCommentsToShow += $scope.commentsToShowMore;
+		};
+
 
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')
@@ -16,11 +30,23 @@ angular.module('myApp', [])
 				var count = response.data;
 				if (count > 0) {
 					$scope.check = true;
+					$scope.unseenmess = count;
 				}
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
+
+		//Lấy danh sách vi phạm
+		$http.get('/getviolations')
+			.then(function(response) {
+				$scope.violations = response.data;
+
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
 
 		$http.get('/findfollowing')
 			.then(function(response) {
@@ -49,9 +75,174 @@ angular.module('myApp', [])
 				console.log(error);
 			});
 
-		$scope.saveImages = function() {
+		$scope.openModalBaoCao = function(postId) {
+			$scope.selectedPostId = postId;
+			$('#modalBaoCao').modal('show');
+		};
 
+		$scope.report = function(postId) {
+			if ($scope.selectedViolationType === null || $scope.selectedViolationType === undefined) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải chọn nội dung báo cáo'
+				})
+				return;
+			}
+			$http.post('/report/' + postId + '/' + $scope.selectedViolationType)
+				.then(function(response) {
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 1000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'success',
+						title: 'Báo cáo bài viết thành công'
+					})
+				})
+				.catch(function(error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+			$('#modalBaoCao').modal('hide');
+		};
+
+
+		$scope.likePost = function(postId) {
+			var likedIndex = $scope.likedPosts.indexOf(postId.toString());
+			var likeEndpoint = '/likepost/' + postId;
+			var dislikeEndpoint = '/didlikepost/' + postId;
+
+			// Nếu postId chưa tồn tại trong mảng likedPosts
+			if (likedIndex === -1) {
+				// Thêm postId vào mảng likedPosts
+				$scope.likedPosts.push(postId.toString());
+
+				// Gửi yêu cầu POST để like bài viết và cập nhật likeCount+1
+				$http.post(likeEndpoint)
+					.then(function(response) {
+
+						// Cập nhật thuộc tính likeCount+1 trong đối tượng post
+						var post = $scope.Posts.find(function(item) {
+							return item.postId === postId;
+						});
+						if (post) {
+							post.likeCount++;
+
+						}
+					})
+					.catch(function(error) {
+						// Xử lý lỗi
+						console.log(error);
+					});
+			} else {
+
+				// Xóa postId khỏi mảng likedPosts
+				$scope.likedPosts.splice(likedIndex, 1);
+
+				// Gửi yêu cầu POST để dislike bài viết và cập nhật likeCount-1
+				$http.post(dislikeEndpoint)
+					.then(function(response) {
+						// Xử lý thành công
+						//console.log(response.data);
+
+						// Cập nhật thuộc tính likeCount-1 trong đối tượng post
+						var post = $scope.Posts.find(function(item) {
+							return item.postId === postId;
+						});
+						if (post) {
+							post.likeCount--;
+
+						}
+					})
+					.catch(function(error) {
+						// Xử lý lỗi
+						console.log(error);
+					});
+			}
+		};
+		$scope.getFormattedTimeAgo = function(date) {
+			var currentTime = new Date();
+			var activityTime = new Date(date);
+			var timeDiff = currentTime.getTime() - activityTime.getTime();
+			var seconds = Math.floor(timeDiff / 1000);
+			var minutes = Math.floor(timeDiff / (1000 * 60));
+			var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+			var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+			if (days === 0) {
+				if (hours === 0 && minutes < 60) {
+					if (seconds < 60) {
+						return seconds + ' giây trước';
+					} else {
+						return minutes + ' phút trước';
+					}
+				} else if (hours < 24) {
+					return hours + ' giờ trước';
+				}
+			} else if (days === 1) {
+				return 'Hôm qua';
+			} else {
+				return days + ' ngày trước';
+			}
+		};
+
+		$scope.getPostDetails = function(postId) {
+			$http.get('/findpostcomments/' + postId)
+				.then(function(response) {
+					var count = response.data;
+					if (count > 0) {
+						$scope.check = true;
+					}
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
 		}
+		$http.get('/findfollowing')
+			.then(function(response) {
+				var Posts = response.data;
+				$scope.Posts = Posts;
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
+		$http.get('/findlikedposts')
+			.then(function(response) {
+				var likedPosts = response.data;
+				$scope.likedPosts = likedPosts;
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
+		$http.get('/findmyaccount')
+			.then(function(response) {
+				var myAccount = response.data;
+				$scope.myAccount = myAccount;
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
 		$scope.likePost = function(postId) {
 			var likedIndex = $scope.likedPosts.indexOf(postId.toString());
 			var likeEndpoint = '/likepost/' + postId;
@@ -135,6 +326,29 @@ angular.module('myApp', [])
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile01');
 
+			// Check if no files are selected
+			if (fileInput.files.length === 0) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải thêm ảnh vào bài viết'
+				})
+				return; // Return without doing anything
+			}
+			if ($scope.content === null || $scope.content === undefined) {
+				$scope.content = '';
+			}
 			for (var i = 0; i < fileInput.files.length; i++) {
 				formData.append('photoFiles', fileInput.files[i]);
 			}
@@ -151,9 +365,24 @@ angular.module('myApp', [])
 			}, function(error) {
 				// Xử lý lỗi
 				console.log(error);
-			});
-			alert("ok");
+			})
 			$scope.content = '';
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'success',
+				title: 'Bài viết được đăng thành công'
+			})
 		};
 
 
@@ -187,6 +416,24 @@ angular.module('myApp', [])
 
 		$scope.addComment = function(postId) {
 			var myComment = $scope.myComment;
+			if (myComment === null || myComment === undefined) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải nhập nội dung bình luận'
+				})
+				return;
+			}
 			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
 				.then(function(response) {
 					$scope.postComments.unshift(response.data);
@@ -215,12 +462,40 @@ angular.module('myApp', [])
 		};
 
 
+
+
 		$scope.sendReply = function(receiverId, replyContent, replyId, commentId) {
 			var requestData = {
 				receiverId: receiverId,
 				replyContent: replyContent,
-				commentId: commentId
+				commentId: commentId,
+				postId: $scope.postDetails.postId
 			};
+			if (replyContent === null || replyContent === undefined) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải nhập nội dung phản hồi'
+				})
+				return;
+
+			}
+			var postToUpdate = $scope.Posts.find(function(post) {
+				return post.postId = $scope.postDetails.postId;
+			});
+			if (postToUpdate) {
+				postToUpdate.commentCount++;
+			}
 			$http.post('/addreply', requestData)
 				.then(function(response) {
 					var comment = $scope.postComments.find(function(comment) {
@@ -242,8 +517,28 @@ angular.module('myApp', [])
 			var requestData = {
 				receiverId: receiverId,
 				replyContent: replyContent,
-				commentId: commentId
+				commentId: commentId,
+				postId: $scope.postDetails.postId
 			};
+			if (replyContent === null || replyContent === undefined) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải nhập nội dung phản hồi'
+				})
+				return;
+
+			}
 			$http.post('/addreply', requestData)
 				.then(function(response) {
 					var comment = $scope.postComments.find(function(comment) {
@@ -251,6 +546,12 @@ angular.module('myApp', [])
 					});
 					comment.reply.unshift(response.data);
 					$scope.replyContent[commentId] = '';
+					var postToUpdate = $scope.Posts.find(function(post) {
+						return post.postId = $scope.postDetails.postId;
+					});
+					if (postToUpdate) {
+						postToUpdate.commentCount++;
+					}
 
 				})
 				.catch(function(error) {
@@ -289,12 +590,86 @@ angular.module('myApp', [])
 			// Lắng nghe các tin nhắn được gửi về cho người dùng
 			stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function(message) {
 				$scope.check = true;
+				$http.get('/getunseenmessage')
+					.then(function(response) {
+						var count = response.data;
+						if (count > 0) {
+							$scope.check = true;
+							$scope.unseenmess = count;
+						}
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
 				$scope.$apply();
 			});
 		}, function(error) {
 			console.error('Lỗi kết nối WebSocket:', error);
 		});
 
+		//Load thông báo
+
+		$http.get('/loadnotification')
+			.then(function(response) {
+				$scope.notification = response.data;
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
+		$http.get('/loadallnotification')
+			.then(function(response) {
+				$scope.allNotification = response.data;
+				console.log($scope.allNotification.receiver.avatar)
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
+		$scope.ConnectNotification = function() {
+
+			var socket = new SockJS('/private-notification');
+			var stompClient = Stomp.over(socket);
+			stompClient.debug = false;
+			stompClient.connect({}, function(frame) {
+				stompClient.subscribe('/private-user', function(response) {
+
+					var data = JSON.parse(response.body)
+					// Thêm dữ liệu mới vào mảng notification
+					for (var i = 0; i < data.length; i++) {
+						// Kiểm tra nếu thông báo chưa tồn tại trong mảng, thì mới thêm vào
+						if (!$scope.isNotificationExists(data[i])) {
+							$scope.notification.push(data[i]);
+							$scope.$apply(); // Cập nhật giao diện khi có dữ liệu mới
+						}
+						$scope.filteredNotifications = $scope.notification.filter(function(notification) {
+							return notification.receiver.userId === $scope.myAccount.user.userId;
+						});
+						$scope.$apply();
+					}
+
+				});
+			});
+		};
+
+		$scope.isNotificationExists = function(newNotification) {
+			return $scope.notification.some(function(notification) {
+
+				return notification.notificationId === newNotification.notificationId;
+			});
+		}
+
+		$scope.seen = function(notificationId) {
+			$http.put('/seennotification/' + notificationId)
+				.then(function(response) {
+
+				}, function(error) {
+					console.log(error);
+				});
+		}
+
+		$scope.ConnectNotification();
+		// Hàm này sẽ được gọi sau khi ng-include hoàn tất nạp tập tin "_menuLeft.html"
 		
 	});
 

@@ -44,9 +44,12 @@ import com.viesonet.entity.Posts;
 import com.viesonet.entity.Reply;
 import com.viesonet.entity.ReplyRequest;
 import com.viesonet.entity.Users;
+import com.viesonet.entity.ViolationTypes;
+import com.viesonet.entity.Violations;
 import com.viesonet.service.CommentsService;
 import com.viesonet.service.CookieService;
 import com.viesonet.service.FavoritesService;
+import com.viesonet.service.FileChecker;
 import com.viesonet.service.FollowService;
 import com.viesonet.service.ImagesService;
 import com.viesonet.service.InteractionService;
@@ -55,6 +58,8 @@ import com.viesonet.service.PostsService;
 import com.viesonet.service.ReplyService;
 import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
+import com.viesonet.service.ViolationTypesService;
+import com.viesonet.service.ViolationsService;
 
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
@@ -105,6 +110,12 @@ public class IndexController {
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
+	@Autowired
+	private ViolationTypesService violationTypesService;
+
+	@Autowired
+	private ViolationsService violationService;
+
 	@GetMapping("/findfollowing")
 	public List<Posts> getFollowsByFollowingId() {
 		List<Follow> followList = followService.getFollowing(session.get("id"));
@@ -134,12 +145,8 @@ public class IndexController {
 		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
 
 		// thêm thông báo
-		Notifications ns = notificationsService.findNotificationByPostId(post.getUser().getUserId(), 3, postId);
-		if(ns == null) {
-			Notifications notifications = notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
-					post.getUser().getUserId(), post, 3);	
-			messagingTemplate.convertAndSend("/private-user", notifications);
-		}
+		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
+				post.getUser().getUserId(), post, 3);
 
 		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
@@ -177,13 +184,10 @@ public class IndexController {
 		String receiverId = request.getReceiverId();
 		String replyContent = request.getReplyContent();
 		int commentId = request.getCommentId();
-
-		// thêm thông báo
-		Posts post = postsService.findPostById(commentsService.getCommentById(commentId).getPost().getPostId());
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, receiverId, post, 6);
-
+		int postId = request.getPostId();
+		System.out.println("postId :"+postId);
 		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(session.get("id")), replyContent,
-				commentsService.getCommentById(commentId), usersService.findUserById(receiverId)));
+				commentsService.getCommentById(commentId), usersService.findUserById(receiverId), postsService.findPostById(postId)));
 
 	}
 
@@ -199,21 +203,6 @@ public class IndexController {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
 		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
-
-		// Thêm thông báo
-		List<Follow> fl = followService.getFollowing(session.get("id"));
-		List<Interaction> itn = interactionService.findListInteraction(session.get("id"));
-		if (itn.size() == 0) {
-			for (Follow list : fl) {
-				notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, list.getFollower().getUserId(), myPost, 1);
-			}
-		} else {
-			for (Interaction it : itn) {
-				notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0,
-						it.getInteractingPerson(), myPost, 1);
-			}
-		}
-
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -229,14 +218,22 @@ public class IndexController {
 
 					try {
 						photoFile.transferTo(new File(pathUpload));
+						String contentType = photoFile.getContentType();
+						boolean type = true;
+						if (contentType.startsWith("image")) {
 
-						long fileSize = photoFile.getSize();
-						if (fileSize > 1 * 1024 * 1024) {
-							double quality = 0.6;
-							String outputPath = pathUpload;
-							Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+						} else if (contentType.startsWith("video")) {
+							type = false;
 						}
-						imagesService.saveImage(myPost, newFileName);
+						if (type == true) {
+							long fileSize = photoFile.getSize();
+							if (fileSize > 1 * 1024 * 1024) {
+								double quality = 0.6;
+								String outputPath = pathUpload;
+								Thumbnails.of(pathUpload).scale(1.0).outputQuality(quality).toFile(outputPath);
+							}
+						}
+						imagesService.saveImage(myPost, newFileName, type);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -251,15 +248,24 @@ public class IndexController {
 		return "success";
 	}
 
+	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
+	public void sendRealTimeNotification() {
+		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
+	}
+
+	@GetMapping("/loadnotification")
+	public List<Notifications> getNotification() {
+		return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
+	}
+
 	@GetMapping("/loadallnotification")
 	public List<Notifications> getAllNotification() {
 		return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
 	}
 
 	@PutMapping("/seennotification/{notificationId}")
-	public List<Notifications> seenNotification(@PathVariable int notificationId) {
+	public void seenNotification(@PathVariable int notificationId) {
 		notificationsService.seenNotification(notificationId);
-	    return notificationsService.findAllByReceiver(session.get("id"));
 	}
 
 	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
@@ -275,6 +281,17 @@ public class IndexController {
 		cookieService.delete("user");
 		cookieService.delete("pass");
 		return new ModelAndView("redirect:/login");
-	}				
-			
+	}
+
+	@GetMapping("/getviolations")
+	public List<ViolationTypes> getViolations() {
+		return violationTypesService.getViolations();
+	}
+
+	@PostMapping("/report/{postId}/{violationTypeId}")
+	public Violations report(@PathVariable("postId") int postId, @PathVariable("violationTypeId") int violationTypeId) {
+		return violationService.report(usersService.getUserById(session.get("id")), postsService.findPostById(postId),
+				violationTypesService.getById(violationTypeId));
+	}
+
 }

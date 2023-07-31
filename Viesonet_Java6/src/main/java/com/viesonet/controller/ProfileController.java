@@ -80,10 +80,10 @@ public class ProfileController {
 //        return followService.getFollowersInfoByUserId(session.get("id"));
 //    }
 	//Lấy thông tin chi tiết các followings
-//	@GetMapping("/findmyfollowing")
-//    public List<Users> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
-//        return followService.getFollowersInfoByUserId(session.get("id"));
-//    }
+	@GetMapping("/findmyfollowing")
+    public List<Users> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
+        return followService.getFollowersInfoByUserId(session.get("id"));
+    }
 	//Lấy thông tin chi tiết của người dùng trong bảng Users
 	@GetMapping("/findusers")
 	public Users findmyi1() {
@@ -114,23 +114,27 @@ public class ProfileController {
     public Users getUserInfo(@SessionAttribute("id") String userId) {
         return usersService.getUserById(userId);
     }
-//	@PostMapping("/updateUserInfo")
-//    public ResponseEntity<String> updateUserInfo(@RequestBody Users userInfo, @SessionAttribute("id") String userId) {
-//        Users currentUser = usersService.findUserById(session.get("id"));
-//        System.out.println(userInfo.getBirthday());
-//        if (currentUser == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-//        }
-//        // Cập nhật thông tin người dùng từ userInfo
-//        currentUser.setUsername(userInfo.getUsername());
-//        currentUser.setBirthday(userInfo.getBirthday());
-//        currentUser.setGender(userInfo.isGender());
-//        currentUser.setAddress(userInfo.getAddress());
-//        currentUser.setRelationship(userInfo.getRelationship());
-//        // Lưu thông tin người dùng đã cập nhật
-//        usersService.updateUserInfo(currentUser);
-//        return ResponseEntity.ok("User info updated successfully.");
-//    }
+	@GetMapping("/getAccInfo")
+    public Accounts getAccInfo(@SessionAttribute("id") String userId) {
+        return accountsService.getAccountById(userId);
+    }
+	@PostMapping("/updateUserInfo")
+    public void updateUserInfo(@RequestBody Users userInfo, @SessionAttribute("id") String userId) {      
+        usersService.updateUserInfo(userInfo,session.get("id"));
+    }
+	
+	@PostMapping("/updateAccInfo/{email}/{statusId}")
+    public void updateAccInfo(@PathVariable String email,@PathVariable String statusId) {      
+		int id = 0;
+		if(statusId.equals("Công khai")) {
+			id = 1;
+		} else if (statusId.equals("Chỉ theo dõi")) {
+			id = 2;
+		} else if(statusId.equals("Tạm ẩn")) {
+			id = 3;
+		}
+		accountsService.updateAccInfo(session.get("id"), email, id);
+    }
 
 	
 	//Hiển thị trang cá nhân
