@@ -44,6 +44,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<script src="js/translate.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
 body {
@@ -454,10 +455,6 @@ div.dropdown-menu.baoCao {
 									<li><b>{{ 'TDG' | translate }}:</b> <span id="wind-speed"></span> m/s</li>
 								</ul>
 							</div>
-						</div>
-						<div>
-							<button ng-click="changeLanguage('vie')">Tiếng Việt</button>
-							<button ng-click="changeLanguage('en')">English</button>
 						</div>
 					</div>
 				</div>
@@ -950,6 +947,18 @@ div.dropdown-menu.baoCao {
 			event.preventDefault();
 			event.target.classList.remove('active');
 		}
+		function toggleColor(link) {
+			  var allLinks = document.getElementsByClassName("colorful-link");
+
+			  for (var i = 0; i < allLinks.length; i++) {
+			    var currentLink = allLinks[i];
+			    currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+
+			    if (currentLink === link) {
+			      link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+			    }
+			  }
+			}
 	</script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
@@ -958,7 +967,6 @@ div.dropdown-menu.baoCao {
 
 	<script src="js/Index.js">
 	</script>
-	
 
 </body>
 

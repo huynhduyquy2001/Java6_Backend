@@ -50,7 +50,12 @@
 	
   	
   	"ST":"Living at",
-  	"MQH":"Relationship"
+  	"MQH":"Relationship",
+  	
+  	"LSTK":"Search History",
+  	
+	"GYTD":"Recommend",
 	
+	"NN":"Language"
 	
 }

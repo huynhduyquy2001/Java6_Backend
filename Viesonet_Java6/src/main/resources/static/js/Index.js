@@ -1,6 +1,6 @@
 
 angular.module('myApp', ['pascalprecht.translate'])
-	.config(function($translateProvider) {
+.config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
 			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
