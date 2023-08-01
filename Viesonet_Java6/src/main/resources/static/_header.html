@@ -16,10 +16,10 @@
 										<i class="fa-regular fa-bell fa-lg"></i>
 										<div class="circle" ng-if="hasNewNotification == true">
 											<!-- Hiển thị tối đa 5 thông báo -->
-											<span ng-if="hasNewNotification == true && notification.length <=5">{{
-												 notification.length}}</span>
+											<span ng-if="hasNewNotification == true && notificationNumber.length <=5">{{
+												 notificationNumber.length}}</span>
 											<!-- Hiển thị "5+" nếu số lượng thông báo lớn hơn 5 -->
-											<span ng-if="hasNewNotification == true && notification.length > 5">5+</span>
+											<span ng-if="hasNewNotification == true && notificationNumber.length > 5">5+</span>
 										</div>
 									</div>
 							</a></li>

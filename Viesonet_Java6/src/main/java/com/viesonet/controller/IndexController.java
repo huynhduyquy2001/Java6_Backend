@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -145,9 +146,15 @@ public class IndexController {
 		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
-				post.getUser().getUserId(), post, 3);
-
+		Notifications ns = notificationsService.findNotificationByPostId(post.getUser().getUserId(), 3, postId);
+		if(ns == null) {
+			Notifications notifications = notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
+					post.getUser(), post, 3);
+		 	
+		 	messagingTemplate.convertAndSend("/private-user", notifications);
+		}
+	 	
+	 	
 		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
 	}
 
@@ -171,9 +178,11 @@ public class IndexController {
 		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getCommentCount(),
-				post.getUser().getUserId(), post, 4);
+		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getCommentCount(),
+				post.getUser(), post, 4);
 
+		messagingTemplate.convertAndSend("/private-user", notifications);
+		
 		return commentsService.addComment(postsService.findPostById(postId),
 				usersService.findUserById(session.get("id")), content);
 	}
@@ -186,6 +195,12 @@ public class IndexController {
 		int commentId = request.getCommentId();
 		int postId = request.getPostId();
 		System.out.println("postId :"+postId);
+		
+		// thêm thông báo
+		Posts post = postsService.findPostById(commentsService.getCommentById(commentId).getPost().getPostId());
+		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, post.getUser(), post, 6);
+		messagingTemplate.convertAndSend("/private-user", notifications);
+		
 		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(session.get("id")), replyContent,
 				commentsService.getCommentById(commentId), usersService.findUserById(receiverId), postsService.findPostById(postId)));
 
@@ -203,6 +218,24 @@ public class IndexController {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
 		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
+		
+		// Thêm thông báo
+				List<Follow> fl = followService.getFollowing(session.get("id"));
+				List<Interaction> itn = interactionService.findListInteraction(session.get("id"));
+				if (itn.size() == 0) {
+					for (Follow list : fl) {
+						Notifications notifications = notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0, list.getFollower(), myPost, 1);
+						messagingTemplate.convertAndSend("/private-user", notifications);
+					}
+				} else {
+					for (Interaction it : itn) {
+						Notifications notifications = notificationsService.createNotifications(usersService.findUserById(session.get("id")), 0,
+								it.getInteractingPerson(), myPost, 1);
+						messagingTemplate.convertAndSend("/private-user", notifications);
+					}
+				}
+
+				
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -248,24 +281,25 @@ public class IndexController {
 		return "success";
 	}
 
-	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
-	public void sendRealTimeNotification() {
-		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
-	}
 
 	@GetMapping("/loadnotification")
 	public List<Notifications> getNotification() {
-		return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
+		return notificationsService.findNotificationByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
 	}
 
 	@GetMapping("/loadallnotification")
 	public List<Notifications> getAllNotification() {
 		return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
 	}
-
-	@PutMapping("/seennotification/{notificationId}")
-	public void seenNotification(@PathVariable int notificationId) {
-		notificationsService.seenNotification(notificationId);
+	
+	@PostMapping("/setHideNotification")
+	public void setHideNotification(@RequestBody  List<Notifications> notification) {
+		 notificationsService.setFalseNotification(notification);
+	}
+	
+	@DeleteMapping("/deleteNotification/{notificationId}")
+	public void deleteNotification(@PathVariable int notificationId) {
+		 notificationsService.deleteNotification(notificationId);
 	}
 
 	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)

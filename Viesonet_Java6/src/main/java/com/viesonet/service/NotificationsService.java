@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.viesonet.dao.NotificationsDao;
@@ -22,7 +23,7 @@ public class NotificationsService {
 	@Autowired
 	UsersDao usersDao;
 	
-	public Notifications createNotifications(Users username, int count, String receiverId, Posts post, int notificationType) {
+	public Notifications createNotifications(Users username, int count, Users receiverId, Posts post, int notificationType) {
 		Notifications notifications = new Notifications();
 		Users user = new Users();
 		if(notificationType == 1) {
@@ -46,7 +47,8 @@ public class NotificationsService {
 		}else if(notificationType == 6) {
 			notifications.setNotificationContent(username.getUsername() + " đã trả lời bình luận của bạn");
 		}
-		user.setUserId(receiverId);
+		user.setUserId(receiverId.getUserId());
+		user.setAvatar(receiverId.getAvatar());
 		notifications.setReceiver(user);
 		notifications.setPost(post);
 		NotificationType nT = new NotificationType();
@@ -60,11 +62,11 @@ public class NotificationsService {
 	}
 	
 	public List<Notifications> findAllByReceiver(String userId){
-		return notificationsDao.findAllByReceiver(userId);
+		return notificationsDao.findAllByReceiver(userId, Sort.by(Sort.Direction.DESC, "notificationDate"));
 	}
 	
-	public List<Notifications> findNotificationByReceiver(){
-		return notificationsDao.findNotificationTrue();
+	public List<Notifications> findNotificationByReceiver(String userId){
+		return notificationsDao.findNotificationTrue(userId, Sort.by(Sort.Direction.DESC, "notificationDate"));
 	}
 	
 	public Notifications findNotificationById(int notificationId) {
@@ -72,10 +74,16 @@ public class NotificationsService {
 		return optionalNotification.orElse(null);
 	}
 	
-	public void seenNotification(int notificationId) {
-		Notifications notifications = notificationsDao.findByNotificationId(notificationId);
-		notifications.setNotificationStatus(false);
-		notificationsDao.saveAndFlush(notifications);
+	public void setFalseNotification(List<Notifications> notifications) {
+		for(Notifications ns : notifications) {
+			Notifications notification = notificationsDao.findByNotificationId(ns.getNotificationId());
+			notification.setNotificationStatus(false);
+			notificationsDao.saveAndFlush(notification);
+		}
+	}
+	
+	public void deleteNotification(int notificationId) {
+		notificationsDao.delete(notificationsDao.findByNotificationId(notificationId));
 	}
 	
 	public Notifications findNotificationByPostId(String userId, int notificationType, int postId) {
