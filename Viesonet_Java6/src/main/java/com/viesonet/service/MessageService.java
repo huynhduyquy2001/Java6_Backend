@@ -66,5 +66,15 @@ public class MessageService {
 	public int getListUnseenMessage(String userId) {
 		return messageDao.getListUnseenMessage(userId, "Đã gửi");
 	}
+	public Message removeMess(Message mess) {
+		mess.setStatus("Đã ẩn");
+		messageDao.saveAndFlush(mess);
+		return mess;
+	}
+	
+	public Message getMessById(int messId) {
+		Optional<Message> obj = messageDao.findById(messId);
+		return obj.orElse(null);
+	}
 
 }

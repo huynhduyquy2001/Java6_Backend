@@ -15,4 +15,5 @@ public class ReplyRequest {
     private int replyId;
     private String replyContent;
     private int commentId;
+    private int postId;
 }
