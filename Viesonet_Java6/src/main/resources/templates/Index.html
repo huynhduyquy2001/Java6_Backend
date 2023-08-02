@@ -865,7 +865,7 @@ div.dropdown-menu.baoCao {
 						aria-labelledby="pills-profile-tab1">
 						<ul class="sidebar-scrollable mt-3">
 							<li class="sidebar-item mt-1 d-flex align-items-center" style="padding: 10px;"
-								ng-repeat="allnotify in allNotification"><a href="#"
+								ng-repeat="allnotify in allNotification | orderBy:'notificationDate':true"><a href="#"
 								ng-click="seen(allnotify.notificationId)" class="image-link">
 									<img src="/images/{{allnotify.receiver.avatar}}" alt=""
 									width="55" height="55" class="rounded-circle"
