@@ -200,6 +200,7 @@ public class IndexController {
 		String userId = account.getUserId();
 		// thêm tương tác
 		Posts post = postsService.findPostById(postId);
+		
 		interactionService.plusInteraction(userId, post.getUser().getUserId());
 
 		// thêm thông báo
@@ -225,7 +226,7 @@ public class IndexController {
 		System.out.println("postId :"+postId);
 		
 		// thêm thông báo
-		Posts post = postsService.findPostById(commentsService.getCommentById(commentId).getPost().getPostId());
+		Posts post = postsService.findPostById(postId);
 		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0, post.getUser(), post, 6);
 		messagingTemplate.convertAndSend("/private-user", notifications);
 		

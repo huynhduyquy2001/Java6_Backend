@@ -6,7 +6,8 @@ angular.module('myApp', ['pascalprecht.translate'])
 			suffix: '.json'
 		});
 		// Set the default language
-		$translateProvider.preferredLanguage('vie');
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
 	})
 	.controller('myCtrl', function($scope, $http, $translate) {
 		$scope.Posts = [];
@@ -28,6 +29,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 		$scope.changeLanguage = function(langKey) {
 			$translate.use(langKey);
+			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
 		};
 
 		// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
@@ -655,8 +657,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 					if ($scope.myAccount.user.userId === data.receiver.userId) {
 						//thêm vào thông báo mới
 						$scope.notification.push(data);
-						//thêm vào tất cả thông báo
-						$scope.allNotification.push(data);
+						
 						//thêm vào mảng để đếm độ số thông báo
 						$scope.notificationNumber.push(data);
 						//cho hiện thông báo mới

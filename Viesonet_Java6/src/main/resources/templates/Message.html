@@ -34,9 +34,10 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/angular-emoji-picker@0.2.0/dist/css/emoji-picker.min.css">
 <link rel="stylesheet" href="/css/emoji.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
-<title>Trang chủ</title>
+<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script><title>Trang chủ</title><title>Trang chủ</title>
 <style type="text/css">
 .dropdown-item {
 	padding-top: 0;
@@ -169,7 +170,7 @@ div.dropdown-menu.baoCao {
 			</div>
 			<div class="col-md-3 menuLeft animate__animated animate__backInRight"
 				style="position: fixed; right: 0; top: 70px;">
-				<input class="form-control" placeholder="Tìm kiếm">
+				<input class="form-control" placeholder="{{ 'TK' | translate }}">
 				<ul class="list-unstyled mb-0">
 					<li ng-repeat="UsersMess in ListUsersMess"
 						class="p-2 border-bottom" style="background-color: white;">

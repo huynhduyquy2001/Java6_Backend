@@ -6,7 +6,9 @@ let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
 			suffix: '.json'
 		});
 		// Set the default language
-		$translateProvider.preferredLanguage('vie');
+		// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
 	})
     .controller('myCtrl', function ($scope, $http, $translate) {
       $scope.Posts = [];
@@ -19,6 +21,7 @@ let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
       //Đa ngôn ngữ	
 		$scope.changeLanguage = function(langKey) {
 			$translate.use(langKey);
+			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
 		};
 	  // đây là code tim kiếm người dùng (tất cả)
       $scope.searchUser = function() {

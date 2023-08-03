@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,9 @@ import com.viesonet.service.UsersService;
 
 import jakarta.websocket.server.PathParam;
 
+import com.viesonet.AuthConfig;
 import com.viesonet.dao.UsersDao;
+import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Follow;
 import com.viesonet.entity.FollowDTO;
 import com.viesonet.entity.Users;
@@ -38,11 +41,12 @@ public class ListFollowController {
 	private UsersDao UsersDao;
 	@Autowired
 	private FollowService followService;
-	@Autowired
-	private SessionService session;
 
 	@Autowired
 	private UsersService UsersService;
+
+	@Autowired
+	private AuthConfig authConfig;
 
 	@GetMapping("/listFollow")
 	public ModelAndView getHomePage() {
@@ -52,19 +56,28 @@ public class ListFollowController {
 
 	// Lấy thông tin chi tiết các followers
 	@GetMapping("/ListFollower")
-	public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
-		return followService.getFollowersInfoByUserId(session.get("id"));
+	public List<Users> getFollowersInfoByUserId(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		return followService.getFollowersInfoByUserId(userId);
 	}
 
 	// Lấy thông tin chi tiết các followers
 	@GetMapping("/ListFollowing1")
-	public List<Users> getFollowingInfoByUserId1(@SessionAttribute("id") String userId) {
-		return followService.getFollowingInfoByUserId(session.get("id"));
+	public List<Users> getFollowingInfoByUserId1(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		return followService.getFollowingInfoByUserId(userId);
 	}
 
 	@GetMapping("/ListFollowing")
-	public List<String> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
-		return followService.findUserIdsOfFollowing(session.get("id"));
+	public List<String> getFollowingInfoByUserId(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		return followService.findUserIdsOfFollowing(userId);
 	}
 
 	@GetMapping("/users")

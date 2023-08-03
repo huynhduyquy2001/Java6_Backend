@@ -4,8 +4,9 @@
 			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
 		});
-		// Set the default language
-		$translateProvider.preferredLanguage('vie');
+	// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
 	})
     .controller('myCtrl', function ($scope, $http, $translate) {
       $scope.Posts = [];
@@ -20,7 +21,8 @@
       $http.get('/ListFollower')
       .then(function(response) {
           $scope.users = response.data;
-          console.log("User",$scope.users); // Kiểm tra dữ liệu trong console log
+          console.log("User",$scope.users); // Kiểm tra dữ liệu trong console 
+
         })
         .catch(function(error) {
           console.log("Lỗi load user",error);
@@ -29,6 +31,7 @@
       //Đa ngôn ngữ	
       $scope.changeLanguage = function (langKey) {
           $translate.use(langKey);
+          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
       };
       
       
