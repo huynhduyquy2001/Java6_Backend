@@ -1,6 +1,14 @@
 
-angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $http, $timeout) {
+angular.module('myApp', ['pascalprecht.translate'])
+.config(function($translateProvider) {
+		$translateProvider.useStaticFilesLoader({
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			suffix: '.json'
+		});
+		// Set the default language
+		$translateProvider.preferredLanguage('vie');
+	})
+	.controller('myCtrl', function($scope, $http, $translate) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -18,11 +26,15 @@ angular.module('myApp', [])
 		$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
 		$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 
+		$scope.changeLanguage = function(langKey) {
+			$translate.use(langKey);
+		};
+
 		// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 		$scope.showMoreComments = function() {
 			$scope.numOfCommentsToShow += $scope.commentsToShowMore;
 		};
-
+	
 
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')

@@ -36,18 +36,35 @@
 										<a href="/changepassword"
 											class="d-flex align-items-center gap-2 dropdown-item"> <i
 											class="ti ti-user fs-6"></i>
-											<p class="mb-0 fs-3">Đổi mật khẩu</p>
+											<p class="mb-0 fs-3">{{ 'DMK' | translate }}</p>
 										</a> <a href="#"
 											class="d-flex align-items-center gap-2 dropdown-item"> <i
 											class="ti ti-mail fs-6"></i>
-											<p class="mb-0 fs-3">Thông tin điều khoản</p>
+											<p class="mb-0 fs-3">{{ 'DK' | translate }}</p>
 										</a> <a href="#"
 											class="d-flex align-items-center gap-2 dropdown-item"> <i
 											class="ti ti-list-check fs-6"></i>
-											<p class="mb-0 fs-3">Nâng cấp</p>
-										</a> <a ng-click="logout()"
-											class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
-											xuất</a>
+											<p class="mb-0 fs-3">{{ 'NC' | translate }}</p>
+										</a> 
+										<hr>	
+										<p style="margin-left: 20px">{{ 'NN' | translate }}</p>
+										<div style="display: flex;">								
+										
+										<a href="#" style="margin-left: 65px" ng-click="changeLanguage('vie')" class="colorful-link" onclick="toggleColor(this)"
+											class="d-flex align-items-center gap-2 dropdown-item" > <i
+											class="ti ti-list-check fs-6"></i>
+											<p class="mb-0 fs-3">Tiếng Việt</p>
+										</a>
+										<p href="#" class="separator"></p>
+										<a href="#" ng-click="changeLanguage('en')" class="colorful-link" onclick="toggleColor(this)"
+											class="d-flex align-items-center gap-2 dropdown-item"> <i
+											class="ti ti-list-check fs-6"></i>
+											<p class="mb-0 fs-3">English</p>
+										</a>
+										</div>
+										<a ng-click="logout()"
+											class="btn btn-outline-primary mx-3 mt-2 d-block">{{ 'DX' | translate }}
+											</a>
 									</div>
 								</div></li>
 						</ul>
