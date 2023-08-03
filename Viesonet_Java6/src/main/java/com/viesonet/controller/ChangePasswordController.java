@@ -34,7 +34,7 @@ public class ChangePasswordController {
 	    String matKhau = (String) data.get("matKhau");
 	    String matKhauMoi = (String) data.get("matKhauMoi");
 	    String matKhauXacNhan = (String) data.get("matKhauXacNhan");
-	    String sdt = sessionService.get("phone");
+	    String sdt = "0939790006";
 	    Accounts accounts = accountsService.findByPhoneNumber(sdt);
 
 	    if (matKhau.equalsIgnoreCase(accounts.getPassword())) {

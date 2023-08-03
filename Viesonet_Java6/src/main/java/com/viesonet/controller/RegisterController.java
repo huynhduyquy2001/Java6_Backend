@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.viesonet.AuthConfig;
 import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Users;
 import com.viesonet.service.AccountStatusService;
@@ -36,6 +37,9 @@ public class RegisterController {
 
 	@Autowired
 	AccountStatusService accountStatusService;
+	
+	@Autowired
+	AuthConfig authConfig;
 
 	LocalDateTime now = LocalDateTime.now();
 	DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
@@ -52,6 +56,7 @@ public class RegisterController {
 
 	@PostMapping("/dangky")
 	public ResponseEntity<?> dangKy2(@RequestBody Map<String, Object> data) {
+		
 		String phoneNumber = (String) data.get("phoneNumber");
 		String password = (String) data.get("password");
 		String confirmPassword = (String) data.get("confirmPassword");
@@ -59,6 +64,7 @@ public class RegisterController {
 		String email = (String) data.get("email");
 		boolean gender = Boolean.parseBoolean(data.get("gender").toString());
 		boolean accept = false;
+		
 		if (data.containsKey("accept")) {
 			accept = Boolean.parseBoolean(data.get("accept").toString());
 		}
@@ -72,6 +78,7 @@ public class RegisterController {
 					return ResponseEntity.ok().body(Collections.singletonMap("message", "Email này đã được đăng ký"));
 				} else {
 					if (password.equalsIgnoreCase(confirmPassword)) {
+						String hashedPassword = authConfig.passwordEncoder().encode(password);
 						Users user = new Users();
 						user.setAvatar(gender ? "avatar1.jpg" : "avatar2.jpg");
 						user.setViolationCount(0);
@@ -83,7 +90,7 @@ public class RegisterController {
 
 						Accounts account = new Accounts();
 						account.setPhoneNumber(phoneNumber);
-						account.setPassword(password);
+						account.setPassword(hashedPassword);
 						account.setEmail(email);
 						account.setUser(usersService.getById(id));
 						account.setRole(rolesService.getById(3));

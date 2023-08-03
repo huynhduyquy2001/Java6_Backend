@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +33,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.viesonet.AuthConfig;
 import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.AccountAndFollow;
+import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Comments;
 import com.viesonet.entity.Favorites;
 import com.viesonet.entity.Follow;
@@ -96,9 +99,6 @@ public class IndexController {
 	private ServletContext servletContext;
 
 	@Autowired
-	private SessionService session;
-
-	@Autowired
 	CookieService cookieService;
 
 	@Autowired
@@ -116,47 +116,72 @@ public class IndexController {
 	@Autowired
 	private ViolationsService violationService;
 
+	@Autowired
+	private AuthConfig authConfig;
+
 	@GetMapping("/findfollowing")
-	public List<Posts> getFollowsByFollowingId() {
-		List<Follow> followList = followService.getFollowing(session.get("id"));
-		List<String> userId = followList.stream().map(follow -> {
+	public List<Posts> getFollowsByFollowingId(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		List<Follow> followList = followService.getFollowing(userId);
+		List<String> listUserId = followList.stream().map(follow -> {
 			return follow.getFollowing().getUserId();
 		}).collect(Collectors.toList());
-		return postsService.findPostsByListUserId(userId);
+		return postsService.findPostsByListUserId(listUserId);
 	}
 
 	@ResponseBody
 	@GetMapping("/findlikedposts")
-	public List<String> findLikedPosts() {
-		return favoritesService.findLikedPosts(session.get("id"));
+	public List<String> findLikedPosts(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		return favoritesService.findLikedPosts(userId);
+	}
+	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
+	public void sendRealTimeNotification() {
+		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
 	}
 
 	@ResponseBody
 	@GetMapping("/findmyaccount")
-	public AccountAndFollow findMyAccount() {
-		return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
+	public AccountAndFollow findMyAccount(Authentication authentication) {
+
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		
+
+		return followService.getFollowingFollower(usersService.findUserById(userId));
 	}
 
 	@ResponseBody
 	@PostMapping("/likepost/{postId}")
-	public void likePost(@PathVariable("postId") int postId) {
+	public void likePost(@PathVariable("postId") int postId, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
 		// thêm tương tác
 		Posts post = postsService.findPostById(postId);
-		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
+		interactionService.plusInteraction(userId, post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getLikeCount(),
+		notificationsService.createNotifications(usersService.findUserById(userId), post.getLikeCount(),
 				post.getUser().getUserId(), post, 3);
 
-		favoritesService.likepost(usersService.findUserById(session.get("id")), postsService.findPostById(postId));
+		favoritesService.likepost(usersService.findUserById(userId), postsService.findPostById(postId));
 	}
 
 	@ResponseBody
 	@PostMapping("/didlikepost/{postId}")
-	public void didlikePost(@PathVariable("postId") int postId) {
+	public void didlikePost(@PathVariable("postId") int postId, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
 		Posts post = postsService.findPostById(postId);
-		interactionService.minusInteraction(session.get("id"), post.getUser().getUserId());
-		favoritesService.didlikepost(session.get("id"), postId);
+		interactionService.minusInteraction(userId, post.getUser().getUserId());
+		favoritesService.didlikepost(userId, postId);
 	}
 
 	@GetMapping("/postdetails/{postId}")
@@ -165,29 +190,35 @@ public class IndexController {
 	}
 
 	@PostMapping("/addcomment/{postId}")
-	public Comments addComment(@PathVariable("postId") int postId, @RequestParam("myComment") String content) {
+	public Comments addComment(@PathVariable("postId") int postId, @RequestParam("myComment") String content, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
 		// thêm tương tác
 		Posts post = postsService.findPostById(postId);
-		interactionService.plusInteraction(session.get("id"), post.getUser().getUserId());
+		interactionService.plusInteraction(userId, post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(session.get("id")), post.getCommentCount(),
+		notificationsService.createNotifications(usersService.findUserById(userId), post.getCommentCount(),
 				post.getUser().getUserId(), post, 4);
 
 		return commentsService.addComment(postsService.findPostById(postId),
-				usersService.findUserById(session.get("id")), content);
+				usersService.findUserById(userId), content);
 	}
 
 	@PostMapping("/addreply")
-	public ResponseEntity<Reply> addReply(@RequestBody ReplyRequest request) {
+	public ResponseEntity<Reply> addReply(@RequestBody ReplyRequest request, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
 		// Lấy các tham số từ request
 		String receiverId = request.getReceiverId();
 		String replyContent = request.getReplyContent();
 		int commentId = request.getCommentId();
 		int postId = request.getPostId();
-		System.out.println("postId :"+postId);
-		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(session.get("id")), replyContent,
-				commentsService.getCommentById(commentId), usersService.findUserById(receiverId), postsService.findPostById(postId)));
+		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(userId), replyContent,
+				commentsService.getCommentById(commentId), usersService.findUserById(receiverId),
+				postsService.findPostById(postId)));
 
 	}
 
@@ -202,7 +233,7 @@ public class IndexController {
 			@RequestParam("content") String content) {
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
-		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
+		Posts myPost = postsService.post(usersService.findUserById("0939790006"), content);
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -248,10 +279,6 @@ public class IndexController {
 		return "success";
 	}
 
-	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
-	public void sendRealTimeNotification() {
-		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
-	}
 
 	@GetMapping("/loadnotification")
 	public List<Notifications> getNotification() {
@@ -259,8 +286,11 @@ public class IndexController {
 	}
 
 	@GetMapping("/loadallnotification")
-	public List<Notifications> getAllNotification() {
-		return notificationsService.findAllByReceiver(session.get("id")); // Implement hàm này để lấy thông báo từ CSDL
+	public List<Notifications> getAllNotification(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		return notificationsService.findAllByReceiver(userId); // Implement hàm này để lấy thông báo từ CSDL
 	}
 
 	@PutMapping("/seennotification/{notificationId}")
@@ -274,14 +304,14 @@ public class IndexController {
 		return modelAndView;
 	}
 
-	@GetMapping("/logout")
-	public ModelAndView logout() {
-		session.remove("id");
-		session.remove("role");
-		cookieService.delete("user");
-		cookieService.delete("pass");
-		return new ModelAndView("redirect:/login");
-	}
+//	@GetMapping("/logout")
+//	public ModelAndView logout() {
+//		session.remove("id");
+//		session.remove("role");
+//		cookieService.delete("user");
+//		cookieService.delete("pass");
+//		return new ModelAndView("redirect:/login");
+//	}
 
 	@GetMapping("/getviolations")
 	public List<ViolationTypes> getViolations() {
@@ -289,8 +319,11 @@ public class IndexController {
 	}
 
 	@PostMapping("/report/{postId}/{violationTypeId}")
-	public Violations report(@PathVariable("postId") int postId, @PathVariable("violationTypeId") int violationTypeId) {
-		return violationService.report(usersService.getUserById(session.get("id")), postsService.findPostById(postId),
+	public Violations report(@PathVariable("postId") int postId, @PathVariable("violationTypeId") int violationTypeId, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+
+		String userId = account.getUserId();
+		return violationService.report(usersService.getUserById(userId), postsService.findPostById(postId),
 				violationTypesService.getById(violationTypeId));
 	}
 
