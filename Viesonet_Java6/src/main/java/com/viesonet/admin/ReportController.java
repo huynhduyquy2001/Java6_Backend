@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.viesonet.AuthConfig;
 import com.viesonet.entity.*;
 import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
@@ -66,14 +68,14 @@ public class ReportController {
 	sp_SumAccountsByDayService sumAccountsByDay;
 	
 	@Autowired
-	private SessionService sessionService;
+	private AuthConfig authConfig;
 	
 	//Load dữ liệu khi mở lên
 	@GetMapping("/admin/report")
-	public String thongKe(Model m) {
+	public String thongKe(Model m, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 		//Tìm người dùng vai trò là admin
-		String userId = sessionService.get("id");
-		m.addAttribute("acc", userService.findUserById(userId));
+		m.addAttribute("acc", userService.findUserById(account.getUserId()));
 		
 		//Thực hiện gọi stored procedure
 		List<ViolationsPosts> rs = EXEC.violationsPosts(LocalDate.now().getYear());

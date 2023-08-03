@@ -85,6 +85,7 @@ public class RegisterController {
 						user.setBackground("nen.jpg");
 						user.setCreateDate(new Date());
 						user.setUserId(id);
+						user.setBirthday(new Date());
 						user.setUsername(username);
 						usersService.save(user);
 

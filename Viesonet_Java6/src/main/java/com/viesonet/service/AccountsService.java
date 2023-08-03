@@ -15,9 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fpoly.dao.AuthorityDAO;
-import com.fpoly.entity.Account;
-import com.fpoly.entity.Authority;
 import com.viesonet.dao.AccountsDao;
 import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.AccountStatus;
@@ -31,9 +28,9 @@ public class AccountsService {
 	
 	@Autowired
 	UsersDao usersDao;
-	
-	@Autowired
-	BCryptPasswordEncoder pe;
+//	
+//	@Autowired
+//	BCryptPasswordEncoder pe;
 
 	public Accounts getAccountByUsers(String userId) {
         return accountsDao.findByUserId(userId);
@@ -80,44 +77,44 @@ public class AccountsService {
 		 return accountsDao.findByUserId(userId);
 	 }
 	 
-	 public List<String> getRolesByUsername(String username){
-
-			List<String> roleNames = new ArrayList<>();
-
-			List<Users> authorities = usersDao.findAll();
-
-			for (Users authority : authorities) {
-				if(authority.getAccount().getUserId().equals(username)){
-					roleNames.add(authority.getAccount().getRole().getRoleId());
-				}
-			}
-			return roleNames;
-		}
-
-		@Override
-		public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-			try {
-				Accounts account = accountsDao.findById(username).get();
-				// Tạo UserDetails từ Account
-				String password = account.getPassword();
-				String[] roles = account.getAuthorities().stream()
-					.map(au -> au.getRole().getId())
-					.collect(Collectors.toList()).toArray(new String[0]);
-
-
-		
-					Map<String, Object> authentication = new HashMap<>();
-					authentication.put("user", account);
-					byte[] token = (username + ":" + account.getPassword()).getBytes();
-					authentication.put("token", "Basic " + Base64.getEncoder().encodeToString(token));
-					//session.setAttribute("authentication", authentication);
-					
-					
-				return User.withUsername(username)
-						.password(pe.encode(password))
-						.roles(roles).build();
-			} catch (Exception e) {
-				throw new UsernameNotFoundException(username + " not found!");
-			}
-		}
+//	 public List<String> getRolesByUsername(String username){
+//
+//			List<String> roleNames = new ArrayList<>();
+//
+//			List<Users> authorities = usersDao.findAll();
+//
+//			for (Users authority : authorities) {
+//				if(authority.getAccount().getUserId().equals(username)){
+//					roleNames.add(authority.getAccount().getRole().getRoleId());
+//				}
+//			}
+//			return roleNames;
+//		}
+//
+//		@Override
+//		public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//			try {
+//				Accounts account = accountsDao.findById(username).get();
+//				// Tạo UserDetails từ Account
+//				String password = account.getPassword();
+//				String[] roles = account.getAuthorities().stream()
+//					.map(au -> au.getRole().getId())
+//					.collect(Collectors.toList()).toArray(new String[0]);
+//
+//
+//		
+//					Map<String, Object> authentication = new HashMap<>();
+//					authentication.put("user", account);
+//					byte[] token = (username + ":" + account.getPassword()).getBytes();
+//					authentication.put("token", "Basic " + Base64.getEncoder().encodeToString(token));
+//					//session.setAttribute("authentication", authentication);
+//					
+//					
+//				return User.withUsername(username)
+//						.password(pe.encode(password))
+//						.roles(roles).build();
+//			} catch (Exception e) {
+//				throw new UsernameNotFoundException(username + " not found!");
+//			}
+//		}
 }

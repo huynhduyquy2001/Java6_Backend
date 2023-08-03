@@ -73,7 +73,7 @@ public class AuthConfig {
 System.out.println("hashedPassword: "+hashedPassword);
                 return User.builder()
                         .username(account.getPhoneNumber())
-                        .password(account.getPassword())
+                        .password(hashedPassword)
                         .roles(String.valueOf(account.getRole().getRoleId()))
                         .build();
             }
