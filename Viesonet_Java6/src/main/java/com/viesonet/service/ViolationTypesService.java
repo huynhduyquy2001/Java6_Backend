@@ -20,4 +20,25 @@ public class ViolationTypesService {
 		Optional<ViolationTypes> obj = violationTypesDao.findById(id);
 		return obj.orElse(null);
 	}
+	
+	public List<ViolationTypes> findAll() {
+		return violationTypesDao.findAll();
+	}
+	
+	public ViolationTypes findByViolationTypesId(int violationTypeId){
+		return violationTypesDao.findByViolationTypeId(violationTypeId);
+	}
+	
+	public ViolationTypes findByViolationDescription(String violationDescription) {
+        return violationTypesDao.findByViolationDescription(violationDescription);
+    }
+	
+	public ViolationTypes save(ViolationTypes violationTypes) {
+		return violationTypesDao.save(violationTypes);
+	}
+	
+	public List<Object> findViolationTypes(String description){
+		return violationTypesDao.findViolationTypes(description);
+	
+	}
 }

@@ -197,7 +197,7 @@ div.dropdown-menu.baoCao {
 												<div class="dropdown-menu dropdown-menu-end"
 													aria-labelledby="drop2">
 													<div class="message-body">
-														<a href="/changepassword"
+														<a href="#"
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-user fs-6"></i>
 															<p class="mb-0 fs-3">Đổi mật khẩu</p>
@@ -252,6 +252,7 @@ div.dropdown-menu.baoCao {
 								<div class="d-flex  gap-2"
 									style="margin-top: 5px; text-align: right;"></div>
 							</div>
+
 						</div>
 					</div>
 				</center>
@@ -400,8 +401,7 @@ div.dropdown-menu.baoCao {
 													style="color: #f50000;">❤️&nbsp;{{ post.likeCount }}</span>
 												<span ng-click="likePost(post.postId)"
 													ng-if="likedPosts.indexOf(post.postId.toString()) === -1">🤍&nbsp;{{
-													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-													ng-click="getPostDetails(post.postId)"><i
+													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
 													class="fa-light fa-comments"></i>&nbsp;{{ post.commentCount
 													}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
 													class="fa-light fa-share-nodes"></i></span>
@@ -584,8 +584,12 @@ div.dropdown-menu.baoCao {
 										<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 											class="w-100" alt="Single image"
 											style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
+
 									</div>
+
+
 								</center>
+
 							</center>
 						</div>
 						<div class="col-md-6 phai ">

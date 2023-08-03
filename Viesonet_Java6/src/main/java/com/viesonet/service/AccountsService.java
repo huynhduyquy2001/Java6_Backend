@@ -77,6 +77,9 @@ public class AccountsService {
 		 return accountsDao.findByUserId(userId);
 	 }
 	 
+	 public Accounts findByEmail(String email) {
+		return accountsDao.findByEmail(email);
+	}
 //	 public List<String> getRolesByUsername(String username){
 //
 //			List<String> roleNames = new ArrayList<>();

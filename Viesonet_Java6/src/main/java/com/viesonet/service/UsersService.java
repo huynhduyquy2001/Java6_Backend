@@ -28,6 +28,10 @@ public class UsersService {
 		return user.orElse(null);
 	}
 
+	public boolean existById(String userId) {
+		return usersDao.existsById(userId);
+	}
+
 	public Users save(Users users) {
 		return usersDao.save(users);
 	}
