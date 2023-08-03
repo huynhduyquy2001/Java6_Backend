@@ -32,9 +32,11 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script><title>Trang chủ</title>
+
 </head>
 <style>
 body {
@@ -213,8 +215,8 @@ video {
 	<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
 		data-navbarbg="skin6" data-sidebartype="full"
 		data-sidebar-position="fixed" data-header-position="fixed">
-		<div ng-include="'_menuLeft.html'"></div>
-		<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
+		<div ng-include="'/_menuLeft.html'"></div>
+		<nav ng-include="'/_header.html'" class="navbar navbar-expand-sm "
 			style="padding: 0; position: fixed; top: 0; z-index: 101">
 			<div class="container" style="width: 100%; padding: 0;">
 				<div class="collapse navbar-collapse" id="collapsibleNavId">
@@ -241,7 +243,7 @@ video {
 										<li class="nav-item dropdown"><a
 											class="nav-link nav-icon-hover" href="#" id="drop2"
 											data-bs-toggle="dropdown" aria-expanded="false"> <img
-												src="images/{{UserInfo.avatar}}" alt="" width="35"
+												src="/images/{{UserInfo.avatar}}" alt="" width="35"
 												height="35" class="rounded-circle">
 										</a>
 											<div class="dropdown-menu dropdown-menu-end"
@@ -1457,7 +1459,7 @@ video {
 			</script>
 			<script type="text/javascript" src="/js/profile.js"></script>
 			<script type="text/javascript" src="/js/service.js"></script>
-			<script src="js/addActive.js"></script>
+			<script src="/js/addActive.js"></script>
 
 			<script>
 				var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh

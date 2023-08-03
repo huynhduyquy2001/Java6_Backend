@@ -1,6 +1,5 @@
 angular.module('myApp', ['ngRoute'])
 	.controller('myCtrl', function($scope, $http) {
-
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
