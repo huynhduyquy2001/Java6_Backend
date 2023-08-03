@@ -1,5 +1,7 @@
 package com.viesonet.entity;
 
+
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -22,15 +24,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Accounts {
+public class Accounts{
     @Id
     private String phoneNumber;
     private String password;
     private String email;
+  
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "userId")
     private Users user;
+    
     @Column(name = "userId", insertable=false, updatable=false) 
 	private String userId;
     
