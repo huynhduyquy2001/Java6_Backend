@@ -1,12 +1,12 @@
-
 angular.module('myApp', ['pascalprecht.translate'])
 .config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
 			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
 		});
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 		// Set the default language
-		$translateProvider.preferredLanguage('vie');
+		$translateProvider.preferredLanguage(storedLanguage);
 	})
 	.controller('myCtrl', function($scope, $http, $translate) {
 		$scope.Posts = [];
@@ -25,6 +25,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 		//Đa ngôn ngữ	
 		$scope.changeLanguage = function(langKey) {
 			$translate.use(langKey);
+			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
 		};
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')

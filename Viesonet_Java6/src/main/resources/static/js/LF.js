@@ -1,11 +1,12 @@
  angular.module('myApp', ['pascalprecht.translate'])
    .config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
-			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			prefix: '/json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
 		});
 		// Set the default language
-		$translateProvider.preferredLanguage('vie');
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
 	})
     .controller('myCtrl', function ($scope, $http, $translate) {
       $scope.Posts = [];
@@ -29,6 +30,7 @@
       //Đa ngôn ngữ	
       $scope.changeLanguage = function (langKey) {
           $translate.use(langKey);
+          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage	
       };
       
       

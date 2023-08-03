@@ -34,7 +34,10 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/angular-emoji-picker@0.2.0/dist/css/emoji-picker.min.css">
 <link rel="stylesheet" href="/css/emoji.min.css">
-<title>Trang chủ</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script><title>Trang chủ</title>
 <style type="text/css">
 .dropdown-item {
 	padding-top: 0;
@@ -112,8 +115,8 @@ div.dropdown-menu.baoCao {
 <body style="padding-top: 70px;" ng-controller="myCtrl">
 	<div style="transition: 0.5s;">
 		<div class="row ">
-			<div ng-include="'_menuLeft.html'"></div>
-			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
+			<div ng-include="'/_menuLeft.html'"></div>
+			<nav ng-include="'/_header.html'" class="navbar navbar-expand-sm "
 				style="padding: 0; position: fixed; top: 0; z-index: 101"></nav>
 			<div class="col-md-7 offset-md-2" style="z-index: 10; padding-left: 4rem">
 				<center>
@@ -241,7 +244,7 @@ div.dropdown-menu.baoCao {
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-	<script src="js/Message.js"></script>
+	<script src="/js/Message.js"></script>
 
 
 

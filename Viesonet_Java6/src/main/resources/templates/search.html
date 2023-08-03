@@ -106,9 +106,9 @@ div.dropdown-menu.baoCao {
 
 <body style="padding-top: 70px;" ng-controller="myCtrl">
 	<div style="transition: 0.5s;">
-		<div class="row ">
-			<div ng-include="'_menuLeft.html'"></div>
-			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
+		<div class="row">
+			<div ng-include="'/_menuLeft.html'"></div>
+			<nav ng-include="'/_header.html'" class="navbar navbar-expand-sm "
 				style="padding: 0; position: fixed; top: 0; z-index: 101">
 				<div class="container" style="width: 100%; padding: 0;">
 					<div class="collapse navbar-collapse" id="collapsibleNavId">
@@ -216,7 +216,7 @@ div.dropdown-menu.baoCao {
 					<div class="user-container">
 						<div class="user-card" ng-repeat="user in users">
 							<div class="user-info">
-								<img ng-src="images/{{user.avatar}}" class="user-avatar"
+								<img ng-src="/images/{{user.avatar}}" class="user-avatar"
 									alt="User Avatar">
 								<div class="user-details">
 									<label class="user-name">{{user.username}}</label>
@@ -265,8 +265,8 @@ div.dropdown-menu.baoCao {
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 	
-<script src="js/search.js"></script>
-<script src="js/addActive.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/addActive.js"></script>
 </body>
 
 </html>
