@@ -39,6 +39,8 @@ import com.viesonet.entity.Images;
 import com.viesonet.entity.Posts;
 import com.viesonet.entity.UserInformation;
 import com.viesonet.entity.Users;
+import com.viesonet.entity.ViolationTypes;
+import com.viesonet.entity.Violations;
 import com.viesonet.service.AccountsService;
 import com.viesonet.service.FavoritesService;
 import com.viesonet.service.FollowService;
@@ -46,6 +48,8 @@ import com.viesonet.service.ImagesService;
 import com.viesonet.service.PostsService;
 import com.viesonet.service.SessionService;
 import com.viesonet.service.UsersService;
+import com.viesonet.service.ViolationTypesService;
+import com.viesonet.service.ViolationsService;
 
 import jakarta.servlet.ServletContext;
 import net.coobird.thumbnailator.Thumbnails;
@@ -80,6 +84,11 @@ public class ProfileController {
 	@Autowired
 	private ServletContext servletContext;
 	
+	@Autowired
+	private ViolationTypesService violationTypesService;
+
+	@Autowired
+	private ViolationsService violationService;
 	private String temporaryUserId;
 	//Lấy thông tin về follow người dùng hiện tại	
 	@GetMapping("/findmyfollow")
@@ -168,7 +177,7 @@ public class ProfileController {
 	}
 	//Nút follow
 	@PostMapping("/followOther")
-	public Follow followUser(@RequestBody FollowDTO followDTO) {
+	public List<FollowDTO> followUser(@RequestBody FollowDTO followDTO) {
 	    // Lấy dữ liệu người dùng hiện tại và người dùng đang được follow
 	    Users follower = usersService.findUserById(followDTO.getFollowerId());
 	    Users following = usersService.findUserById(followDTO.getFollowingId());
@@ -178,7 +187,22 @@ public class ProfileController {
 	    follow.setFollower(follower);
 	    follow.setFollowing(following);
 	    follow.setFollowDate(new Date());
-	    return followService.saveFollow(follow);
+	    
+	    followService.saveFollow(follow);
+	    
+	    List<Follow> listFollow = followService.findAllFollow();
+	    List<FollowDTO> listFollowDTO = new ArrayList<>();
+
+	    for (Follow follow1 : listFollow) {
+	        FollowDTO followDTO1 = new FollowDTO();
+	        followDTO1.setFollowId(follow.getFollowId());
+	        followDTO1.setFollowerId(follow.getFollower().getUserId());
+	        followDTO1.setFollowingId(follow.getFollowing().getUserId());
+	        followDTO1.setFollowDate(follow.getFollowDate());
+
+	        listFollowDTO.add(followDTO1);
+	    }
+	    return listFollowDTO;
 	}
 	//Nút unfollow
 	@ResponseBody
@@ -324,77 +348,74 @@ public class ProfileController {
 		ModelAndView modelAndView = new ModelAndView("Profile");
         return modelAndView;
 	}
+	//----------------------------OtherProfile-----------------------------
+	//Lấy thông tin người dùng khác
+	@PostMapping("/getOtherUserId/{userId}")
+	public Users getOtherUserId(@PathVariable String userId) {
+		return usersService.findUserById(userId);
+	}
+    
+	//Đếm số bài viết của người dùng khác
+	@PostMapping("/countmypost/{userId}")
+	public int countOtherPosts(@PathVariable String userId) {
+		return postsService.countPost(userId);
+	}
+	//Lấy thông tin về follow người dùng khác	
+	@PostMapping("/findmyfollow/{userId}")
+	public AccountAndFollow findOtherAccount(@PathVariable String userId) {	
+		 return followService.getFollowingFollower(usersService.findUserById(userId));
+	}
+	//Lấy thông tin các bài viết người dùng khác
+	@PostMapping("/getmypost/{userId}")
+	public List<Posts> getMyPost(@PathVariable String userId){
+		return postsService.getMyPost(userId);
+	}
+	//Lấy thông tin chi tiết của người dùng trong bảng Account
+	@PostMapping("/findaccounts/{userId}")
+	public Accounts findmyi2(@PathVariable String userId) {
+		return accountsService.getAccountByUsers(userId);
+	}	
+	//Lấy thông tin chi tiết các followers
+	@PostMapping("/findmyfollowers/{userId}")
+    public List<Users> getFollowersInfoByOtherId(@PathVariable String userId) {
+        return followService.getFollowersInfoByUserId(userId);
+    }
+	//Lấy thông tin chi tiết các followings
+	@PostMapping("/findmyfollowing/{userId}")
+    public List<Users> getFollowingInfoByOtherId(@PathVariable String userId) {
+        return followService.getFollowingInfoByUserId(userId);
+    }
+	//Lấy danh sách follow
+	@PostMapping("/getallfollow/{userId}")
+	public List<FollowDTO> getFollow(@PathVariable String userId) {
+		    List<Follow> listFollow = followService.findAllFollow();
+		    List<FollowDTO> listFollowDTO = new ArrayList<>();
+
+		    for (Follow follow : listFollow) {
+		        FollowDTO followDTO = new FollowDTO();
+		        followDTO.setFollowId(follow.getFollowId());
+		        followDTO.setFollowerId(follow.getFollower().getUserId());
+		        followDTO.setFollowingId(follow.getFollowing().getUserId());
+		        followDTO.setFollowDate(follow.getFollowDate());
+		        listFollowDTO.add(followDTO);
+		    }
+
+		    return listFollowDTO;	
+	}
+	//Lấy danh sách ảnh theo UserId
+	@PostMapping("/getListImage/{userId}")
+    public List<Images> getImagesByUserId(@PathVariable String userId) {
+         return imagesService.getImagesByUserId(userId);
+    }
 	
-	@GetMapping("/otherProfile/{userId}")
-	public ModelAndView otherProfile(@PathVariable String userId) {
-	    ModelAndView modelAndView = new ModelAndView("otherProfile");
-	    modelAndView.addObject("userId", userId);
-	    return modelAndView;
+	@GetMapping("/user/getviolations")
+	public List<ViolationTypes> getViolations() {
+		return violationTypesService.getViolations();
 	}
-	@PostMapping("/saveUserId")
-	public void saveUserId(@RequestBody String json) {
-	    try {
-	        // Sử dụng ObjectMapper để chuyển đổi JSON thành đối tượng Map
-	        ObjectMapper objectMapper = new ObjectMapper();
-	        Map<String, String> data = objectMapper.readValue(json, new TypeReference<Map<String, String>>() {});
 
-	        // Lấy giá trị userId từ đối tượng Map
-	        String userId = data.get("userId");
-
-	        // Lưu userId vào biến tạm thời
-	        temporaryUserId = userId;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+	@PostMapping("/user/report/{userId}/{postId}/{violationTypeId}")
+	public Violations report(@PathVariable("postId") int postId, @PathVariable("violationTypeId") int violationTypeId,@PathVariable String userId) {
+		return violationService.report(usersService.getUserById(userId), postsService.findPostById(postId),
+				violationTypesService.getById(violationTypeId));
 	}
-    @GetMapping("/getTemporaryUserId")
-    public String getTemporaryUserId() {
-        // Trả về giá trị userId trong biến tạm thời
-
-        return temporaryUserId;
-    }
-	@GetMapping("/getInfoOtherProfile/{userId}")
-    public Map<String, Object> getInfoOtherProfile(@PathVariable String userId) {
-        Map<String, Object> responseData = new HashMap<>();
-        
-        // Lấy thông tin người dùng theo userId
-        Users userInfo = usersService.getUserById(userId);
-        responseData.put("userInfo", userInfo);
-        
-        // Lấy id của người dùng hiện tại
-        responseData.put("currentUserId", session.get("id"));
-        responseData.put("id", temporaryUserId);
-
-        // Lấy thông tin tài khoản của người dùng theo userId
-        Accounts accountInfo = accountsService.getAccountByUsers(userId);
-        responseData.put("accountInfo", accountInfo);
-
-        // Lấy danh sách bài viết của người dùng theo userId
-        List<Posts> userPosts = postsService.getMyPost(userId);
-        responseData.put("userPosts", userPosts);
-
-        // Lấy danh sách ảnh của người dùng theo userId
-        List<Images> userImages = imagesService.getImagesByUserId(userId);
-        responseData.put("userImages", userImages);
-        
-        // Lấy số lượng các follow
-        AccountAndFollow follow = followService.getFollowingFollower(userInfo);
-        responseData.put("myFollowersAndFollowing", follow);
-        
-        // Lấy danh sách chi tiết các follower
-        List<Users> followers = followService.getFollowersInfoByUserId(userId);
-        responseData.put("followers", followers);
-        
-        // Lấy danh sách chi tiết các following
-        List<Users> followings = followService.getFollowingInfoByUserId(userId);
-        responseData.put("followings", followings);
-        
-        // Lấy tổng số lượng bài viết
-        Integer sumPost =  postsService.countPost(userId);
-        responseData.put("sumPost", sumPost);
-        
-        return responseData;
-        
-    }
-
 }

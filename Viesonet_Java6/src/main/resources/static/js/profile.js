@@ -1,15 +1,5 @@
 angular.module('myApp', ['ngRoute'])
-	angular.module('myApp').config(function($routeProvider) {
-    $routeProvider
-        .when('/otherProfile/:userId', {
-            templateUrl: 'otherProfile.html',
-            controller: 'myCtrl2'
-        })
-        .otherwise({
-            redirectTo: '/'
-        });
-})
-	.controller('myCtrl', function($scope, $http, $window, dataService) {
+	.controller('myCtrl', function($scope, $http) {
 
 		$scope.Posts = [];
 		$scope.likedPosts = [];
@@ -20,22 +10,21 @@ angular.module('myApp', ['ngRoute'])
 		$scope.followers = [];
 		$scope.followings = [];
 		$scope.myPostImage = [];
-		$scope.myListFollow = 0;
-		$scope.UserInfo = [];
-
+		$scope.myListFollow = [];
+		$scope.UserInfo = {};
+		$scope.myUserId = '';
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;
 				$scope.UserInfo = UserInfo;
+				$scope.myUserId = $scope.UserInfo.userId;
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
-			
-		
 		// Truyền dữ liệu vào Service
-				
-		
+
+
 		// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
 		$http.get('/getUserInfo').then(function(response) {
 			$scope.UserInfo = response.data;
@@ -59,7 +48,21 @@ angular.module('myApp', ['ngRoute'])
 					.catch(function(error) {
 						console.log(error);
 					});
-				console.log('User info updated successfully.');
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'success',
+					title: 'Cập nhật thông tin thành công!'
+				})
 			}).catch(function(error) {
 				console.error('Error while updating user info:', error);
 			});
@@ -81,6 +84,21 @@ angular.module('myApp', ['ngRoute'])
 			// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
 			$http.post('/updateAccInfo/' + $scope.AccInfo.email + "/" + $scope.AccInfo.accountStatus.statusName).then(function(response) {
 				console.log('Account info updated successfully.');
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'success',
+					title: 'Cập nhật tài khoản thành công!'
+				})
 			}).catch(function(error) {
 				console.error('Error while updating account info:', error);
 			});
@@ -104,19 +122,11 @@ angular.module('myApp', ['ngRoute'])
 			.catch(function(error) {
 				console.log(error);
 			});
+
 		$http.get('/findmyfollowing')
 			.then(function(response) {
 				$scope.followings = response.data;
 				//console.log($scope.followings); // Kiểm tra dữ liệu trong console log
-			})
-			.catch(function(error) {
-				console.log(error);
-			});
-
-		$http.get('/findfollowing')
-			.then(function(response) {
-				var Posts = response.data;
-				$scope.Posts = Posts;
 			})
 			.catch(function(error) {
 				console.log(error);
@@ -135,6 +145,7 @@ angular.module('myApp', ['ngRoute'])
 			.then(function(response) {
 				var myAccount = response.data;
 				$scope.myAccount = myAccount;
+				console.log($scope.myAccount);
 			})
 			.catch(function(error) {
 				console.log(error);
@@ -322,23 +333,116 @@ angular.module('myApp', ['ngRoute'])
 		};
 
 
+		$scope.getPostDetails = function(postId) {
+			$http.get('/findpostcomments/' + postId)
+				.then(function(response) {
+					var postComments = response.data;
+					$scope.postComments = postComments;
+
+
+					console.log(response.data);
+				}, function(error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+
+			$scope.isReplyEmpty = true;
+			$http.get('/postdetails/' + postId)
+				.then(function(response) {
+					var postDetails = response.data;
+					$scope.postDetails = postDetails;
+					// Xử lý phản hồi thành công từ máy chủ
+					$('#chiTietBaiViet').modal('show');
+
+				}, function(error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+		};
+
+
 		$scope.addComment = function(postId) {
 			var myComment = $scope.myComment;
+			if (myComment === null || myComment === undefined) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải nhập nội dung bình luận'
+				})
+				return;
+			}
 			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
 				.then(function(response) {
 					$scope.postComments.unshift(response.data);
+					var postToUpdate = $scope.Posts.find(function(post) {
+						return post.postId = postId;
+					});
+					if (postToUpdate) {
+						postToUpdate.commentCount++;
+					}
 					$scope.myComment = '';
+
 
 				}, function(error) {
 					console.log(error);
 				});
 		};
-				$scope.sendReply = function(receiverId, replyContent, replyId, commentId) {
+
+
+		$scope.logout = function() {
+			$http.get('/logout')
+				.then(function() {
+					window.location.href = '/login';
+				}, function(error) {
+					console.log(error);
+				});
+		};
+
+
+
+
+		$scope.sendReply = function(receiverId, replyContent, replyId, commentId) {
 			var requestData = {
 				receiverId: receiverId,
 				replyContent: replyContent,
-				commentId: commentId
+				commentId: commentId,
+				postId: $scope.postDetails.postId
 			};
+			if (replyContent === null || replyContent === undefined) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải nhập nội dung phản hồi'
+				})
+				return;
+
+			}
+			var postToUpdate = $scope.Posts.find(function(post) {
+				return post.postId = $scope.postDetails.postId;
+			});
+			if (postToUpdate) {
+				postToUpdate.commentCount++;
+			}
 			$http.post('/addreply', requestData)
 				.then(function(response) {
 					var comment = $scope.postComments.find(function(comment) {
@@ -360,8 +464,28 @@ angular.module('myApp', ['ngRoute'])
 			var requestData = {
 				receiverId: receiverId,
 				replyContent: replyContent,
-				commentId: commentId
+				commentId: commentId,
+				postId: $scope.postDetails.postId
 			};
+			if (replyContent === null || replyContent === undefined) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'warning',
+					title: 'Bạn phải nhập nội dung phản hồi'
+				})
+				return;
+
+			}
 			$http.post('/addreply', requestData)
 				.then(function(response) {
 					var comment = $scope.postComments.find(function(comment) {
@@ -369,6 +493,12 @@ angular.module('myApp', ['ngRoute'])
 					});
 					comment.reply.unshift(response.data);
 					$scope.replyContent[commentId] = '';
+					var postToUpdate = $scope.Posts.find(function(post) {
+						return post.postId = $scope.postDetails.postId;
+					});
+					if (postToUpdate) {
+						postToUpdate.commentCount++;
+					}
 
 				})
 				.catch(function(error) {
@@ -390,13 +520,20 @@ angular.module('myApp', ['ngRoute'])
 				$scope.sendReplyForComment(receiverId, commentId, replyContent);
 			}
 		};
+		$http.get('/getallfollow')
+			.then(function(response) {
+				$scope.myListFollow = response.data;
+			}, function(error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
 		$scope.isFollowing = function(followingId) {
 			// Lấy id của người dùng hiện tại
 			var currentUserId = $scope.UserInfo.userId;
 			// Kiểm tra xem người dùng hiện tại đã follow người dùng với id tương ứng (followingId) chưa
 			// Dựa vào danh sách các người dùng mà người dùng hiện tại đã follow
 			// Trong ví dụ này, danh sách này có thể được lưu trữ trong cơ sở dữ liệu hoặc được lấy từ API
-			var myListFollow = $scope.listFollow;
+			var myListFollow = $scope.myListFollow;
 			for (var i = 0; i < myListFollow.length; i++) {
 				if (myListFollow[i].followingId === followingId && myListFollow[i].followerId === currentUserId) {
 					// Người dùng hiện tại đã follow người dùng với id tương ứng
@@ -412,13 +549,15 @@ angular.module('myApp', ['ngRoute'])
 					followerId: currentUserId,
 					followingId: followingId
 				};
+
 				$http.post('/followOther', data)
 					.then(function(response) {
-						// Thêm follow mới thành công, cập nhật trạng thái trong danh sách và chuyển nút thành "Unfollow"
-						$scope.listFollow.push(response.data);
-						console.log("Success Follow!");
 
-						// Cập nhật lại danh sách follow sau khi thêm mới thành công
+						// Thêm follow mới đã chuyển đổi vào myListFollow
+						$scope.myListFollow = response.data;
+
+						// Cập nhật trạng thái follow và cập nhật giao diện
+						$scope.updateFollowStatus();
 						$scope.refreshFollowList();
 					})
 					.catch(function(error) {
@@ -435,34 +574,37 @@ angular.module('myApp', ['ngRoute'])
 			$http.delete('/unfollowOther', { data: data, headers: { 'Content-Type': 'application/json' } })
 				.then(function(response) {
 					// Cập nhật lại danh sách follow sau khi xóa thành công
-					$scope.listFollow = $scope.listFollow.filter(function(follow) {
-
+					$scope.myListFollow = $scope.myListFollow.filter(function(follow) {
 						return !(follow.followerId === currentUserId && follow.followingId === followingId);
 					});
-				}, function(error) {
-					console.log(error);
-				});
-		};
+					console.log("Unfollow dc nhen")
 
-		$http.get('/getallfollow')
-			.then(function(response) {
-				var listFollow = response.data;
-				$scope.listFollow = listFollow;
-			}, function(error) {
-				// Xử lý lỗi
-				console.log(error);
-			});
-		// Hàm làm mới danh sách follow
-		$scope.refreshFollowList = function() {
-			$http.get('/getallfollow')
-				.then(function(response) {
-					var listFollow = response.data;
-					$scope.listFollow = listFollow;
+					$scope.refreshFollowList(); // Cập nhật trạng thái isFollowing cho các người dùng còn lại
 				})
 				.catch(function(error) {
 					console.log(error);
 				});
 		};
+
+
+		$scope.updateFollowStatus = function() {
+			var currentUserId = $scope.UserInfo.userId;
+			for (var i = 0; i < $scope.myListFollow.length; i++) {
+				$scope.myListFollow[i].isFollowing = $scope.isFollowing($scope.myListFollow[i].followingId);
+			}
+		};
+		// Hàm làm mới danh sách follow
+		$scope.refreshFollowList = function() {
+			$http.get('/getallfollow')
+				.then(function(response) {
+					$scope.myListFollow = response.data;
+				}, function(error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+		};
+
+
 		$scope.changeBackground = function() {
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile02');
@@ -554,12 +696,12 @@ angular.module('myApp', ['ngRoute'])
 						$scope.myPosts[index].content = selectedPost.content;
 					}
 					Swal.fire({
-                    icon: 'success',
-                    title: 'Cập nhật thành công!',
-                    text: 'Bài viết đã được cập nhật thành công.',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+						icon: 'success',
+						title: 'Cập nhật thành công!',
+						text: 'Bài viết đã được cập nhật thành công.',
+						showConfirmButton: false,
+						timer: 3000
+					});
 					// Đóng modal
 					$('#editModal').modal('hide');
 				})
@@ -567,56 +709,56 @@ angular.module('myApp', ['ngRoute'])
 					// Xử lý lỗi
 					console.log(error);
 					Swal.fire({
-                    icon: 'error',
-                    title: 'Có lỗi xảy ra!',
-                    text: 'Đã có lỗi xảy ra khi cập nhật bài viết.',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
+						icon: 'error',
+						title: 'Có lỗi xảy ra!',
+						text: 'Đã có lỗi xảy ra khi cập nhật bài viết.',
+						showConfirmButton: false,
+						timer: 2000
+					});
 				});
 		};
 
 
-    $scope.hidePost = function(postId) {
-        $http.put('/hide/' + postId)
-            .then(function(response) {
-                // Cập nhật trạng thái của bài viết trong danh sách myPosts
-                var index = $scope.myPosts.findIndex(function(post) {
-                    return post.postId === postId;
-                });
+		$scope.hidePost = function(postId) {
+			$http.put('/hide/' + postId)
+				.then(function(response) {
+					// Cập nhật trạng thái của bài viết trong danh sách myPosts
+					var index = $scope.myPosts.findIndex(function(post) {
+						return post.postId === postId;
+					});
 
-                if (index !== -1) {
-                    $scope.myPosts[index].isActive = false;
-                }
+					if (index !== -1) {
+						$scope.myPosts[index].isActive = false;
+					}
 
-                // Tính lại tổng số lượng ảnh
-                $scope.totalImagesCount = $scope.myPosts.reduce(function(total, post) {
-                    return total + post.images.length;
-                }, 0);
+					// Tính lại tổng số lượng ảnh
+					$scope.totalImagesCount = $scope.myPosts.reduce(function(total, post) {
+						return total + post.images.length;
+					}, 0);
 
-                // Hiển thị thông báo SweetAlert2
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Bài viết đã được ẩn thành công!',
-                    showConfirmButton: false,
-                    timer: 1500 // Thời gian hiển thị thông báo (1.5 giây)
-                });
-            })
-            .catch(function(error) {
-                // Xử lý lỗi
-                console.log(error);
+					// Hiển thị thông báo SweetAlert2
+					Swal.fire({
+						icon: 'success',
+						title: 'Bài viết đã được ẩn thành công!',
+						showConfirmButton: false,
+						timer: 1500 // Thời gian hiển thị thông báo (1.5 giây)
+					});
+				})
+				.catch(function(error) {
+					// Xử lý lỗi
+					console.log(error);
 
-                // Hiển thị thông báo SweetAlert2 khi xảy ra lỗi
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Đã xảy ra lỗi khi ẩn bài viết!',
-                    text: 'Vui lòng thử lại sau.',
-                    showConfirmButton: true
-                });
-            });
-    };
+					// Hiển thị thông báo SweetAlert2 khi xảy ra lỗi
+					Swal.fire({
+						icon: 'error',
+						title: 'Đã xảy ra lỗi khi ẩn bài viết!',
+						text: 'Vui lòng thử lại sau.',
+						showConfirmButton: true
+					});
+				});
+		};
 
-    	$scope.handleKeyDown = function(event, userId, replyContent, replyId, commentId) {
+		$scope.handleKeyDown = function(event, userId, replyContent, replyId, commentId) {
 			if (event.keyCode === 13) {
 				// Người dùng đã nhấn phím Enter
 				$scope.sendReply(userId, replyContent, replyId, commentId);
@@ -630,30 +772,240 @@ angular.module('myApp', ['ngRoute'])
 			}
 		};
 
-
+		//---------------------------------------------------------------------------
 		$scope.goToProfile = function(userId) {
-			// Sử dụng $window.location.href để chuyển đến trang otherProfile.html với userId truyền vào
+			$scope.Posts = [];
+			$scope.likedPosts = [];
+			$scope.myAccount = {};
+			$scope.postData = {};
+			$scope.postDetails = {};
+			$scope.postComments = [];
+			$scope.followers = [];
+			$scope.followings = [];
+			$scope.myPostImage = [];
+			$scope.myListFollow = [];
+			$scope.UserInfo = [];
+			$scope.AccInfo = {};
+			$scope.myPosts = [];
+			$scope.selectedPostId = '';
 			console.log(userId)
-			$http.post('/saveUserId', { userId: userId })
-           	 .then(function(response) {
-                console.log('UserId temporarily saved.');
-                // Gọi hàm để lấy userId từ máy chủ và lưu vào dataService (nếu cần thiết)
-                $http.get('/getTemporaryUserId')
-                    .then(function(response) {
-                        var temporaryUserId = response.data;
-                        dataService.setData(temporaryUserId);
-                        console.log('UserId saved in dataService:', temporaryUserId);
-                    })
-                    .catch(function(error) {
-                        console.log('Error while getting temporary userId:', error);
-                    });
-            })
-            .catch(function(error) {
-                console.log('Error while saving temporary userId:', error);
-            });
-			$window.location.href = '/otherProfile/' + userId;
-			
-		};
+			$http.post('/getOtherUserId/' + userId)
+				.then(function(response) {
+					var UserInfo = response.data;
+					$scope.UserInfo = UserInfo;
+					console.log($scope.myUserId);
+				})
+			//
+			$http.post('/countmypost/' + userId)
+				.then(function(response) {
+					var sumPost = response.data;
+					$scope.sumPost = sumPost;
+				})
+			//
+			$http.post('/findmyfollow/' + userId)
+				.then(function(response) {
+					var myAccount = response.data;
+					$scope.myAccount = myAccount;
+				})
+			//
+			$http.post('/getmypost/' + userId)
+				.then(function(response) {
+					var myPosts = response.data;
+					$scope.myPosts = myPosts;
 
+					$scope.totalImagesCount = myPosts.reduce(function(total, post) {
+						return total + post.images.length;
+					}, 0);
+					console.log($scope.totalImagesCount)
+
+				});
+			//
+			$http.post('/findaccounts/' + userId)
+				.then(function(response) {
+					var AccInfo = response.data;
+					$scope.AccInfo = AccInfo;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			//
+			$http.post('/findmyfollowers/' + userId)
+				.then(function(response) {
+					$scope.followers = response.data;
+					console.log($scope.followers); // Kiểm tra dữ liệu trong console log
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			//
+			$http.post('/findmyfollowing/' + userId)
+				.then(function(response) {
+					$scope.followings = response.data;
+					//console.log($scope.followings); // Kiểm tra dữ liệu trong console log
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			//
+			$http.get('/findlikedposts')
+				.then(function(response) {
+					var likedPosts = response.data;
+					$scope.likedPosts = likedPosts;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			//
+			$scope.isFollowing = function(followingId) {
+				// Lấy id của người dùng hiện tại
+				var currentUserId = $scope.myUserId;
+				// Kiểm tra xem người dùng hiện tại đã follow người dùng với id tương ứng (followingId) chưa
+				// Dựa vào danh sách các người dùng mà người dùng hiện tại đã follow
+				// Trong ví dụ này, danh sách này có thể được lưu trữ trong cơ sở dữ liệu hoặc được lấy từ API
+				var myListFollow = $scope.myListFollow;
+				for (var i = 0; i < myListFollow.length; i++) {
+					if (myListFollow[i].followingId === followingId && myListFollow[i].followerId === currentUserId) {
+						// Người dùng hiện tại đã follow người dùng với id tương ứng
+						return true;
+					}
+				}
+				// Người dùng hiện tại chưa follow người dùng với id tương ứng
+				return false;
+			},
+
+				//
+			$scope.followUser = function(followingId) {
+				var currentUserId = $scope.myUserId;
+				var data = {
+					followerId: currentUserId,
+					followingId: followingId
+				};
+
+				$http.post('/followOther', data)
+					.then(function(response) {
+
+						// Thêm follow mới đã chuyển đổi vào myListFollow
+						$scope.myListFollow = response.data;
+
+						// Cập nhật trạng thái follow và cập nhật giao diện
+						$scope.updateFollowStatus();
+						$scope.refreshFollowList();
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+			};
+
+		$scope.unfollowUser = function(followingId) {
+			var currentUserId = $scope.myUserId;
+			var data = {
+				followerId: currentUserId,
+				followingId: followingId
+			};
+			$http.delete('/unfollowOther', { data: data, headers: { 'Content-Type': 'application/json' } })
+				.then(function(response) {
+					// Cập nhật lại danh sách follow sau khi xóa thành công
+					$scope.myListFollow = $scope.myListFollow.filter(function(follow) {
+						return !(follow.followerId === currentUserId && follow.followingId === followingId);
+					});
+					console.log("Unfollow dc nhen")
+
+					$scope.refreshFollowList(); // Cập nhật trạng thái isFollowing cho các người dùng còn lại
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+		};
+			//
+			$http.get('/getallfollow')
+				.then(function(response) {
+					var myListFollow = response.data;
+					$scope.myListFollow = myListFollow;
+				}, function(error) {
+					// Xử lý lỗi
+					console.log(error);
+				});
+			// Hàm làm mới danh sách follow
+			$scope.refreshFollowList = function() {
+				$http.get('/getallfollow')
+					.then(function(response) {
+						$scope.myListFollow = response.data;
+					}, function(error) {
+						// Xử lý lỗi
+						console.log(error);
+					});
+			};
+
+			//
+			$http.post('/getListImage/' + userId)
+				.then(function(response) {
+					// Dữ liệu trả về từ API sẽ nằm trong response.data
+					$scope.imageList = response.data;
+					$scope.displayedImages = $scope.imageList.slice(0, 9);
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+
+			//Lấy danh sách vi phạm
+			$http.get('/getviolations')
+				.then(function(response) {
+					$scope.violations = response.data;
+
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			$scope.openModalBaoCao = function(postId) {
+				$scope.selectedPostId = postId;
+				$('#modalBaoCao').modal('show');
+			};
+
+			$scope.report = function(postId) {
+				if ($scope.selectedViolationType === null || $scope.selectedViolationType === undefined) {
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'warning',
+						title: 'Bạn phải chọn nội dung báo cáo'
+					})
+					return;
+				}
+				$http.post('/user/report/' + userId + '/' + postId + '/' + $scope.selectedViolationType)
+					.then(function(response) {
+						const Toast = Swal.mixin({
+							toast: true,
+							position: 'top-end',
+							showConfirmButton: false,
+							timer: 1000,
+							timerProgressBar: true,
+							didOpen: (toast) => {
+								toast.addEventListener('mouseenter', Swal.stopTimer)
+								toast.addEventListener('mouseleave', Swal.resumeTimer)
+							}
+						})
+						Toast.fire({
+							icon: 'success',
+							title: 'Báo cáo bài viết thành công'
+						})
+					})
+					.catch(function(error) {
+						// Xử lý lỗi
+						console.log(error);
+					});
+				$('#modalBaoCao').modal('hide');
+			};
+
+
+		};
 	});
 

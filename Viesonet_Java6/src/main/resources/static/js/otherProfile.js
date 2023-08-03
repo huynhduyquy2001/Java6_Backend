@@ -1,4 +1,4 @@
-angular.module('myApp').controller('myCtrl2', function($scope, $http, $window, dataService) {
+angular.module('myApp',[]).controller('myCtrl2', function($scope, $http, $window, dataService) {
 		var userId = dataService.getData().userId;
 		$http.get('/getInfoOtherProfile/' + userId)
 			.then(function(response) {

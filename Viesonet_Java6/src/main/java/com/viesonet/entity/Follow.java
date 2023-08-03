@@ -30,7 +30,6 @@ public class Follow {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int followId;
-	
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "followerId")
