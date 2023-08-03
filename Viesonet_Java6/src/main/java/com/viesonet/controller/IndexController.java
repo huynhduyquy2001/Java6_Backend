@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -139,10 +140,7 @@ public class IndexController {
 		String userId = account.getUserId();
 		return favoritesService.findLikedPosts(userId);
 	}
-	@Scheduled(fixedRate = 500) // Lặp lại theo thời gian
-	public void sendRealTimeNotification() {
-		messagingTemplate.convertAndSend("/private-user", notificationsService.findNotificationByReceiver());
-	}
+
 
 	@ResponseBody
 	@GetMapping("/findmyaccount")
@@ -167,10 +165,16 @@ public class IndexController {
 		interactionService.plusInteraction(userId, post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(userId), post.getLikeCount(),
-				post.getUser().getUserId(), post, 3);
-
-		favoritesService.likepost(usersService.findUserById(userId), postsService.findPostById(postId));
+		Notifications ns = notificationsService.findNotificationByPostId(post.getUser().getUserId(), 3, postId);
+		if(ns == null) {
+			Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), post.getLikeCount(),
+					post.getUser(), post, 3);
+		 	
+		 	messagingTemplate.convertAndSend("/private-user", notifications);
+		}
+	 	
+	 	
+		favoritesService.likepost(usersService.findUserById(account.getUserId()), postsService.findPostById(postId));
 	}
 
 	@ResponseBody
@@ -199,9 +203,11 @@ public class IndexController {
 		interactionService.plusInteraction(userId, post.getUser().getUserId());
 
 		// thêm thông báo
-		notificationsService.createNotifications(usersService.findUserById(userId), post.getCommentCount(),
-				post.getUser().getUserId(), post, 4);
+		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), post.getCommentCount(),
+				post.getUser(), post, 4);
 
+		messagingTemplate.convertAndSend("/private-user", notifications);
+		
 		return commentsService.addComment(postsService.findPostById(postId),
 				usersService.findUserById(userId), content);
 	}
@@ -216,9 +222,15 @@ public class IndexController {
 		String replyContent = request.getReplyContent();
 		int commentId = request.getCommentId();
 		int postId = request.getPostId();
-		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(userId), replyContent,
-				commentsService.getCommentById(commentId), usersService.findUserById(receiverId),
-				postsService.findPostById(postId)));
+		System.out.println("postId :"+postId);
+		
+		// thêm thông báo
+		Posts post = postsService.findPostById(commentsService.getCommentById(commentId).getPost().getPostId());
+		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0, post.getUser(), post, 6);
+		messagingTemplate.convertAndSend("/private-user", notifications);
+		
+		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(account.getUserId()), replyContent,
+				commentsService.getCommentById(commentId), usersService.findUserById(receiverId), postsService.findPostById(postId)));
 
 	}
 
@@ -230,10 +242,29 @@ public class IndexController {
 	@ResponseBody
 	@PostMapping("/post")
 	public String dangBai(@RequestParam("photoFiles") MultipartFile[] photoFiles,
-			@RequestParam("content") String content) {
+			@RequestParam("content") String content, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
-		Posts myPost = postsService.post(usersService.findUserById("0939790006"), content);
+		Posts myPost = postsService.post(usersService.findUserById(account.getUserId()), content);
+		
+		// Thêm thông báo
+				List<Follow> fl = followService.getFollowing(account.getUserId());
+				List<Interaction> itn = interactionService.findListInteraction(account.getUserId());
+				if (itn.size() == 0) {
+					for (Follow list : fl) {
+						Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0, list.getFollower(), myPost, 1);
+						messagingTemplate.convertAndSend("/private-user", notifications);
+					}
+				} else {
+					for (Interaction it : itn) {
+						Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0,
+								it.getInteractingPerson(), myPost, 1);
+						messagingTemplate.convertAndSend("/private-user", notifications);
+					}
+				}
+
+				
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -281,8 +312,9 @@ public class IndexController {
 
 
 	@GetMapping("/loadnotification")
-	public List<Notifications> getNotification() {
-		return notificationsService.findNotificationByReceiver(); // Implement hàm này để lấy thông báo từ CSDL
+	public List<Notifications> getNotification(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+		return notificationsService.findNotificationByReceiver(account.getUserId()); // Implement hàm này để lấy thông báo từ CSDL
 	}
 
 	@GetMapping("/loadallnotification")
@@ -292,10 +324,15 @@ public class IndexController {
 		String userId = account.getUserId();
 		return notificationsService.findAllByReceiver(userId); // Implement hàm này để lấy thông báo từ CSDL
 	}
-
-	@PutMapping("/seennotification/{notificationId}")
-	public void seenNotification(@PathVariable int notificationId) {
-		notificationsService.seenNotification(notificationId);
+	
+	@PostMapping("/setHideNotification")
+	public void setHideNotification(@RequestBody  List<Notifications> notification) {
+		 notificationsService.setFalseNotification(notification);
+	}
+	
+	@DeleteMapping("/deleteNotification/{notificationId}")
+	public void deleteNotification(@PathVariable int notificationId) {
+		 notificationsService.deleteNotification(notificationId);
 	}
 
 	@RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)

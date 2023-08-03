@@ -111,18 +111,16 @@ div.dropdown-menu.baoCao {
 }
 
 .image-link {
-	padding: 10px;
 	display: flex;
 	align-items: center;
 	text-decoration: none;
-	color: #989692;
+	color: #5a5957;
 	display: flex;
 }
 
 .notification {
 	border-radius: 10px;
 	background-color: rgba(93, 135, 255, 0.1);
-	color: #5D87FF;
 }
 
 .content {
@@ -134,6 +132,23 @@ div.dropdown-menu.baoCao {
 
 .content p {
 	margin-bottom: 0;
+}
+.sidebar-scrollable {
+	max-height: 550px; /* Đặt chiều cao tối đa của vùng cuộn */
+	overflow-y: auto; /* Tạo thanh cuộn dọc */
+}
+
+.sidebar-scrollable::-webkit-scrollbar {
+	display: none;
+}
+
+.sidebar-scrollable::-webkit-scrollbar-thumb {
+	background-color: #888; /* Màu sắc của thanh cuộn */
+	border-radius: 4px; /* Bo tròn viền thanh cuộn */
+}
+
+.sidebar-scrollable::-webkit-scrollbar-track {
+	background-color: #f5f5f5; /* Màu sắc của vùng di chuyển thanh cuộn */
 }
 </style>
 
@@ -801,7 +816,7 @@ div.dropdown-menu.baoCao {
 					<li class="nav-item" role="presentation">
 						<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
 							data-bs-target="#pills-home1" type="button" role="tab"
-							aria-controls="home" aria-selected="true">Chưa đọc</button>
+							aria-controls="home" aria-selected="true">Mới</button>
 					</li>
 					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
@@ -813,26 +828,36 @@ div.dropdown-menu.baoCao {
 					<div class="tab-pane fade show active" id="pills-home1"
 						role="tabpanel" aria-labelledby="pills-home-tab1">
 						<ul class="sidebar-scrollable mt-3">
-							<li class="sidebar-item notification mt-1"
-								ng-repeat="notify in notification"><a href="/profile"
-								ng-click="seen(notify.notificationId)" class="image-link"
-								ng-if="notify.receiver.userId == myAccount.user.userId"> <img
+							<li class="sidebar-item notification mt-1 align-items-center d-flex" style="padding: 10px;" ng-repeat="notify in notification | orderBy:'notificationDate':true">
+							 <a href="#" ng-click="seen(notify.notificationId)" class="image-link"> <img
 									src="/images/{{notify.receiver.avatar}}" width="55" height="55"
 									style="object-fit: cover;" class="rounded-circle">
 									<div class="content">
-										<b>{{ notify.notificationContent }}</b>
+										<b style="color: black;">{{ notify.notificationContent }}</b>
 										<p>{{ getFormattedTimeAgo(notify.notificationDate) }}
 										<p>
 									</div>
-							</a></li>
+							 </a>
+							 <div class="ms-auto">
+									<div class="dropdown">
+										<a href="#" class="link" id="dropdownMenuButton"
+											data-bs-toggle="dropdown" aria-expanded="false"> <i
+											class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+										</a>
+										<ul style="background: whitesmoke;" class="dropdown-menu"
+											aria-labelledby="dropdownMenuButton">
+											<li><a class="dropdown-item" href="#" ng-click="hideNotificationById(notify.notificationId)"> <i class="fa-solid fa-bell-slash"></i> Ẩn thông báo</a></li>
+											</li>
+										</ul>
+									</div>
+							</li>
 						</ul>
 					</div>
 					<div class="tab-pane fade" id="pills-profile1" role="tabpanel"
 						aria-labelledby="pills-profile-tab1">
-						<ul class="sidebar-scrollable  hover mt-4">
-							<li class="sidebar-item mt-1"
-								ng-class="{'notification': allnotify.notificationStatus == true, '': allnotify.notificationStatus == false}"
-								ng-repeat="allnotify in allNotification"><a href="/profile"
+						<ul class="sidebar-scrollable mt-3">
+							<li class="sidebar-item mt-1 d-flex align-items-center" style="padding: 10px;"
+								ng-repeat="allnotify in allNotification | orderBy:'notificationDate':true"><a href="#"
 								ng-click="seen(allnotify.notificationId)" class="image-link">
 									<img src="/images/{{allnotify.receiver.avatar}}" alt=""
 									width="55" height="55" class="rounded-circle"
@@ -842,7 +867,20 @@ div.dropdown-menu.baoCao {
 										<p>{{ getFormattedTimeAgo(allnotify.notificationDate) }}
 										<p>
 									</div>
-							</a></li>
+							</a>
+							<div class="ms-auto">
+									<div class="dropdown">
+										<a href="#" class="link" id="dropdownMenuButton"
+											data-bs-toggle="dropdown" aria-expanded="false"> <i
+											class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+										</a>
+										<ul style="background: whitesmoke;" class="dropdown-menu"
+											aria-labelledby="dropdownMenuButton">
+											<li><a class="dropdown-item" href="#" ng-click="deleteNotification(allnotify.notificationId)"> <i class="fa-solid fa-bell-slash"></i> Xóa thông báo</a></li>
+											</li>
+										</ul>
+									</div>
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -995,7 +1033,6 @@ div.dropdown-menu.baoCao {
 	<script src="js/addActive.js">
 		
 	</script>
-
 
 </body>
 
