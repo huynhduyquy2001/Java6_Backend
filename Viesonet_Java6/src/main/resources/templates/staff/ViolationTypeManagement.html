@@ -224,7 +224,7 @@ input.hover-effect:hover {
 									<form class="position-relative">
 										<input type="text" class="form-control search-chat py-2 ps-5"
 											id="text-srh" placeholder="Nhập chi tiết vi phạm"
-											ng-change="searchByDescription()" ng-model="searchText"
+											ng-keyup="searchByDescription()" ng-model="searchText"
 											style="border: 1px solid #ccc;"> <i
 											class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
 									</form>
@@ -391,7 +391,7 @@ input.hover-effect:hover {
 
 		$scope.searchByDescription = function () {
 	        var description = $scope.searchText;
-	        description = description.trim();
+	        
 	        if (!description) {
 	            // Nếu ô tìm kiếm rỗng, gán lại bản sao của danh sách gốc cho $scope.listViolationType
 	            $scope.listViolationType = angular.copy(originalList);
@@ -400,7 +400,6 @@ input.hover-effect:hover {
 	        $http.get('/staff/violationtype/searchViolationDescription', { params: { description: description } })
 	            .then(function (response) {
 	                // Xử lý kết quả tìm kiếm ở đây
-	                console.log(response.data);
 	                $scope.listViolationType = response.data;
 	            })
 	            .catch(function (error) {
