@@ -34,8 +34,11 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script><title>Trang chủ</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<title>Trang chủ</title>
 <style type="text/css">
 .dropdown-item {
 	padding-top: 0;
@@ -201,37 +204,61 @@ div.dropdown-menu.baoCao {
 						<div style="width: 85%; text-align: left;" data-bs-toggle="modal">
 							<form class="position-relative">
 								<input type="search" class="form-control search-chat py-2 ps-5"
-									ng-blur="checkInput()" ng-focus="resetError()"
-									ng-submit="LS()" ng-keyup="searchUser()" ng-model="username"
-									id="text-srh" placeholder="{{ 'TK' | translate }}"
-									style="border: 1px solid #ccc;"> <a ng-click="LS()"><i style="cursor: pointer;" class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
-									<!--  <button ng-click="LS()">Tìm kiếm</button> -->	
+									ng-blur="checkInput()" ng-focus="resetError()" ng-submit="LS()"
+									ng-keyup="searchUser()" ng-model="username" id="text-srh"
+									placeholder="{{ 'TK' | translate }}"
+									style="border: 1px solid #ccc;"> <a ng-click="LS()"><i
+									style="cursor: pointer;"
+									class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+								<!--  <button ng-click="LS()">Tìm kiếm</button> -->
 							</form>
-							<span ng-show="showError" style="color: red;">Vui lòng nhập kí tự ạ.</span>
-  								
+							<span ng-show="showError" style="color: red;">Vui lòng
+								nhập kí tự ạ.</span>
+
 						</div>
-						
 				</center>
 				<center>
 					<div class="user-container">
-						<div class="user-card" ng-repeat="user in users">
-							<div class="user-info">
-								<img ng-src="images/{{user.avatar}}" class="user-avatar"
-									alt="User Avatar">
-								<div class="user-details">
-									<label class="user-name">{{user.username}}</label>
-									<div class="follow-btn-container">
-										<button
+
+
+
+
+
+						<div class="user-card" style="background: transparent;"
+							ng-repeat="user in users">
+							<div class="user-data full-width"
+								style="margin-bottom: 5px; margin-left: 0">
+								<div class="user-profile" style="display: block;">
+									<div class="username-dt dpbg-1"
+										style="background-image: url(images/{{user.background}}); background-size: cover;">
+										<a href="/" class="usr-pic">
+											<img alt="" ng-src="/images/{{user.avatar}}"
+												>
+										</a>
+									</div>
+									<div class="user-main-details" style="padding: 60px 0 2px 0;">
+										<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
+										<!-- <span><i class="feather-map-pin"></i>India</span> -->
+									</div>
+									<center>
+									<button style="margin: 3px"
 											ng-if="followings.indexOf(user.userId.toString()) === -1"
 											ng-click="followUser(user.userId)" id="follow-btn"
 											class="btn btn-outline-primary py-1 px-2">Follow</button>
-										<button
+										<button style="margin: 3px;"
 											ng-if="followings.indexOf(user.userId.toString()) !== -1"
 											ng-click="unfollowUser(user.userId)" id="follow-btn"
 											class="btn btn-outline-danger py-1 px-2">Unfollow</button>
-									</div>
+									</center>
+									
+
 								</div>
 							</div>
+
+
+
+
+							
 						</div>
 					</div>
 				</center>
@@ -241,32 +268,33 @@ div.dropdown-menu.baoCao {
 		<div class="col-md-3 menuLeft animate__animated animate__backInRight"
 			style="position: fixed; right: 3%; top: 70px;">
 			<div class="row">
-    			<h5>{{ 'LSTK' | translate }}</h5>
-    				<div class="col-lg-12" ng-repeat="(key,name) in items" style="display: flex; justify-content: space-between;">
-        				<a>{{name.username}}</a>
-        				<a ng-click="deleteLS(key)" style="cursor: pointer;">x</a>
-    				</div>
+				<h5>{{ 'LSTK' | translate }}</h5>
+				<div class="col-lg-12" ng-repeat="(key,name) in items"
+					style="display: flex; justify-content: space-between;">
+					<a>{{name.username}}</a> <a ng-click="deleteLS(key)"
+						style="cursor: pointer;">x</a>
+				</div>
 			</div>
 
-			
+
 		</div>
 	</div>
 	<!-- load ảnh-->
 	<script>
-  // $http.get(url).then(resp=>{ code đúng r nè 
-//	  $scope.items = resp.data;
-//	  console.log("Load OK", response);
- // }).catch(function(error) {
- //     console.log("Load Error", error);
- // });
-</script>
-<script
+		// $http.get(url).then(resp=>{ code đúng r nè 
+		//	  $scope.items = resp.data;
+		//	  console.log("Load OK", response);
+		// }).catch(function(error) {
+		//     console.log("Load Error", error);
+		// });
+	</script>
+	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	
-<script src="js/search.js"></script>
-<script src="js/addActive.js"></script>
+
+	<script src="js/search.js"></script>
+	<script src="js/addActive.js"></script>
 </body>
 
 </html>

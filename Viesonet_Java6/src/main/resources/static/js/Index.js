@@ -1,6 +1,6 @@
 
 angular.module('myApp', ['pascalprecht.translate'])
-.config(function($translateProvider) {
+	.config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
 			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
@@ -9,7 +9,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 		$translateProvider.preferredLanguage(storedLanguage);
 	})
-	.controller('myCtrl', function($scope, $http, $translate) {
+	.controller('myCtrl', function($scope, $http, $translate, $window) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -36,7 +36,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 		$scope.showMoreComments = function() {
 			$scope.numOfCommentsToShow += $scope.commentsToShowMore;
 		};
-	
+
 
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')
@@ -331,10 +331,17 @@ angular.module('myApp', ['pascalprecht.translate'])
 				}
 			} else if (days === 1) {
 				return 'Hôm qua';
-			} else {
+			} else if (days <= 7) {
 				return days + ' ngày trước';
+			} else {
+				// Hiển thị ngày, tháng và năm của activityTime
+				var formattedDate = activityTime.getDate();
+				var formattedMonth = activityTime.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
+				var formattedYear = activityTime.getFullYear();
+				return formattedDate + '-' + formattedMonth + '-' + formattedYear;
 			}
 		};
+
 
 		$scope.post = function() {
 			var formData = new FormData();
@@ -366,7 +373,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 			for (var i = 0; i < fileInput.files.length; i++) {
 				formData.append('photoFiles', fileInput.files[i]);
 			}
-			formData.append('content', $scope.content);
+			formData.append('content', $scope.content.trim());
 
 			$http.post('/post', formData, {
 				transformRequest: angular.identity,
@@ -381,6 +388,10 @@ angular.module('myApp', ['pascalprecht.translate'])
 				console.log(error);
 			})
 			$scope.content = '';
+			fileInput.value = null;
+			var mediaList = document.getElementById('mediaList');
+			mediaList.innerHTML = '';
+			$window.selectedMedia = [];
 			const Toast = Swal.mixin({
 				toast: true,
 				position: 'top-end',
@@ -405,8 +416,6 @@ angular.module('myApp', ['pascalprecht.translate'])
 				.then(function(response) {
 					var postComments = response.data;
 					$scope.postComments = postComments;
-
-
 					console.log(response.data);
 				}, function(error) {
 					// Xử lý lỗi
@@ -429,41 +438,46 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 
 		$scope.addComment = function(postId) {
+
 			var myComment = $scope.myComment;
-			if (myComment === null || myComment === undefined) {
+
+			if (myComment === undefined || myComment.trim() === '') {
 				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 1000,
-					timerProgressBar: true,
-					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
-					}
-				})
-				Toast.fire({
-					icon: 'warning',
-					title: 'Bạn phải nhập nội dung bình luận'
-				})
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Bạn chưa nhập nội dung bình luận'
+			})
 				return;
 			}
-			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
+			$http.post('/addcomment/' + postId + '?myComment=' + myComment.trim())
 				.then(function(response) {
 					$scope.postComments.unshift(response.data);
 					var postToUpdate = $scope.Posts.find(function(post) {
-						return post.postId = postId;
+						return post.postId === postId; // Sửa thành '===' thay vì '='
 					});
 					if (postToUpdate) {
 						postToUpdate.commentCount++;
 					}
-					$scope.myComment = '';
-
 
 				}, function(error) {
 					console.log(error);
 				});
+
+			$scope.myComment = '';
+
 		};
+
 
 
 		$scope.logout = function() {
@@ -485,7 +499,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 				commentId: commentId,
 				postId: $scope.postDetails.postId
 			};
-			if (replyContent === null || replyContent === undefined) {
+			if (replyContent === null || replyContent === undefined || replyContent.trim() === '') {
 				const Toast = Swal.mixin({
 					toast: true,
 					position: 'top-end',
@@ -528,52 +542,50 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 
 		$scope.sendReplyForComment = function(receiverId, commentId, replyContent) {
-			var requestData = {
-				receiverId: receiverId,
-				replyContent: replyContent,
-				commentId: commentId,
-				postId: $scope.postDetails.postId
-			};
-			if (replyContent === null || replyContent === undefined) {
-				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 1000,
-					timerProgressBar: true,
-					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
-					}
-				})
-				Toast.fire({
-					icon: 'warning',
-					title: 'Bạn phải nhập nội dung phản hồi'
-				})
-				return;
+    var requestData = {
+        receiverId: receiverId,
+        replyContent: replyContent,
+        commentId: commentId,
+        postId: $scope.postDetails.postId
+    };
+    if (replyContent === null || replyContent === undefined || replyContent.trim() === '') {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+        Toast.fire({
+            icon: 'warning',
+            title: 'Bạn phải nhập nội dung phản hồi'
+        });
+        return;
+    }
+    $http.post('/addreply', requestData)
+        .then(function(response) {
+            var comment = $scope.postComments.find(function(comment) {
+                return comment.commentId === commentId;
+            });
+            comment.reply.unshift(response.data);
+            $scope.replyContent[commentId] = '';
+            var postToUpdate = $scope.Posts.find(function(post) {
+                return post.postId === $scope.postDetails.postId;
+            });
+            if (postToUpdate) {
+                postToUpdate.commentCount++;
+            }
+        })
+        .catch(function(error) {
+            // Xử lý lỗi
+            console.log('Lỗi:', error);
+        });
+};
 
-			}
-			$http.post('/addreply', requestData)
-				.then(function(response) {
-					var comment = $scope.postComments.find(function(comment) {
-						return comment.commentId === commentId;
-					});
-					comment.reply.unshift(response.data);
-					$scope.replyContent[commentId] = '';
-					var postToUpdate = $scope.Posts.find(function(post) {
-						return post.postId = $scope.postDetails.postId;
-					});
-					if (postToUpdate) {
-						postToUpdate.commentCount++;
-					}
-
-				})
-				.catch(function(error) {
-					// Xử lý lỗi
-					console.log('Lỗi:', error);
-				});
-
-		};
 		$scope.handleKeyDown = function(event, userId, replyContent, replyId, commentId) {
 			if (event.keyCode === 13) {
 				// Người dùng đã nhấn phím Enter
@@ -629,7 +641,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 			.then(function(response) {
 				$scope.notification = response.data;
 				$scope.notificationNumber = $scope.notification;
-				if($scope.notificationNumber.length != 0){
+				if ($scope.notificationNumber.length != 0) {
 					$scope.hasNewNotification = true;
 				}
 			})
@@ -657,11 +669,11 @@ angular.module('myApp', ['pascalprecht.translate'])
 					if ($scope.myAccount.user.userId === data.receiver.userId) {
 						//thêm vào thông báo mới
 						$scope.notification.push(data);
-						
+
 						//thêm vào mảng để đếm độ số thông báo
 						$scope.notificationNumber.push(data);
 						//cho hiện thông báo mới
-						$scope.hasNewNotification = true; 
+						$scope.hasNewNotification = true;
 					}
 					$scope.$apply();
 
@@ -686,13 +698,14 @@ angular.module('myApp', ['pascalprecht.translate'])
 			$scope.hasNewNotification = false;
 			$scope.notificationNumber = [];
 		}
-		
+
 		//Xóa thông báo
 		$scope.deleteNotification = function(notificationId) {
-			$http.delete('/deleteNotification/'+ notificationId)
+			$http.delete('/deleteNotification/' + notificationId)
 				.then(function(response) {
 					$scope.allNotification = $scope.allNotification.filter(function(allNotification) {
-					return allNotification.notificationId !== notificationId;});
+						return allNotification.notificationId !== notificationId;
+					});
 				})
 				.catch(function(error) {
 					// Xử lý lỗi nếu có

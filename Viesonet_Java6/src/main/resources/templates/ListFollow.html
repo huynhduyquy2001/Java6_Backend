@@ -34,8 +34,10 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
 .dropdown-item {
@@ -195,36 +197,48 @@ div.dropdown-menu.baoCao {
 				</div>
 			</nav>
 
-			<div class="col-md-6 offset-md-4" style="z-index: 10;">
-			<label style="font-size: 25px; font: bold;">{{ 'GYTD' | translate }}</label>			
-				<center>
-					<div class="row">
-						<div class="col-md-6" ng-repeat="user in users" ng-if="followings.indexOf(user.userId	.toString())===-1"
-							style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px">
-							<div class="user-profile">
-								<img src="images/{{user.avatar}}" class="img-thumbnail" alt="" style="border-radius: 35%; width:25%; height: auto;">
-								<div>
-									<label>{{ user.username }}</label> <br> 
+			<div class="col-md-6 offset-md-3" style="z-index: 10;">
+				<label style="font-size: 25px; font: bold;">{{ 'GYTD' |
+					translate }}</label>
+				<div class="user-card" style="background: transparent;"
+								ng-repeat="user in users" ng-if="followings.indexOf(user.userId	.toString())===-1">
+								<div class="user-data full-width"
+									style="margin-bottom: 5px; margin-left: 0">
+									<div class="user-profile" style="display: block;">
+										<div class="username-dt dpbg-1"
+											style="background-image: url(images/{{user.background}}); background-size: cover;">
+											<a href="/" class="usr-pic"> <img alt=""
+												ng-src="/images/{{user.avatar}}">
+											</a>
+										</div>
+										<div class="user-main-details" style="padding: 60px 0 2px 0;">
+											<h6 style="font-weight: 600" class="ng-binding">{{user.username}}</h6>
+											<!-- <span><i class="feather-map-pin"></i>India</span> -->
+										</div>
+										<center>
+											
+								<a href="" role="button" class="btn btn-primary"
+									ng-if="!isFollowing(follower.userId)"
+									ng-click="followUser(user.userId)"
+									style="background-color: #5D87FF; color: #fff;margin-bottom: 0.1rem">Follow</a>
+								<a href="" role="button" class="btn btn-primary"
+									ng-if="isFollowing(follower.userId)"
+									ng-click="unfollowUser(user.userId)"
+									style="background-color: #5D87FF; color: #fff; margin-bottom: 0.1rem">Unfollow</a>
+							
+										</center>
+
+
+									</div>
 								</div>
 							</div>
-							<div> 
-								<a href="" role="button" class="btn btn-primary"  ng-if="!isFollowing(follower.userId)"
-																				ng-click="followUser(user.userId)"
-									style="background-color: #5D87FF; color: #fff; margin-right: 50px ">Follow</a>
-									<a href="" role="button" class="btn btn-primary"  ng-if="isFollowing(follower.userId)"
-																				ng-click="unfollowUser(user.userId)"
-									style="background-color: #5D87FF; color: #fff; margin-right: 50px ">Unfollow</a>
-							</div>
-						</div>
-					</div>
-				</center>
 			</div>
 		</div>
 	</div>
 	<!-- load ảnh-->
 	<script>
-  
-</script>
+		
+	</script>
 
 	<script src="js/LF.js"></script>
 	<script src="js/addActive.js"></script>
