@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.viesonet.AuthConfig;
 import com.viesonet.dao.FollowDao;
 import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.AccountAndFollow;
@@ -89,64 +91,78 @@ public class ProfileController {
 
 	@Autowired
 	private ViolationsService violationService;
-	private String temporaryUserId;
+	
+	@Autowired
+	private AuthConfig authConfig;
+	
 	//Lấy thông tin về follow người dùng hiện tại	
 	@GetMapping("/findmyfollow")
-	public AccountAndFollow findMyAccount() {	
-		 return followService.getFollowingFollower(usersService.findUserById(session.get("id")));
+	public AccountAndFollow findMyAccount(Authentication authentication) {	
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+		 return followService.getFollowingFollower(usersService.findUserById(account.getUserId()));
 	}
 	//Lấy thông tin chi tiết các followers
 	@GetMapping("/findmyfollowers")
-    public List<Users> getFollowersInfoByUserId(@SessionAttribute("id") String userId) {
-        return followService.getFollowersInfoByUserId(session.get("id"));
+    public List<Users> getFollowersInfoByUserId(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+        return followService.getFollowersInfoByUserId(account.getUserId());
     }
 	//Lấy thông tin chi tiết các followings
 	@GetMapping("/findmyfollowing")
-    public List<Users> getFollowingInfoByUserId(@SessionAttribute("id") String userId) {
-        return followService.getFollowingInfoByUserId(session.get("id"));
+    public List<Users> getFollowingInfoByUserId(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+        return followService.getFollowingInfoByUserId(account.getUserId());
     }
 	//Lấy thông tin chi tiết của người dùng trong bảng Users
 	@GetMapping("/findusers")
-	public Users findmyi1() {
-		return usersService.findUserById(session.get("id"));
+	public Users findmyi1(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+		return usersService.findUserById(account.getUserId());
 	}
 	//Lấy thông tin chi tiết của người dùng trong bảng Account
 	@GetMapping("/findaccounts")
-	public Accounts findmyi2() {
-		return accountsService.getAccountByUsers(session.get("id"));
+	public Accounts findmyi2(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+		return accountsService.getAccountByUsers(account.getUserId());
 	}	
 	//Lấy thông tin các bài viết người dùng hiện tại
 	@GetMapping("/getmypost")
-	public List<Posts> getMyPost(){
-		return postsService.getMyPost(session.get("id"));
+	public List<Posts> getMyPost(Authentication authentication){
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+		return postsService.getMyPost(account.getUserId());
 	}
 	
 	//Đếm số bài viết của người dùng hiện tại
 	@GetMapping("/countmypost")
-	public int countMyPosts() {
-		return postsService.countPost(session.get("id"));
+	public int countMyPosts(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+		return postsService.countPost(account.getUserId());
 	}
 	// Phương thức này trả về thông tin người dùng (Users) dựa vào session attribute "id".
 	@GetMapping("/getUserInfo")
-	public Users getUserInfo(@SessionAttribute("id") String userId) {
-	    return usersService.getUserById(userId);
+	public Users getUserInfo(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+	    return usersService.getUserById(account.getUserId());
 	}
 
 	// Phương thức này trả về thông tin tài khoản (Accounts) dựa vào session attribute "id".
 	@GetMapping("/getAccInfo")
-	public Accounts getAccInfo(@SessionAttribute("id") String userId) {
-	    return accountsService.getAccountById(userId);
+	public Accounts getAccInfo(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+	    return accountsService.getAccountById(account.getUserId());
 	}
 
 	// Phương thức này thực hiện cập nhật thông tin người dùng (Users) dựa vào dữ liệu từ request body.
 	@PostMapping("/updateUserInfo")
-	public void updateUserInfo(@RequestBody Users userInfo, @SessionAttribute("id") String userId) {      
-	    usersService.updateUserInfo(userInfo, session.get("id"));
+	public void updateUserInfo(@RequestBody Users userInfo, Authentication authentication) {      
+		Accounts account = authConfig.getLoggedInAccount(authentication);
+		usersService.updateUserInfo(userInfo, account.getUserId());
 	}
 
 	// Phương thức này thực hiện cập nhật thông tin tài khoản (Accounts) dựa vào dữ liệu từ các path variable email và statusId.
 	@PostMapping("/updateAccInfo/{email}/{statusId}")
-	public void updateAccInfo(@PathVariable String email, @PathVariable String statusId) {      
+	public void updateAccInfo(@PathVariable String email, @PathVariable String statusId, Authentication authentication) {  
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 	    int id = 0;
 	    if (statusId.equals("Công khai")) {
 	        id = 1;
@@ -155,7 +171,7 @@ public class ProfileController {
 	    } else if (statusId.equals("Tạm ẩn")) {
 	        id = 3;
 	    }
-	    accountsService.updateAccInfo(session.get("id"), email, id);
+	    accountsService.updateAccInfo(account.getUserId(), email, id);
 	}
 	//Lấy danh sách follow
 	@GetMapping("/getallfollow")
@@ -218,10 +234,11 @@ public class ProfileController {
 	//Cập nhật ảnh bìa
 	@ResponseBody
 	@PostMapping("/updateBackground")
-	public String doiAnhBia(@RequestParam("photoFiles2") MultipartFile[] photoFiles, @RequestParam("content") String content,@SessionAttribute("id") String userId ) {
+	public String doiAnhBia(@RequestParam("photoFiles2") MultipartFile[] photoFiles, @RequestParam("content") String content,Authentication authentication ) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
-		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
+		Posts myPost = postsService.post(usersService.findUserById(account.getUserId()), content);
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -259,7 +276,7 @@ public class ProfileController {
 					// Cập nhật ảnh bìa cho người dùng
 	                if (myPost != null) {
 	                    String newBackgroundImageUrl = newFileName;
-	                    usersService.updateBackground(userId, newBackgroundImageUrl);
+	                    usersService.updateBackground(account.getUserId(), newBackgroundImageUrl);
 	                }
 				}
 				
@@ -271,10 +288,11 @@ public class ProfileController {
 	//Cập nhật ảnh đại diện
 	@ResponseBody
 	@PostMapping("/updateAvatar")
-	public String doiAnhDaiDien(@RequestParam("photoFiles3") MultipartFile[] photoFiles, @RequestParam("content") String content,@SessionAttribute("id") String userId ) {
+	public String doiAnhDaiDien(@RequestParam("photoFiles3") MultipartFile[] photoFiles, @RequestParam("content") String content,Authentication authentication ) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 		List<String> hinhAnhList = new ArrayList<>();
 		// Lưu bài đăng vào cơ sở dữ liệu
-		Posts myPost = postsService.post(usersService.findUserById(session.get("id")), content);
+		Posts myPost = postsService.post(usersService.findUserById(account.getUserId()), content);
 		// Lưu hình ảnh vào thư mục static/images
 		if (photoFiles != null && photoFiles.length > 0) {
 			for (MultipartFile photoFile : photoFiles) {
@@ -313,7 +331,7 @@ public class ProfileController {
 					// Cập nhật ảnh bìa cho người dùng
 	                if (myPost != null) {
 	                    String newAvatarImageUrl = newFileName;
-	                    usersService.updateAvatar(userId, newAvatarImageUrl);
+	                    usersService.updateAvatar(account.getUserId(), newAvatarImageUrl);
 	                }
 				}
 				
@@ -324,8 +342,9 @@ public class ProfileController {
 	}
 	//Lấy danh sách ảnh theo UserId
 	@GetMapping("/getListImage")
-    public List<Images> getImagesByUserIdFromSession(@SessionAttribute("id") String userId) {
-         return imagesService.getImagesByUserId(userId);
+    public List<Images> getImagesByUserIdFromSession(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication); 
+		return imagesService.getImagesByUserId(account.getUserId());
     }
 	
     //Cập nhật bài viết

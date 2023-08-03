@@ -1,6 +1,15 @@
 
-angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $http, $timeout) {
+angular.module('myApp', ['pascalprecht.translate'])
+	.config(function($translateProvider) {
+		$translateProvider.useStaticFilesLoader({
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			suffix: '.json'
+		});
+		// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
+	})
+	.controller('myCtrl', function($scope, $http, $translate, $window) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -17,6 +26,11 @@ angular.module('myApp', [])
 
 		$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
 		$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
+
+		$scope.changeLanguage = function(langKey) {
+			$translate.use(langKey);
+			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
+		};
 
 		// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 		$scope.showMoreComments = function() {
@@ -317,10 +331,17 @@ angular.module('myApp', [])
 				}
 			} else if (days === 1) {
 				return 'Hôm qua';
-			} else {
+			} else if (days <= 7) {
 				return days + ' ngày trước';
+			} else {
+				// Hiển thị ngày, tháng và năm của activityTime
+				var formattedDate = activityTime.getDate();
+				var formattedMonth = activityTime.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
+				var formattedYear = activityTime.getFullYear();
+				return formattedDate + '-' + formattedMonth + '-' + formattedYear;
 			}
 		};
+
 
 		$scope.post = function() {
 			var formData = new FormData();
@@ -352,7 +373,7 @@ angular.module('myApp', [])
 			for (var i = 0; i < fileInput.files.length; i++) {
 				formData.append('photoFiles', fileInput.files[i]);
 			}
-			formData.append('content', $scope.content);
+			formData.append('content', $scope.content.trim());
 
 			$http.post('/post', formData, {
 				transformRequest: angular.identity,
@@ -367,6 +388,10 @@ angular.module('myApp', [])
 				console.log(error);
 			})
 			$scope.content = '';
+			fileInput.value = null;
+			var mediaList = document.getElementById('mediaList');
+			mediaList.innerHTML = '';
+			$window.selectedMedia = [];
 			const Toast = Swal.mixin({
 				toast: true,
 				position: 'top-end',
@@ -391,8 +416,6 @@ angular.module('myApp', [])
 				.then(function(response) {
 					var postComments = response.data;
 					$scope.postComments = postComments;
-
-
 					console.log(response.data);
 				}, function(error) {
 					// Xử lý lỗi
@@ -415,41 +438,46 @@ angular.module('myApp', [])
 
 
 		$scope.addComment = function(postId) {
+
 			var myComment = $scope.myComment;
-			if (myComment === null || myComment === undefined) {
+
+			if (myComment === undefined || myComment.trim() === '') {
 				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 1000,
-					timerProgressBar: true,
-					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
-					}
-				})
-				Toast.fire({
-					icon: 'warning',
-					title: 'Bạn phải nhập nội dung bình luận'
-				})
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Bạn chưa nhập nội dung bình luận'
+			})
 				return;
 			}
-			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
+			$http.post('/addcomment/' + postId + '?myComment=' + myComment.trim())
 				.then(function(response) {
 					$scope.postComments.unshift(response.data);
 					var postToUpdate = $scope.Posts.find(function(post) {
-						return post.postId = postId;
+						return post.postId === postId; // Sửa thành '===' thay vì '='
 					});
 					if (postToUpdate) {
 						postToUpdate.commentCount++;
 					}
-					$scope.myComment = '';
-
 
 				}, function(error) {
 					console.log(error);
 				});
+
+			$scope.myComment = '';
+
 		};
+
 
 
 		$scope.logout = function() {
@@ -471,7 +499,7 @@ angular.module('myApp', [])
 				commentId: commentId,
 				postId: $scope.postDetails.postId
 			};
-			if (replyContent === null || replyContent === undefined) {
+			if (replyContent === null || replyContent === undefined || replyContent.trim() === '') {
 				const Toast = Swal.mixin({
 					toast: true,
 					position: 'top-end',
@@ -514,52 +542,50 @@ angular.module('myApp', [])
 
 
 		$scope.sendReplyForComment = function(receiverId, commentId, replyContent) {
-			var requestData = {
-				receiverId: receiverId,
-				replyContent: replyContent,
-				commentId: commentId,
-				postId: $scope.postDetails.postId
-			};
-			if (replyContent === null || replyContent === undefined) {
-				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 1000,
-					timerProgressBar: true,
-					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
-					}
-				})
-				Toast.fire({
-					icon: 'warning',
-					title: 'Bạn phải nhập nội dung phản hồi'
-				})
-				return;
+    var requestData = {
+        receiverId: receiverId,
+        replyContent: replyContent,
+        commentId: commentId,
+        postId: $scope.postDetails.postId
+    };
+    if (replyContent === null || replyContent === undefined || replyContent.trim() === '') {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+        Toast.fire({
+            icon: 'warning',
+            title: 'Bạn phải nhập nội dung phản hồi'
+        });
+        return;
+    }
+    $http.post('/addreply', requestData)
+        .then(function(response) {
+            var comment = $scope.postComments.find(function(comment) {
+                return comment.commentId === commentId;
+            });
+            comment.reply.unshift(response.data);
+            $scope.replyContent[commentId] = '';
+            var postToUpdate = $scope.Posts.find(function(post) {
+                return post.postId === $scope.postDetails.postId;
+            });
+            if (postToUpdate) {
+                postToUpdate.commentCount++;
+            }
+        })
+        .catch(function(error) {
+            // Xử lý lỗi
+            console.log('Lỗi:', error);
+        });
+};
 
-			}
-			$http.post('/addreply', requestData)
-				.then(function(response) {
-					var comment = $scope.postComments.find(function(comment) {
-						return comment.commentId === commentId;
-					});
-					comment.reply.unshift(response.data);
-					$scope.replyContent[commentId] = '';
-					var postToUpdate = $scope.Posts.find(function(post) {
-						return post.postId = $scope.postDetails.postId;
-					});
-					if (postToUpdate) {
-						postToUpdate.commentCount++;
-					}
-
-				})
-				.catch(function(error) {
-					// Xử lý lỗi
-					console.log('Lỗi:', error);
-				});
-
-		};
 		$scope.handleKeyDown = function(event, userId, replyContent, replyId, commentId) {
 			if (event.keyCode === 13) {
 				// Người dùng đã nhấn phím Enter
@@ -608,26 +634,30 @@ angular.module('myApp', [])
 		});
 
 		//Load thông báo
-
+		$scope.hasNewNotification = false;
+		$scope.notificationNumber = [];
+		//Load thông báo chưa đọc
 		$http.get('/loadnotification')
 			.then(function(response) {
 				$scope.notification = response.data;
+				$scope.notificationNumber = $scope.notification;
+				if ($scope.notificationNumber.length != 0) {
+					$scope.hasNewNotification = true;
+				}
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
-
+		//Load tất cả thông báo
 		$http.get('/loadallnotification')
 			.then(function(response) {
 				$scope.allNotification = response.data;
-				console.log($scope.allNotification.receiver.avatar)
 			})
 			.catch(function(error) {
 				console.log(error);
 			});
-
+		//Kết nối websocket
 		$scope.ConnectNotification = function() {
-
 			var socket = new SockJS('/private-notification');
 			var stompClient = Stomp.over(socket);
 			stompClient.debug = false;
@@ -635,42 +665,69 @@ angular.module('myApp', [])
 				stompClient.subscribe('/private-user', function(response) {
 
 					var data = JSON.parse(response.body)
-					// Thêm dữ liệu mới vào mảng notification
-					for (var i = 0; i < data.length; i++) {
-						// Kiểm tra nếu thông báo chưa tồn tại trong mảng, thì mới thêm vào
-						if (!$scope.isNotificationExists(data[i])) {
-							$scope.notification.push(data[i]);
-							$scope.$apply(); // Cập nhật giao diện khi có dữ liệu mới
-						}
-						$scope.filteredNotifications = $scope.notification.filter(function(notification) {
-							return notification.receiver.userId === $scope.myAccount.user.userId;
-						});
-						$scope.$apply();
+					// Kiểm tra điều kiện đúng với user hiện tại thì thêm thông báo mới
+					if ($scope.myAccount.user.userId === data.receiver.userId) {
+						//thêm vào thông báo mới
+						$scope.notification.push(data);
+
+						//thêm vào mảng để đếm độ số thông báo
+						$scope.notificationNumber.push(data);
+						//cho hiện thông báo mới
+						$scope.hasNewNotification = true;
 					}
+					$scope.$apply();
 
 				});
 			});
 		};
 
-		$scope.isNotificationExists = function(newNotification) {
-			return $scope.notification.some(function(notification) {
-
-				return notification.notificationId === newNotification.notificationId;
-			});
+		//xem chi tiết thông báo
+		$scope.seen = function(notificationId) {
+			$scope.getPostDetails(notificationId);
 		}
 
-		$scope.seen = function(notificationId) {
-			$http.put('/seennotification/' + notificationId)
+		//Ẩn tất cả thông báo khi click vào xem
+		$scope.hideNotification = function() {
+			$http.post('/setHideNotification', $scope.notification)
 				.then(function(response) {
+					// Xử lý phản hồi từ backend nếu cần
+				})
+				.catch(function(error) {
+					// Xử lý lỗi nếu có
+				});
+			$scope.hasNewNotification = false;
+			$scope.notificationNumber = [];
+		}
 
-				}, function(error) {
-					console.log(error);
+		//Xóa thông báo
+		$scope.deleteNotification = function(notificationId) {
+			$http.delete('/deleteNotification/' + notificationId)
+				.then(function(response) {
+					$scope.allNotification = $scope.allNotification.filter(function(allNotification) {
+						return allNotification.notificationId !== notificationId;
+					});
+				})
+				.catch(function(error) {
+					// Xử lý lỗi nếu có
 				});
 		}
 
+		//Ẩn thông báo 
+		$scope.hideNotificationById = function(notificationId) {
+			// Ví dụ xóa phần tử có notificationId là 123
+			$scope.removeNotificationById(notificationId);
+		}
+		//Hàm xóa theo ID của mảng
+		$scope.removeNotificationById = function(notificationIdToRemove) {
+			// Lọc ra các phần tử có notificationId khác với notificationIdToRemove
+			$scope.notification = $scope.notification.filter(function(notification) {
+				return notification.notificationId !== notificationIdToRemove;
+			});
+		};
+		//Kết nối khi mở trang web
 		$scope.ConnectNotification();
 		// Hàm này sẽ được gọi sau khi ng-include hoàn tất nạp tập tin "_menuLeft.html"
-		
+
 	});
 
 

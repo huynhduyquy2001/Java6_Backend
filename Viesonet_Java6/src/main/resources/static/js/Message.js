@@ -1,5 +1,14 @@
-angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $window, $http, $timeout) {
+angular.module('myApp', ['pascalprecht.translate'])
+ .config(function($translateProvider) {
+		$translateProvider.useStaticFilesLoader({
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			suffix: '.json'
+		});
+	// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
+	})
+	.controller('myCtrl', function($scope, $window, $http, $timeout,$translate) {
 		$scope.LikePost = [];
 		$scope.ListUsersMess = [];
 		$scope.ListMessWith = [];
@@ -7,7 +16,11 @@ angular.module('myApp', [])
 		$scope.ListMess = [];
 		$scope.userMess = {};
 		$scope.check = false;
-
+		//Đa ngôn ngữ	
+      		$scope.changeLanguage = function (langKey) {
+          $translate.use(langKey);
+          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
+      };
 		// Tìm acc của mình
 		$http.get('/findmyaccount')
 			.then(function(response) {
@@ -27,7 +40,7 @@ angular.module('myApp', [])
 				console.log(error);
 			});
 
-		// Sử dụng $http như trước đây để lấy danh sách người đã từng nhắn tin
+		// Sử dụng $http để lấy danh sách người đã từng nhắn tin
 		$http.get('/getusersmess')
 			.then(function(response) {
 				$scope.ListUsersMess = response.data;
@@ -54,11 +67,17 @@ angular.module('myApp', [])
 			stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function(message) {
 				try {
 					var newMess = JSON.parse(message.body);
-					// Xử lý tin nhắn mới nhận được ở đây
-					if ($scope.userMess.userId === newMess.sender.userId) {
+					// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
+					var checkMess = $scope.ListMess.find(function(obj) {
+						return obj.messId === newMess.messId; // Sửa dấu === ở đây
+					});
+					if (checkMess) {
+						checkMess.status = 'Đã ẩn';
+					} else if ($scope.userMess.userId === newMess.sender.userId && !checkMess) {
 						$scope.ListMess.push(newMess);
 					}
 
+					//cập nhật lại danh sách người đang nhắn tin với mình
 					$http.get('/getusersmess')
 						.then(function(response) {
 							$scope.ListUsersMess = response.data;
@@ -87,17 +106,18 @@ angular.module('myApp', [])
 				receiverId: receiverId,
 				content: content
 			};
-
+			//lưu tin nhắn vào cơ sở dữ liệu
 			$http.post('/savemess', message)
 				.then(function(response) {
+					//hàm gửi tin nhắn qua websocket
 					stompClient.send('/app/sendnewmess', {}, JSON.stringify(response.data));
-
+					//cập nhật lại tin nhắn và những người đã gửi bên cột những người đã gửi
 					var check = response.data;
-					var objUpdate = $scope.ListUsersMess.find(function(obj) {
+					var existingUserIndex = $scope.ListUsersMess.findIndex(function(obj) {
 						return check.receiver.userId === obj[0] || check.receiver.userId === obj[2];
 					});
 
-					Object.assign(objUpdate, {
+					var newObj = {
 						0: check.sender.userId,
 						1: check.sender.username,
 						2: check.receiver.userId,
@@ -108,28 +128,36 @@ angular.module('myApp', [])
 						7: new Date(),
 						8: "Đã gửi",
 						9: check.messId
-					});
+					};
+
+					if (existingUserIndex !== -1) {
+						// Nếu người nhận đã tồn tại trong danh sách, cập nhật thông tin tin nhắn mới nhất
+						$scope.ListUsersMess.splice(existingUserIndex, 1);
+					}
+
+					// Thêm tin nhắn mới vào đầu danh sách
+					$scope.ListUsersMess.unshift(newObj);
+
+					//cập nhật tin nhắn bên người gửi
+					var newMess = {
+						sender: { userId: senderId, username: $scope.myAccount.user.username, avatar: $scope.myAccount.user.avatar },
+						receiver: { userId: receiverId },
+						content: content,
+						sendDate: new Date(),
+						messId: check.messId
+					};
+
+					$scope.ListMess.push(newMess);
 				})
 				.catch(function(error) {
 					console.log(error);
 				});
-
 			console.log('Tin nhắn đã được gửi thành công!');
 			$scope.newMess = '';
-
-			var newMess = {
-				sender: { userId: senderId, username: $scope.myAccount.user.username, avatar: $scope.myAccount.user.avatar },
-				receiver: { userId: receiverId },
-				content: content,
-				sendDate: new Date()
-			};
-
-			$scope.ListMess.push(newMess);
 
 			var foundUser = $scope.ListUsersMess.find(function(user) {
 				return user.userId === receiverId;
 			});
-
 			if (foundUser) {
 				foundUser.status = 'Đã gửi';
 			}
@@ -191,7 +219,7 @@ angular.module('myApp', [])
 
 			if (days === 0) {
 				if (hours === 0 && minutes === 0) {
-					return seconds + ' giây trước';
+					return 'vài giây trước';
 				} else if (hours === 0) {
 					return minutes + ' phút trước';
 				} else {
@@ -224,15 +252,38 @@ angular.module('myApp', [])
 					console.log(error);
 				});
 		};
-		
+
 		$scope.revokeMessage = function(messId) {
-			alert(messId)
-			$http.get('/removemess/'+messId)
+			$http.post('/removemess/' + messId)
 				.then(function(reponse) {
-					var messToUpdate = $scope.ListMess.find(function(mess){
-						return mess.messId = messId;
+					var messToUpdate = $scope.ListMess.find(function(mess) {
+						return mess.messId === messId;
 					})
-					messToUpdate.status="Đã ẩn";
+					messToUpdate.status = "Đã ẩn";
+
+					var mess = reponse.data;
+
+					var objUpdate = $scope.ListUsersMess.find(function(obj) {
+						return (mess.receiver.userId === obj[0] || mess.receiver.userId === obj[2]) && mess.messId === obj[9];
+					});
+					if (objUpdate) {
+						Object.assign(objUpdate, {
+							0: mess.sender.userId,
+							1: mess.sender.username,
+							2: mess.receiver.userId,
+							3: mess.receiver.username,
+							4: mess.sender.avatar,
+							5: mess.receiver.avatar,
+							6: mess.content,
+							7: new Date(),
+							8: "Đã ẩn",
+							9: mess.messId
+						});
+					}
+					stompClient.send('/app/sendnewmess', {}, JSON.stringify(mess));
+
+
+
 				}, function(error) {
 					console.log(error);
 				});

@@ -15,10 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.viesonet.dao.PostsDao;
+import com.viesonet.entity.Notifications;
 import com.viesonet.entity.Posts;
 import com.viesonet.entity.Users;
 
@@ -27,10 +29,12 @@ public class PostsService {
 
 	@Autowired
 	PostsDao postsDao;
-
+	
+	
 	public List<Posts> findPostsByListUserId(List<String> userId) {
 		return postsDao.findPostsByListUserId(userId, Sort.by(Sort.Direction.DESC, "postDate"));
 	}
+
 
 	public Posts findPostById(int postId) {
 		Optional<Posts> optionalPost = postsDao.findById(postId);
@@ -85,4 +89,5 @@ public class PostsService {
         }
     }
 
+	
 }

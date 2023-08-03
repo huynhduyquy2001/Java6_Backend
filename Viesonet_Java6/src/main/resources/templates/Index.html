@@ -41,7 +41,13 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<script src="js/translate.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
 body {
@@ -110,18 +116,16 @@ div.dropdown-menu.baoCao {
 }
 
 .image-link {
-	padding: 10px;
 	display: flex;
 	align-items: center;
 	text-decoration: none;
-	color: #989692;
+	color: #5a5957;
 	display: flex;
 }
 
 .notification {
 	border-radius: 10px;
 	background-color: rgba(93, 135, 255, 0.1);
-	color: #5D87FF;
 }
 
 .content {
@@ -134,6 +138,24 @@ div.dropdown-menu.baoCao {
 .content p {
 	margin-bottom: 0;
 }
+
+.sidebar-scrollable {
+	max-height: 550px; /* Đặt chiều cao tối đa của vùng cuộn */
+	overflow-y: auto; /* Tạo thanh cuộn dọc */
+}
+
+.sidebar-scrollable::-webkit-scrollbar {
+	display: none;
+}
+
+.sidebar-scrollable::-webkit-scrollbar-thumb {
+	background-color: #888; /* Màu sắc của thanh cuộn */
+	border-radius: 4px; /* Bo tròn viền thanh cuộn */
+}
+
+.sidebar-scrollable::-webkit-scrollbar-track {
+	background-color: #f5f5f5; /* Màu sắc của vùng di chuyển thanh cuộn */
+}
 </style>
 
 <script
@@ -145,8 +167,6 @@ div.dropdown-menu.baoCao {
 	<div style="transition: 0.5s;">
 		<div class="row ">
 			<div ng-include="'_menuLeft.html'"></div>
-
-
 
 			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
 				style="padding: 0; position: fixed; top: 0; z-index: 101">
@@ -181,7 +201,7 @@ div.dropdown-menu.baoCao {
 												<div class="dropdown-menu dropdown-menu-end"
 													aria-labelledby="drop2">
 													<div class="message-body">
-														<a href="/changepassword"
+														<a href="#"
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-user fs-6"></i>
 															<p class="mb-0 fs-3">Đổi mật khẩu</p>
@@ -191,11 +211,11 @@ div.dropdown-menu.baoCao {
 															<p class="mb-0 fs-3">Thông tin điều khoản</p>
 														</a> <a href="#"
 															class="d-flex align-items-center gap-2 dropdown-item">
-															<i class="ti ti-list-check fs-6"></i>
 															<p class="mb-0 fs-3">Nâng cấp</p>
-														</a> <a ng-click="logout()"
+														</a> </a> <a ng-click="logout()"
 															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
 															xuất</a>
+
 													</div>
 												</div></li>
 										</ul>
@@ -223,19 +243,20 @@ div.dropdown-menu.baoCao {
 								style="margin-bottom: 15px; background: white 0.5; border-radius: 3px 3px 0 0; padding-top: 10px; padding-bottom: 10px; background-color: transparent; background-image: url('/images/nenDn.jpeg'); background-size: cover; min-height: 10rem;">
 								<span
 									style="font-weight: 600 !important; font-size: 1rem !important; margin: 0; color: white"><i
-									class="fa-solid fa-pencil"></i> Đăng bài viết</span>
+									class="fa-solid fa-pencil"></i> {{ 'DBV' | translate }}</span>
 								<form id="postForm">
 									<center>
 										<img id="img" src="" width="45%"
 											style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
 									</center>
-									<div class="form-control" id="floatingTextarea2"
-										style="height: 57px; opacity: 0.7; border-radius: 0px 15px 0px 15px;">Hãy
-										viết gì đó cho ngày hôm nay...</div>
+									<textarea class="form-control"
+										placeholder="{{ 'HV' | translate }}" id="floatingTextarea2"
+										style="height: 137px; opacity: 0.4"></textarea>
 								</form>
 								<div class="d-flex  gap-2"
 									style="margin-top: 5px; text-align: right;"></div>
 							</div>
+
 						</div>
 					</div>
 				</center>
@@ -273,9 +294,10 @@ div.dropdown-menu.baoCao {
 													<label>{{ post.user.username }}</label>
 													<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 													<br> <small style="font-size: 12px; color: #65676b">
-														<b>Sống tại:</b> {{ post.user.address }}
+														<b>{{ 'ST' | translate }}:</b> {{ post.user.address }}
 													</small> <br> <small style="font-size: 12px; color: #65676b">
-														<b>Mối quan hệ:</b> {{ post.user.relationship }}
+														<b>{{ 'MQH' | translate }}:</b> {{ post.user.relationship
+														}}
 													</small>
 
 												</div>
@@ -292,8 +314,8 @@ div.dropdown-menu.baoCao {
 												<div class="dropdown-menu" aria-labelledby="triggerId">
 													<a class="dropdown-item"
 														ng-click="openModalBaoCao(post.postId)"
-														style="color: #E53F31; font-size: 13px">Báo cáo vi
-														phạm</a>
+														style="color: #E53F31; font-size: 13px">{{ 'BCVP' |
+														translate }}</a>
 												</div>
 											</div>
 										</div>
@@ -386,8 +408,8 @@ div.dropdown-menu.baoCao {
 													ng-if="likedPosts.indexOf(post.postId.toString()) === -1">🤍&nbsp;{{
 													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
 													ng-click="getPostDetails(post.postId)"><i
-													class="fa-light fa-comments"></i>&nbsp;{{ post.commentCount
-													}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
+													class="fa-light fa-comments"></i>&nbsp;{{
+													post.commentCount}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
 													class="fa-light fa-share-nodes"></i></span>
 											</div>
 										</div>
@@ -417,13 +439,13 @@ div.dropdown-menu.baoCao {
 						<ul class="followers-dts">
 							<li>
 								<div class="followers-dt-sm">
-									<h4>Người theo dõi</h4>
+									<h4>{{ 'NTD' | translate }}</h4>
 									<span>{{myAccount.followers}}</span>
 								</div>
 							</li>
 							<li>
 								<div class="followers-dt-sm">
-									<h4>Đang theo dõi</h4>
+									<h4>{{ 'DTD' | translate }}</h4>
 									<span>{{myAccount.following}}</span>
 								</div>
 							</li>
@@ -433,7 +455,7 @@ div.dropdown-menu.baoCao {
 							<a class="btn-blue" href="/profile"
 								style="background-color: #3a57e8; border-radius: 2px; border: 1px solid #3a57e8; box-sizing: border-box; color: white; display: inline-block; font-family: Arial, sans-serif; font-size: 14px; line-height: 16.8px; margin: 0px 3px 10px; padding: 10px 14px; text-decoration-line: none; transition: all 0.2s; width: 98%;"
 								rel="noopener noreferrer"><i
-								class="fa-light fa-address-card"></i> Xem trang cá nhân </a>
+								class="fa-light fa-address-card"></i>{{ 'XTCN' | translate }} </a>
 						</div>
 
 					</div>
@@ -446,11 +468,13 @@ div.dropdown-menu.baoCao {
 								style="background-color: rgba(0, 0, 0, 0.4); margin: 0; padding: 10px; color: #F2E5C9;">
 
 								<ul style="font-size: 13px">
-									<li><b>Thành phố:</b> <span id="city"></span></li>
-									<li><b>Nhiệt độ:</b> <span id="temperature"></span> °C</li>
-									<li><b>Mô tả:</b> <span id="description"></span></li>
-									<li><b>Độ ẩm:</b> <span id="humidity"></span>%</li>
-									<li><b>Tốc độ gió:</b> <span id="wind-speed"></span> m/s</li>
+									<li><b>{{ 'TP' | translate }}:</b> <span id="city"></span></li>
+									<li><b>{{ 'NDD' | translate }}:</b> <span id="temperature"></span>
+										°C</li>
+									<li><b>{{ 'MT' | translate }}:</b> <span id="description"></span></li>
+									<li><b>{{ 'DA' | translate }}:</b> <span id="humidity"></span>%</li>
+									<li><b>{{ 'TDG' | translate }}:</b> <span id="wind-speed"></span>
+										m/s</li>
 								</ul>
 							</div>
 						</div>
@@ -468,7 +492,7 @@ div.dropdown-menu.baoCao {
 				style="background-color: rgba(246, 245, 244, 1);">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalToggleLabel">
-						<b style="margin-left: 170px;">Đăng bài viết</b>
+						<b style="margin-left: 170px;">{{ 'DBV' | translate }}</b>
 					</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
@@ -482,23 +506,24 @@ div.dropdown-menu.baoCao {
 								<div style="display: flex; align-items: center;">
 									<div class="circle2 mb-2"
 										style="margin-bottom: 0 !important; background-color: green"></div>
-									&nbsp; <small style="font-size: 12px"> Đang hoạt động </small>
+									&nbsp; <small style="font-size: 12px"> {{ 'DHD' |
+										translate }} </small>
 								</div>
 							</div>
 						</div>
 						<br>
-						<textarea name="content" placeholder="Bạn đang nghĩ gì?"
+						<textarea name="content" placeholder="{{ 'BDNG' | translate }}"
 							id="content" ng-model="content" cols="30" rows="3"
 							style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;"></textarea>
 						<br>
 						<div id="dropArea" ondrop="dropHandler(event);"
 							ondragover="dragOverHandler(event);"
-							ondragleave="dragLeaveHandler(event);">Chọn hoặc kéo thả để
-							tải hình ảnh/video.</div>
+							ondragleave="dragLeaveHandler(event);">{{ 'KEO' | translate
+							}}</div>
 
-						<div class="input-group mb-3">
+						<div hidden class="input-group mb-3">
 							<label class="input-group-text" for="inputGroupFile01"> <i
-								class="fa-regular fa-image"></i>Hình ảnh và video
+								class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
 							</label> <input type="file" class="form-control" name="mediaFiles"
 								id="inputGroupFile01" multiple>
 						</div>
@@ -509,7 +534,8 @@ div.dropdown-menu.baoCao {
 				<div class="modal-footer">
 					<button ng-click="post()" style="width: 500px; border: none;"
 						class="btn-blue" data-bs-target="#exampleModalToggle2"
-						data-bs-toggle="modal" data-bs-dismiss="modal">Đăng bài</button>
+						data-bs-toggle="modal" data-bs-dismiss="modal">{{ 'DB' |
+						translate }}</button>
 				</div>
 			</div>
 		</div>
@@ -568,8 +594,12 @@ div.dropdown-menu.baoCao {
 										<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 											class="w-100" alt="Single image"
 											style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
+
 									</div>
+
+
 								</center>
+
 							</center>
 						</div>
 						<div class="col-md-6 phai ">
@@ -599,7 +629,8 @@ div.dropdown-menu.baoCao {
 												id="triggerId" data-bs-toggle="dropdown"
 												aria-haspopup="true" aria-expanded="false"></span>
 											<div class="dropdown-menu" aria-labelledby="triggerId">
-												<a class="dropdown-item" href="#">Báo cáo vi phạm</a>
+												<a class="dropdown-item" href="#">{{ 'BCVP' | translate
+													}}</a>
 											</div>
 										</div>
 									</div>
@@ -609,16 +640,46 @@ div.dropdown-menu.baoCao {
 									<div style="display: flex;">
 										<input ng-model="myComment" type="text"
 											class="ip form-control" style="width: 80%;"
-											placeholder="Bình luận của bạn" required="">
+											placeholder="{{ 'BLCB' | translate }}" required="">
 										<button class="btn01" type="submit"
-											style="background: #3a57e8; color: white; width: 20%; height: 65%; border-radius: 3px; transform: translateY(85%); margin-left: 0.2rem;"
-											ng-click="addComment(postDetails.postId)">Bình luận</button>
+											style="background: #007ACC; color: white; height: 70%; transform: translateY(60%); border-radius: 3px; margin-left: 5px; padding: 3px"
+											ng-click="addComment(postDetails.postId)">{{ 'BL' |
+											translate }}</button>
 									</div>
 								</form>
 							</div>
-							<center>
-								<hr style="width: 10%; text-align: center;">
-							</center>
+<div class="user-data full-width" style="margin-bottom: 5px; margin-left: 0">
+					<div class="user-profile" style="display: block;">
+						<div class="username-dt dpbg-1" style="background-image: url(images/nen.jpg); background-size: cover;">
+							<div class="usr-pic">
+								<img alt="" ng-src="/images/avatar1.jpg" src="/images/avatar1.jpg">
+							</div>
+						</div>
+						<div class="user-main-details">
+							<h6 style="font-weight: 600" class="ng-binding">Huỳnh Khang</h6>
+							<!-- <span><i class="feather-map-pin"></i>India</span> -->
+						</div>
+						<ul class="followers-dts">
+							<li>
+								<div class="followers-dt-sm">
+									<h4 class="ng-binding">Người theo dõi</h4>
+									<span class="ng-binding">3</span>
+								</div>
+							</li>
+							<li>
+								<div class="followers-dt-sm">
+									<h4 class="ng-binding">Đang theo dõi</h4>
+									<span class="ng-binding">5</span>
+								</div>
+							</li>
+						</ul>
+						<div class="profile-link">
+
+							<a class="btn-blue ng-binding" href="/profile" style="background-color: #3a57e8; border-radius: 2px; border: 1px solid #3a57e8; box-sizing: border-box; color: white; display: inline-block; font-family: Arial, sans-serif; font-size: 14px; line-height: 16.8px; margin: 0px 3px 10px; padding: 10px 14px; text-decoration-line: none; transition: all 0.2s; width: 98%;" rel="noopener noreferrer"><svg class="svg-inline--fa fa-address-card" aria-hidden="true" focusable="false" data-prefix="fal" data-icon="address-card" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M512 64c17.7 0 32 14.3 32 32V416c0 17.7-14.3 32-32 32H64c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32H512zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm96 160a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm96 0a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zM112 368c0-26.5 21.5-48 48-48h64c26.5 0 48 21.5 48 48c0 8.8 7.2 16 16 16s16-7.2 16-16c0-44.2-35.8-80-80-80H160c-44.2 0-80 35.8-80 80c0 8.8 7.2 16 16 16s16-7.2 16-16zM352 160c-8.8 0-16 7.2-16 16s7.2 16 16 16H480c8.8 0 16-7.2 16-16s-7.2-16-16-16H352zm0 64c-8.8 0-16 7.2-16 16s7.2 16 16 16H480c8.8 0 16-7.2 16-16s-7.2-16-16-16H352zm0 64c-8.8 0-16 7.2-16 16s7.2 16 16 16H480c8.8 0 16-7.2 16-16s-7.2-16-16-16H352z"></path></svg><!-- <i class="fa-light fa-address-card"></i> --> Xem trang cá nhân  </a>
+						</div>
+
+					</div>
+				</div>
 							<div
 								style="overflow-y: scroll; max-height: 60vh; padding-right: 0.2rem">
 								<div
@@ -632,7 +693,7 @@ div.dropdown-menu.baoCao {
 											<div>
 												<div>
 													<label class="nhan"
-														style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{comment.user.username}}</label>
+														style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{comment.user.username}}</label>
 												</div>
 												<small style="font-size: 12px;"> <svg
 														class="svg-inline--fa fa-comment" aria-hidden="true"
@@ -665,27 +726,29 @@ div.dropdown-menu.baoCao {
 
 									<div ng-show="o_reply"
 										class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
-										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
+										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%; border: 1px solid #dee2e6;">
 										<img ng-src="/images/{{myAccount.user.avatar}}"
 											class="img-thumbnail" alt="">
 										<div style="width: 70%">
 											<small style="font-size: 12px;" class="ng-binding"> <i
-												class="fa-regular fa-tag"></i> <label
-												class="nhan ng-binding"
-												style="font-size: 13px; color: #313131; font-weight: bolder;"><span
-													class="nhan">Bạn đang trả lời: </span>
-													{{comment.user.username}}</label>
+												class="fa-regular fa-tag"></i> <small
+												style="font-size: 12px;" class="ng-binding"> Bạn
+													đang trả lời: {{comment.user.username}} </small>
+
 											</small><br>
 											<div>
 												<form>
 													<div class="input-group">
-														<input type="text" class="form-control"
+														<input
+															style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0"
+															type="text" class="form-control"
 															ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
 															placeholder="Nhập nội dung..."
 															ng-model="replyContent[comment.commentId]">
-														<div class="input-group-append">
+														<div class="input-group-append"
+															style="margin-left: 0.3rem">
 															<button class="btn btn-primary"
-																style="background-color: #007ACC; color: white; border: none"
+																style="background-color: #007ACC; color: white; border: none;"
 																type="button"
 																ng-click="sendReplyForComment(comment.user.userId, comment.commentId, replyContent[comment.commentId])">Gửi</button>
 														</div>
@@ -695,7 +758,6 @@ div.dropdown-menu.baoCao {
 										</div>
 									</div>
 									<div ng-show="o_checkbox">
-
 										<div
 											ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
 
@@ -709,7 +771,7 @@ div.dropdown-menu.baoCao {
 													<div>
 														<div>
 															<label class="nhan ng-binding"
-																style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{obj.responder.username}}</label>
+																style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{obj.responder.username}}</label>
 														</div>
 														<small style="font-size: 12px;" class="ng-binding">
 															<small style="font-size: 12px;" class="ng-binding">
@@ -727,16 +789,7 @@ div.dropdown-menu.baoCao {
 																<!-- ngIf: comment.reply.length > 0 -->
 															</label> &nbsp; <small style="font-size: 10px; cursor: pointer;">
 																<label> <input type="checkbox"
-																	ng-model="o_reply" hidden="true"
-																	class="ng-pristine ng-untouched ng-valid ng-empty">
-																	<svg class="svg-inline--fa fa-reply" aria-hidden="true"
-																		focusable="false" data-prefix="fasr" data-icon="reply"
-																		role="img" xmlns="http://www.w3.org/2000/svg"
-																		viewBox="0 0 512 512" data-fa-i2svg="">
-																		<path fill="currentColor"
-																			d="M461.7 427c-35.8 37.4-77.7 53-77.7 53s30.1-30.1 31.9-75.7c.1-1.4 .1-2.8 .1-4.3c0-61.9-50.1-112-112-112H272 224v48 12.2 .9V384H192l-16-14.7L35.5 240.6 0 208l35.5-32.6L176 46.7 192 32h32V66.9v.9V80v48h48 64c97.2 0 176 78.8 176 176c0 54.8-23.5 95-50.3 123zm-5.8-77.6C460.9 336 464 321 464 304c0-70.7-57.3-128-128-128H224 176V128 111.8L71 208l105 96.2V288 240h48 80c70.7 0 130.6 45.8 151.8 109.4z"></path></svg>
-																	<!-- <i class="fa-sharp fa-regular fa-reply"></i> -->
-																	Trả lời
+																	ng-model="o_reply2" hidden="true"> Trả lời
 															</label>
 															</small>
 														</div>
@@ -752,15 +805,16 @@ div.dropdown-menu.baoCao {
 													class="img-thumbnail" alt="">
 												<div style="width: 65%">
 													<small style="font-size: 12px;" class="ng-binding">
-														<i class="fa-regular fa-tag"></i> <label
-														class="nhan ng-binding"
-														style="font-size: 13px; color: #313131; font-weight: bolder;"><span
-															class="nhan">Bạn đang trả lời: </span>{{obj.responder.username}}</label>
+														<i class="fa-regular fa-tag"></i> <small
+														style="font-size: 12px;" class="ng-binding"> Bạn
+															đang trả lời: {{obj.responder.username}} </small>
 													</small><br>
 													<div>
 														<form>
 															<div class="input-group">
-																<input type="text" class="form-control"
+																<input
+																	style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0;"
+																	type="text" class="form-control"
 																	placeholder="Nhập nội dung..."
 																	ng-model="replyContent[obj.replyId]"
 																	ng-keydown="handleKeyDown($event, obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">
@@ -798,7 +852,7 @@ div.dropdown-menu.baoCao {
 	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
 		aria-labelledby="offcanvasRightLabel">
 		<div class="offcanvas-header">
-			<h4 id="offcanvasRightLabel">Thông báo</h4>
+			<h4 id="offcanvasRightLabel">{{ 'TB' | translate }}</h4>
 			<button type="button" class="btn-close text-reset"
 				data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
@@ -809,53 +863,88 @@ div.dropdown-menu.baoCao {
 					<li class="nav-item" role="presentation">
 						<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
 							data-bs-target="#pills-home1" type="button" role="tab"
-							aria-controls="home" aria-selected="true">Chưa đọc</button>
+							aria-controls="home" aria-selected="true">{{ 'CD' |
+							translate }}</button>
 					</li>
 					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
 							data-bs-target="#pills-profile1" type="button" role="tab"
-							aria-controls="profile" aria-selected="false">Tất cả</button>
+							aria-controls="profile" aria-selected="false">{{ 'TC' |
+							translate }}</button>
 					</li>
 				</ul>
 				<div class="tab-content" id="pills-tabContent">
 					<div class="tab-pane fade show active" id="pills-home1"
 						role="tabpanel" aria-labelledby="pills-home-tab1">
 						<ul class="sidebar-scrollable mt-3">
-							<li class="sidebar-item notification mt-1"
-								ng-repeat="notify in notification"><a href="/profile"
-								ng-click="seen(notify.notificationId)" class="image-link"
-								ng-if="notify.receiver.userId == myAccount.user.userId"> <img
+							<li
+								class="sidebar-item notification mt-1 align-items-center d-flex"
+								style="padding: 10px;"
+								ng-repeat="notify in notification | orderBy:'notificationDate':true">
+								<a href="#" ng-click="seen(notify.post.postId)"
+								class="image-link"> <img
 									src="/images/{{notify.receiver.avatar}}" width="55" height="55"
 									style="object-fit: cover;" class="rounded-circle">
 									<div class="content">
-										<b>{{ notify.notificationContent }}</b>
+										<b style="color: black;">{{ notify.notificationContent }}</b>
 										<p>{{ getFormattedTimeAgo(notify.notificationDate) }}
 										<p>
 									</div>
-							</a></li>
+							</a>
+								<div class="ms-auto">
+									<div class="dropdown">
+										<a href="#" class="link" id="dropdownMenuButton"
+											data-bs-toggle="dropdown" aria-expanded="false"> <i
+											class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+										</a>
+										<ul style="background: whitesmoke;" class="dropdown-menu"
+											aria-labelledby="dropdownMenuButton">
+											<li><a class="dropdown-item" href="#"
+												ng-click="hideNotificationById(notify.notificationId)">
+													<i class="fa-solid fa-bell-slash"></i> Ẩn thông báo
+											</a></li>
+							</li>
 						</ul>
 					</div>
-					<div class="tab-pane fade" id="pills-profile1" role="tabpanel"
-						aria-labelledby="pills-profile-tab1">
-						<ul class="sidebar-scrollable  hover mt-4">
-							<li class="sidebar-item mt-1"
-								ng-class="{'notification': allnotify.notificationStatus == true, '': allnotify.notificationStatus == false}"
-								ng-repeat="allnotify in allNotification"><a href="/profile"
-								ng-click="seen(allnotify.notificationId)" class="image-link">
-									<img src="/images/{{allnotify.receiver.avatar}}" alt=""
-									width="55" height="55" class="rounded-circle"
-									style="object-fit: cover;">
-									<div class="content">
-										<b>{{ allnotify.notificationContent }}</b>
-										<p>{{ getFormattedTimeAgo(allnotify.notificationDate) }}
-										<p>
-									</div>
-							</a></li>
-						</ul>
-					</div>
+					</li>
+					</ul>
 				</div>
+				<div class="tab-pane fade" id="pills-profile1" role="tabpanel"
+					aria-labelledby="pills-profile-tab1">
+					<ul class="sidebar-scrollable mt-3">
+						<li class="sidebar-item mt-1 d-flex align-items-center"
+							style="padding: 10px;"
+							ng-repeat="allnotify in allNotification | orderBy:'notificationDate':true"><a
+							href="#" ng-click="seen(allnotify.post.postId)"
+							class="image-link"> <img
+								src="/images/{{allnotify.receiver.avatar}}" alt="" width="55"
+								height="55" class="rounded-circle" style="object-fit: cover;">
+								<div class="content">
+									<b>{{ allnotify.notificationContent }}</b>
+									<p>{{ getFormattedTimeAgo(allnotify.notificationDate) }}
+									<p>
+								</div>
+						</a>
+							<div class="ms-auto">
+								<div class="dropdown">
+									<a href="#" class="link" id="dropdownMenuButton"
+										data-bs-toggle="dropdown" aria-expanded="false"> <i
+										class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+									</a>
+									<ul style="background: whitesmoke;" class="dropdown-menu"
+										aria-labelledby="dropdownMenuButton">
+										<li><a class="dropdown-item" href="#"
+											ng-click="deleteNotification(allnotify.notificationId)">
+												<i class="fa-solid fa-bell-slash"></i> Xóa thông báo
+										</a></li></li>
+					</ul>
+				</div>
+				</li>
+				</ul>
 			</div>
 		</div>
+	</div>
+	</div>
 	</div>
 	<!-- Modal báo cáo -->
 	<div class="modal fade" id="modalBaoCao" tabindex="-1" role="dialog"
@@ -863,7 +952,8 @@ div.dropdown-menu.baoCao {
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="modalTitleId">Nội dung tố cáo</h5>
+					<h5 class="modal-title" id="modalTitleId">{{ 'NDTC' |
+						translate }}</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -879,131 +969,140 @@ div.dropdown-menu.baoCao {
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
-						style="background-color: white; color: gray"
-						data-bs-dismiss="modal">Đóng</button>
+						data-bs-dismiss="modal">{{ 'D' | translate }}</button>
 					<button type="button" class="btn btn-primary"
-						style="background-color: #F27323; border: none"
-						ng-click=report(selectedPostId)>Báo cáo</button>
+						ng-click=report(selectedPostId)>{{ 'BC' | translate }}</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- load ảnh -->
 	<script>
-    var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
+		var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
 
-    document.getElementById('dropArea').addEventListener('click',
-      function () {
-        document.getElementById('inputGroupFile01').click();
-      });
+		document.getElementById('dropArea').addEventListener('click',
+				function() {
+					document.getElementById('inputGroupFile01').click();
+				});
 
-    document.getElementById('inputGroupFile01').addEventListener('change',
-      function () {
-        handleFiles(this.files);
-      });
+		document.getElementById('inputGroupFile01').addEventListener('change',
+				function() {
+					handleFiles(this.files);
+				});
 
-    function dropHandler(event) {
-      event.preventDefault();
-      var files = event.dataTransfer.files;
-      handleFiles(files);
-    }
+		function dropHandler(event) {
+			event.preventDefault();
+			var files = event.dataTransfer.files;
+			handleFiles(files);
+		}
 
-    function handleFiles(files) {
-      var mediaType = /^image\//;
-      var videoType = /^video\//;
-      var mediaList = document.getElementById('mediaList');
+		function handleFiles(files) {
+			var mediaType = /^image\//;
+			var videoType = /^video\//;
+			var mediaList = document.getElementById('mediaList');
 
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        if (mediaType.test(file.type) || videoType.test(file.type)) {
-          var reader = new FileReader();
-          reader.onload = (function (file) {
-            return function () {
-              if (mediaType.test(file.type)) {
-                var media = new Image();
-                media.src = this.result;
-                media.classList.add('previewMedia');
-                var container = createMediaContainer(media,
-                  file);
-                mediaList.appendChild(container);
-              } else if (videoType.test(file.type)) {
-                var media = document.createElement('video');
-                media.src = this.result;
-                media.setAttribute('controls', 'controls');
-                media.classList.add('previewMedia');
-                var container = createMediaContainer(media,
-                  file);
-                mediaList.appendChild(container);
-              }
-            };
-          })(file);
-          reader.readAsDataURL(file);
-          selectedMedia.push(file);
-        }
-      }
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (mediaType.test(file.type) || videoType.test(file.type)) {
+					var reader = new FileReader();
+					reader.onload = (function(file) {
+						return function() {
+							if (mediaType.test(file.type)) {
+								var media = new Image();
+								media.src = this.result;
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+										file);
+								mediaList.appendChild(container);
+							} else if (videoType.test(file.type)) {
+								var media = document.createElement('video');
+								media.src = this.result;
+								media.setAttribute('controls', 'controls');
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+										file);
+								mediaList.appendChild(container);
+							}
+						};
+					})(file);
+					reader.readAsDataURL(file);
+					selectedMedia.push(file);
+				}
+			}
 
-      // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
-      var dataTransfer = new DataTransfer();
-      for (var i = 0; i < selectedMedia.length; i++) {
-        dataTransfer.items.add(selectedMedia[i]);
-      }
-      document.getElementById('inputGroupFile01').files = dataTransfer.files;
-    }
+			// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+			var dataTransfer = new DataTransfer();
+			for (var i = 0; i < selectedMedia.length; i++) {
+				dataTransfer.items.add(selectedMedia[i]);
+			}
+			document.getElementById('inputGroupFile01').files = dataTransfer.files;
+		}
 
-    function createMediaContainer(media, file) {
-      var container = document.createElement('div');
-      container.classList.add('previewMediaContainer');
-      container.appendChild(media);
+		function createMediaContainer(media, file) {
+			var container = document.createElement('div');
+			container.classList.add('previewMediaContainer');
+			container.appendChild(media);
 
-      var deleteButton = document.createElement('button');
-      deleteButton.innerHTML = 'X';
-      deleteButton.classList.add('deleteButton');
-      deleteButton
-        .addEventListener(
-          'click',
-          function () {
-            // Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
-            var index = selectedMedia.indexOf(file);
-            if (index !== -1) {
-              selectedMedia.splice(index, 1);
-            }
-            // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
-            var dataTransfer = new DataTransfer();
-            for (var i = 0; i < selectedMedia.length; i++) {
-              dataTransfer.items.add(selectedMedia[i]);
-            }
-            document.getElementById('inputGroupFile01').files = dataTransfer.files;
+			var deleteButton = document.createElement('button');
+			deleteButton.innerHTML = 'X';
+			deleteButton.classList.add('deleteButton');
+			deleteButton
+					.addEventListener(
+							'click',
+							function() {
+								// Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
+								var index = selectedMedia.indexOf(file);
+								if (index !== -1) {
+									selectedMedia.splice(index, 1);
+								}
+								// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+								var dataTransfer = new DataTransfer();
+								for (var i = 0; i < selectedMedia.length; i++) {
+									dataTransfer.items.add(selectedMedia[i]);
+								}
+								document.getElementById('inputGroupFile01').files = dataTransfer.files;
 
-            container.remove();
-          });
+								container.remove();
+							});
 
-      container.appendChild(deleteButton);
+			container.appendChild(deleteButton);
 
-      return container;
-    }
+			return container;
+		}
 
-    function dragOverHandler(event) {
-      event.preventDefault();
-      event.target.classList.add('active');
-    }
+		function dragOverHandler(event) {
+			event.preventDefault();
+			event.target.classList.add('active');
+		}
 
-    function dragLeaveHandler(event) {
-      event.preventDefault();
-      event.target.classList.remove('active');
-    }
-  </script>
+		function dragLeaveHandler(event) {
+			event.preventDefault();
+			event.target.classList.remove('active');
+		}
+		function toggleColor(link) {
+			var allLinks = document.getElementsByClassName("colorful-link");
+
+			for (var i = 0; i < allLinks.length; i++) {
+				var currentLink = allLinks[i];
+				currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+
+				if (currentLink === link) {
+					link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+				}
+			}
+		}
+	</script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 	<script src="js/Index.js">
-
-  </script>
-<script src="js/addActive.js">
-  
-</script>
-
+		
+	</script>
+	<script src="js/addActive.js">
+		
+	</script>
 
 </body>
 

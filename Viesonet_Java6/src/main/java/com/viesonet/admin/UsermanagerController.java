@@ -3,6 +3,7 @@ package com.viesonet.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.viesonet.AuthConfig;
 import com.viesonet.dao.AccountsDao;
 import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.Accounts;
@@ -31,16 +33,16 @@ public class UsermanagerController {
 	AccountsService accountService;
 	
 	@Autowired
-	private SessionService sessionService;
+	private AuthConfig authConfig;
 	
 	@GetMapping("/admin/usermanager")
-	public String usermanager(Model m) {
+	public String usermanager(Model m, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 		// Tìm người dùng vai trò là admin
-		String userId = sessionService.get("id");
-		m.addAttribute("acc", userService.findUserById(userId));
+		m.addAttribute("acc", userService.findUserById(account.getUserId()));
 		
 		//Lấy danh sách người dùng
-		m.addAttribute("listUser", userService.findByUserAndStaff(userId));
+		m.addAttribute("listUser", userService.findByUserAndStaff(account.getUserId()));
 		return "/admin/usermanager";
 	}
 	
