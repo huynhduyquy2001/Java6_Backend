@@ -4,9 +4,12 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import com.viesonet.AuthConfig;
 import com.viesonet.entity.*;
 import com.viesonet.service.*;
 
@@ -28,14 +31,14 @@ public class PostsViolationsController {
 	sp_FilterPostLikeService filterPostsLike;
 	
 	@Autowired
-	private SessionService sessionService;
+	private AuthConfig authConfig;
 	
 	@GetMapping("/admin/postsviolation")
 	public String postsViolations(Model m,  @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "9") int size) {
+            @RequestParam(defaultValue = "9") int size, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 		// Tìm người dùng vai trò là admin
-		String userId = sessionService.get("id");
-		m.addAttribute("acc", userService.findUserById(userId));
+		m.addAttribute("acc", userService.findUserById(account.getUserId()));
 		
 		// Lấy danh sách bài viết vi phạm
 		m.addAttribute("listPosts", violationsService.findAllListFalse(page, size));

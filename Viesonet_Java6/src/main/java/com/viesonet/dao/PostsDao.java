@@ -25,6 +25,5 @@ public interface PostsDao extends JpaRepository<Posts, Integer>{
 	@Query("SELECT COUNT(b) FROM Posts b WHERE b.user.userId = :userId")
     Integer countMyPosts(String userId);
 	
-	
 }
 	

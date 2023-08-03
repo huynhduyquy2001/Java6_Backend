@@ -41,6 +41,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <title>Trang chủ</title>
 <style type="text/css">
@@ -196,7 +197,7 @@ div.dropdown-menu.baoCao {
 												<div class="dropdown-menu dropdown-menu-end"
 													aria-labelledby="drop2">
 													<div class="message-body">
-														<a href="/changepassword"
+														<a href="#"
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-user fs-6"></i>
 															<p class="mb-0 fs-3">Đổi mật khẩu</p>
@@ -208,7 +209,7 @@ div.dropdown-menu.baoCao {
 															class="d-flex align-items-center gap-2 dropdown-item">
 															<i class="ti ti-list-check fs-6"></i>
 															<p class="mb-0 fs-3">Nâng cấp</p>
-														</a> <a ng-click="logout()"
+														</a> <a href="/logout"
 															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
 															xuất</a>
 													</div>
@@ -251,6 +252,7 @@ div.dropdown-menu.baoCao {
 								<div class="d-flex  gap-2"
 									style="margin-top: 5px; text-align: right;"></div>
 							</div>
+
 						</div>
 					</div>
 				</center>
@@ -399,8 +401,7 @@ div.dropdown-menu.baoCao {
 													style="color: #f50000;">❤️&nbsp;{{ post.likeCount }}</span>
 												<span ng-click="likePost(post.postId)"
 													ng-if="likedPosts.indexOf(post.postId.toString()) === -1">🤍&nbsp;{{
-													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-													ng-click="getPostDetails(post.postId)"><i
+													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
 													class="fa-light fa-comments"></i>&nbsp;{{ post.commentCount
 													}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
 													class="fa-light fa-share-nodes"></i></span>
@@ -583,8 +584,12 @@ div.dropdown-menu.baoCao {
 										<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 											class="w-100" alt="Single image"
 											style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
+
 									</div>
+
+
 								</center>
+
 							</center>
 						</div>
 						<div class="col-md-6 phai ">
@@ -631,9 +636,7 @@ div.dropdown-menu.baoCao {
 									</div>
 								</form>
 							</div>
-							<center>
-								<hr style="width: 10%; text-align: center;">
-							</center>
+							
 							<div
 								style="overflow-y: scroll; max-height: 60vh; padding-right: 0.2rem">
 								<div
@@ -647,7 +650,7 @@ div.dropdown-menu.baoCao {
 											<div>
 												<div>
 													<label class="nhan"
-														style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{comment.user.username}}</label>
+														style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{comment.user.username}}</label>
 												</div>
 												<small style="font-size: 12px;"> <svg
 														class="svg-inline--fa fa-comment" aria-hidden="true"
@@ -680,27 +683,29 @@ div.dropdown-menu.baoCao {
 
 									<div ng-show="o_reply"
 										class="user-profile animate__animated animate__headShake img-thumbnail ng-scope"
-										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%">
+										style="box-sizing: border-box; padding: 4px; border-radius: 5px; background-color: white; margin-bottom: 5px; margin-left: 5rem; width: 85%; border: 1px solid #dee2e6;">
 										<img ng-src="/images/{{myAccount.user.avatar}}"
 											class="img-thumbnail" alt="">
 										<div style="width: 70%">
 											<small style="font-size: 12px;" class="ng-binding"> <i
-												class="fa-regular fa-tag"></i> <label
-												class="nhan ng-binding"
-												style="font-size: 13px; color: #313131; font-weight: bolder;"><span
-													class="nhan">Bạn đang trả lời: </span>
-													{{comment.user.username}}</label>
+												class="fa-regular fa-tag"></i> <small
+												style="font-size: 12px;" class="ng-binding"> Bạn
+													đang trả lời: {{comment.user.username}} </small>
+
 											</small><br>
 											<div>
 												<form>
 													<div class="input-group">
-														<input type="text" class="form-control"
+														<input
+															style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0"
+															type="text" class="form-control"
 															ng-keydown="handleKeyDownReplyForComment($event, comment.user.userId, comment.commentId, replyContent[comment.commentId])"
 															placeholder="Nhập nội dung..."
 															ng-model="replyContent[comment.commentId]">
-														<div class="input-group-append">
+														<div class="input-group-append"
+															style="margin-left: 0.3rem">
 															<button class="btn btn-primary"
-																style="background-color: #007ACC; color: white; border: none"
+																style="background-color: #007ACC; color: white; border: none;"
 																type="button"
 																ng-click="sendReplyForComment(comment.user.userId, comment.commentId, replyContent[comment.commentId])">Gửi</button>
 														</div>
@@ -710,7 +715,6 @@ div.dropdown-menu.baoCao {
 										</div>
 									</div>
 									<div ng-show="o_checkbox">
-
 										<div
 											ng-repeat="obj in comment.reply | orderBy:'replyDate':true">
 
@@ -724,7 +728,7 @@ div.dropdown-menu.baoCao {
 													<div>
 														<div>
 															<label class="nhan ng-binding"
-																style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{obj.responder.username}}</label>
+																style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{obj.responder.username}}</label>
 														</div>
 														<small style="font-size: 12px;" class="ng-binding">
 															<small style="font-size: 12px;" class="ng-binding">
@@ -742,16 +746,7 @@ div.dropdown-menu.baoCao {
 																<!-- ngIf: comment.reply.length > 0 -->
 															</label> &nbsp; <small style="font-size: 10px; cursor: pointer;">
 																<label> <input type="checkbox"
-																	ng-model="o_reply" hidden="true"
-																	class="ng-pristine ng-untouched ng-valid ng-empty">
-																	<svg class="svg-inline--fa fa-reply" aria-hidden="true"
-																		focusable="false" data-prefix="fasr" data-icon="reply"
-																		role="img" xmlns="http://www.w3.org/2000/svg"
-																		viewBox="0 0 512 512" data-fa-i2svg="">
-																		<path fill="currentColor"
-																			d="M461.7 427c-35.8 37.4-77.7 53-77.7 53s30.1-30.1 31.9-75.7c.1-1.4 .1-2.8 .1-4.3c0-61.9-50.1-112-112-112H272 224v48 12.2 .9V384H192l-16-14.7L35.5 240.6 0 208l35.5-32.6L176 46.7 192 32h32V66.9v.9V80v48h48 64c97.2 0 176 78.8 176 176c0 54.8-23.5 95-50.3 123zm-5.8-77.6C460.9 336 464 321 464 304c0-70.7-57.3-128-128-128H224 176V128 111.8L71 208l105 96.2V288 240h48 80c70.7 0 130.6 45.8 151.8 109.4z"></path></svg>
-																	<!-- <i class="fa-sharp fa-regular fa-reply"></i> -->
-																	Trả lời
+																	ng-model="o_reply2" hidden="true"> Trả lời
 															</label>
 															</small>
 														</div>
@@ -767,15 +762,16 @@ div.dropdown-menu.baoCao {
 													class="img-thumbnail" alt="">
 												<div style="width: 65%">
 													<small style="font-size: 12px;" class="ng-binding">
-														<i class="fa-regular fa-tag"></i> <label
-														class="nhan ng-binding"
-														style="font-size: 13px; color: #313131; font-weight: bolder;"><span
-															class="nhan">Bạn đang trả lời: </span>{{obj.responder.username}}</label>
+														<i class="fa-regular fa-tag"></i> <small
+														style="font-size: 12px;" class="ng-binding"> Bạn
+															đang trả lời: {{obj.responder.username}} </small>
 													</small><br>
 													<div>
 														<form>
 															<div class="input-group">
-																<input type="text" class="form-control"
+																<input
+																	style="border: none; border-bottom: 1px solid #dee2e6; border-radius: 0;"
+																	type="text" class="form-control"
 																	placeholder="Nhập nội dung..."
 																	ng-model="replyContent[obj.replyId]"
 																	ng-keydown="handleKeyDown($event, obj.responder.userId, replyContent[obj.replyId], obj.replyId, comment.commentId)">
@@ -928,119 +924,119 @@ div.dropdown-menu.baoCao {
 	</div>
 	<!-- load ảnh -->
 	<script>
-    var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
+		var selectedMedia = []; // Mảng để lưu trữ các tệp đã chọn từ cả hai lần chọn hình ảnh
 
-    document.getElementById('dropArea').addEventListener('click',
-      function () {
-        document.getElementById('inputGroupFile01').click();
-      });
+		document.getElementById('dropArea').addEventListener('click',
+				function() {
+					document.getElementById('inputGroupFile01').click();
+				});
 
-    document.getElementById('inputGroupFile01').addEventListener('change',
-      function () {
-        handleFiles(this.files);
-      });
+		document.getElementById('inputGroupFile01').addEventListener('change',
+				function() {
+					handleFiles(this.files);
+				});
 
-    function dropHandler(event) {
-      event.preventDefault();
-      var files = event.dataTransfer.files;
-      handleFiles(files);
-    }
+		function dropHandler(event) {
+			event.preventDefault();
+			var files = event.dataTransfer.files;
+			handleFiles(files);
+		}
 
-    function handleFiles(files) {
-      var mediaType = /^image\//;
-      var videoType = /^video\//;
-      var mediaList = document.getElementById('mediaList');
+		function handleFiles(files) {
+			var mediaType = /^image\//;
+			var videoType = /^video\//;
+			var mediaList = document.getElementById('mediaList');
 
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        if (mediaType.test(file.type) || videoType.test(file.type)) {
-          var reader = new FileReader();
-          reader.onload = (function (file) {
-            return function () {
-              if (mediaType.test(file.type)) {
-                var media = new Image();
-                media.src = this.result;
-                media.classList.add('previewMedia');
-                var container = createMediaContainer(media,
-                  file);
-                mediaList.appendChild(container);
-              } else if (videoType.test(file.type)) {
-                var media = document.createElement('video');
-                media.src = this.result;
-                media.setAttribute('controls', 'controls');
-                media.classList.add('previewMedia');
-                var container = createMediaContainer(media,
-                  file);
-                mediaList.appendChild(container);
-              }
-            };
-          })(file);
-          reader.readAsDataURL(file);
-          selectedMedia.push(file);
-        }
-      }
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (mediaType.test(file.type) || videoType.test(file.type)) {
+					var reader = new FileReader();
+					reader.onload = (function(file) {
+						return function() {
+							if (mediaType.test(file.type)) {
+								var media = new Image();
+								media.src = this.result;
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+										file);
+								mediaList.appendChild(container);
+							} else if (videoType.test(file.type)) {
+								var media = document.createElement('video');
+								media.src = this.result;
+								media.setAttribute('controls', 'controls');
+								media.classList.add('previewMedia');
+								var container = createMediaContainer(media,
+										file);
+								mediaList.appendChild(container);
+							}
+						};
+					})(file);
+					reader.readAsDataURL(file);
+					selectedMedia.push(file);
+				}
+			}
 
-      // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
-      var dataTransfer = new DataTransfer();
-      for (var i = 0; i < selectedMedia.length; i++) {
-        dataTransfer.items.add(selectedMedia[i]);
-      }
-      document.getElementById('inputGroupFile01').files = dataTransfer.files;
-    }
+			// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+			var dataTransfer = new DataTransfer();
+			for (var i = 0; i < selectedMedia.length; i++) {
+				dataTransfer.items.add(selectedMedia[i]);
+			}
+			document.getElementById('inputGroupFile01').files = dataTransfer.files;
+		}
 
-    function createMediaContainer(media, file) {
-      var container = document.createElement('div');
-      container.classList.add('previewMediaContainer');
-      container.appendChild(media);
+		function createMediaContainer(media, file) {
+			var container = document.createElement('div');
+			container.classList.add('previewMediaContainer');
+			container.appendChild(media);
 
-      var deleteButton = document.createElement('button');
-      deleteButton.innerHTML = 'X';
-      deleteButton.classList.add('deleteButton');
-      deleteButton
-        .addEventListener(
-          'click',
-          function () {
-            // Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
-            var index = selectedMedia.indexOf(file);
-            if (index !== -1) {
-              selectedMedia.splice(index, 1);
-            }
-            // Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
-            var dataTransfer = new DataTransfer();
-            for (var i = 0; i < selectedMedia.length; i++) {
-              dataTransfer.items.add(selectedMedia[i]);
-            }
-            document.getElementById('inputGroupFile01').files = dataTransfer.files;
+			var deleteButton = document.createElement('button');
+			deleteButton.innerHTML = 'X';
+			deleteButton.classList.add('deleteButton');
+			deleteButton
+					.addEventListener(
+							'click',
+							function() {
+								// Xóa hình ảnh khỏi giao diện và khỏi mảng selectedMedia khi người dùng xóa
+								var index = selectedMedia.indexOf(file);
+								if (index !== -1) {
+									selectedMedia.splice(index, 1);
+								}
+								// Cập nhật lại những ảnh hoặc video đã chọn trong phần tử <input>
+								var dataTransfer = new DataTransfer();
+								for (var i = 0; i < selectedMedia.length; i++) {
+									dataTransfer.items.add(selectedMedia[i]);
+								}
+								document.getElementById('inputGroupFile01').files = dataTransfer.files;
 
-            container.remove();
-          });
+								container.remove();
+							});
 
-      container.appendChild(deleteButton);
+			container.appendChild(deleteButton);
 
-      return container;
-    }
+			return container;
+		}
 
-    function dragOverHandler(event) {
-      event.preventDefault();
-      event.target.classList.add('active');
-    }
+		function dragOverHandler(event) {
+			event.preventDefault();
+			event.target.classList.add('active');
+		}
 
-    function dragLeaveHandler(event) {
-      event.preventDefault();
-      event.target.classList.remove('active');
-    }
-  </script>
+		function dragLeaveHandler(event) {
+			event.preventDefault();
+			event.target.classList.remove('active');
+		}
+	</script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 	<script src="js/Index.js">
-
-  </script>
-<script src="js/addActive.js">
-  
-</script>
+		
+	</script>
+	<script src="js/addActive.js">
+		
+	</script>
 
 </body>
 

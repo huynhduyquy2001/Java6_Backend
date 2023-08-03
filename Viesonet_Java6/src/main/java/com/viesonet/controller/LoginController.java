@@ -4,81 +4,49 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.viesonet.AuthConfig;
 import com.viesonet.entity.Accounts;
 import com.viesonet.service.AccountsService;
 import com.viesonet.service.CookieService;
 import com.viesonet.service.SessionService;
+import com.viesonet.service.UsersService;
 
 @RestController
 public class LoginController {
-	@Autowired
-	private AccountsService accountsService;
-	@Autowired
 	
-	private SessionService sessionService;
 	@Autowired
-	
-	private CookieService cookieService;
+	AuthConfig authConfig;
 
 	@GetMapping("/login")
-	public ModelAndView getLoginPage() {
-		String user = cookieService.getValue("user");
+	public ModelAndView getLoginPage() {		
+		ModelAndView modelAndView = new ModelAndView("Login");
 		
-		if (user != null) {
-			Accounts accounts = accountsService.findByPhoneNumber(user);
-			sessionService.set("role", accounts.getRole().getRoleId());
-			sessionService.set("id", accounts.getUser().getUserId());
-			sessionService.set("phone", accounts.getPhoneNumber());
-			return new ModelAndView("redirect:/");
-		} else if (sessionService.get("id") != null) {
-			return new ModelAndView("redirect:/");
-		} else {
-			return new ModelAndView("Login");
-		}
+		return modelAndView;
 	}
-		
-
-	@PostMapping("/dangnhap")
-	public ResponseEntity<?> dangNhap2(@RequestBody Map<String, Object> data) {
-		String sdt = (String) data.get("sdt");
-		String matKhau = (String) data.get("matKhau");
-		boolean remember = data.get("ghiNho") == null ? false : (Boolean) data.get("ghiNho");
-		Accounts accounts = accountsService.findByPhoneNumber(sdt);
-		if (accounts == null) {
-			return ResponseEntity.ok().body(Collections.singletonMap("message", "Số điện thoại không tồn tại"));
-		}
-		if (sdt.equals(accounts.getPhoneNumber()) && matKhau.equals(accounts.getPassword())) {
-			if (accounts.getAccountStatus().getStatusId() == 4) {
-				return ResponseEntity.ok()
-						.body(Collections.singletonMap("message", "Tài khoản này đã bị khóa do vi phạm điều khoản"));
-			} else {
-				sessionService.set("role", accounts.getRole().getRoleId());
-				sessionService.set("id", accounts.getUser().getUserId());
-				sessionService.set("phone", accounts.getPhoneNumber());
-
-				if (remember) {
-					cookieService.add("user", sdt, 10);
-					cookieService.add("pass", matKhau, 10);
-				} else {
-					cookieService.delete("user");
-					cookieService.delete("pass");
-				}
-				return ResponseEntity.ok().build();
-			}
-		} else {
-			return ResponseEntity.ok()
-					.body(Collections.singletonMap("message", "Thông tin đăng nhập không chính xác !"));
-		}
-	}
-
+	@RequestMapping("/login-fail")
+    public ModelAndView loginFail() {
+        ModelAndView modelAndView = new ModelAndView("Login");
+        modelAndView.addObject("message", "Thông tin đăng nhập không đúng!");
+        return modelAndView;
+    }
+	   
 }

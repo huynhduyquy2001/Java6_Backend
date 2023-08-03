@@ -53,6 +53,7 @@ public class MessController {
 		messagingTemplate.convertAndSendToUser(newMessage.getReceiver().getUserId(), "/queue/receiveMessage",
 				newMessage);
 	}
+	
 
 	@PostMapping("/savemess")
 	public Message saveMess(@RequestBody MessageRequest messageRequest) {
@@ -86,8 +87,8 @@ public class MessController {
 	public List<Message> seen(@PathVariable("userId") String senderId) {
 		return messageService.seen(senderId, sessionService.get("id"));
 	}
-	@GetMapping("/removemess/{messId}")
-	public Message seen(@PathVariable("messId") int messId) {
+	@PostMapping("/removemess/{messId}")
+	public Message reMoveMess(@PathVariable("messId") int messId) {
 		return messageService.removeMess(messageService.getMessById(messId));
 	}
 }
