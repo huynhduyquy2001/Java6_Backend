@@ -41,6 +41,12 @@ public class AuthConfig {
     @Autowired
     private AccountsService accountsService;
     
+
+    @Autowired
+    public AuthConfig(AccountsService accountsService) {
+        this.accountsService = accountsService;
+    }
+    
     @Bean
     public CustomAuthenticationEntryPoint authenticationEntryPoint() {
         return new CustomAuthenticationEntryPoint();
@@ -62,18 +68,10 @@ public class AuthConfig {
             @Override
             public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
                 Accounts account = accountsService.getAccountById(userId);
-                System.out.println("User ID: " + account.getUserId());
-                System.out.println("Username: " + account.getPhoneNumber());
-                System.out.println("Password: " + account.getPassword());
-                System.out.println("UserId: " + account.getUserId());
-                // ...
-
-                // Mã hóa mật khẩu trước khi trả về UserDetails
-                String hashedPassword = passwordEncoder().encode(account.getPassword());
-System.out.println("hashedPassword: "+hashedPassword);
+            
                 return User.builder()
                         .username(account.getPhoneNumber())
-                        .password(hashedPassword)
+                        .password(account.getPassword())
                         .roles(String.valueOf(account.getRole().getRoleId()))
                         .build();
             }
@@ -86,7 +84,9 @@ System.out.println("hashedPassword: "+hashedPassword);
         return http
             .csrf().disable()
             .authorizeRequests()
-            .requestMatchers("/login", "/register","/dangky","/login-fail", "/images/**", "/js/**", "/css/**").permitAll()
+            .requestMatchers("/login","/forgotpassword", "/quenmatkhau/**","/change_password", "/doimatkhau2", "/register","/dangky","/login-fail", "/images/**", "/js/**", "/css/**").permitAll()
+            .requestMatchers("/staff/**").hasAnyRole("2", "3")
+            .requestMatchers("/admin/**").hasRole("1")
             .anyRequest().authenticated()
             .and()
             .formLogin()
@@ -97,6 +97,9 @@ System.out.println("hashedPassword: "+hashedPassword);
             .passwordParameter("password") // [password]
             .failureUrl("/login-fail")
             .and()
+            .rememberMe()
+            .rememberMeParameter("remember")
+            .and()
             .logout()
             .logoutSuccessUrl("/login")
             .invalidateHttpSession(true)
@@ -104,6 +107,7 @@ System.out.println("hashedPassword: "+hashedPassword);
             .deleteCookies("JSESSIONID")
             .and()
             .exceptionHandling() // Xử lý ngoại lệ khi người dùng chưa đăng nhập
+            .accessDeniedPage("/error")
             .authenticationEntryPoint(authenticationEntryPoint())
             .and()
             .build();

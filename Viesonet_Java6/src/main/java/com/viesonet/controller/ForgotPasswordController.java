@@ -56,13 +56,15 @@ public class ForgotPasswordController {
 	@PostMapping("/quenmatkhau/guima")
 	public ResponseEntity<?> quenmatkhau(@RequestBody Map<String, Object> data) {
 		String email = (String) data.get("email");
+		String phone = (String) data.get("phone");
 		MimeMessage message = sender.createMimeMessage();
-
-		Accounts accounts = accountsService.findByEmail(email);
-		if (accountsService.existByEmail(email) == false) {
-			return ResponseEntity.ok().body(Collections.singletonMap("message", "Email này chưa đăng ký tài khoản !"));
+		
+		Accounts accounts = accountsService.findByPhoneNumber(phone);
+		
+		if (!email.equalsIgnoreCase(accounts.getEmail())) {
+			return ResponseEntity.ok().body(Collections.singletonMap("message", "Email này không đúng với tài khoản đã đăng kí !"));
 		}
-		if (accounts.getAccountStatus().getStatusId() == 4) {
+		else if (accounts.getAccountStatus().getStatusId() == 4) {
 			return ResponseEntity.ok().body(Collections.singletonMap("message", "Tài khoản này đã bị khóa !"));
 		} else {
 			Users users = usersService.getById(accounts.getUser().getUserId());
@@ -92,7 +94,7 @@ public class ForgotPasswordController {
 		Accounts accounts = accountsService.findByEmail(email);
 		String expectedCode = Arrays.toString(randomNumbers).replaceAll("\\[|\\]|,|\\s", "");
 		if (!code.equals(expectedCode)) {
-			return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật mã chưa được gửi !"));
+			return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật mã chưa chính xác!"));
 		} else {
 			sessionService.set("phone", accounts.getPhoneNumber());
 			return ResponseEntity.ok().build();

@@ -310,7 +310,6 @@ public class IndexController {
 		return "success";
 	}
 
-
 	@GetMapping("/loadnotification")
 	public List<Notifications> getNotification(Authentication authentication) {
 		Accounts account = authConfig.getLoggedInAccount(authentication);
@@ -363,5 +362,10 @@ public class IndexController {
 		return violationService.report(usersService.getUserById(userId), postsService.findPostById(postId),
 				violationTypesService.getById(violationTypeId));
 	}
+	@GetMapping("/error")
+	public ModelAndView getAccessDenied() {
+		ModelAndView modelAndView = new ModelAndView("error");
+		return modelAndView;
+	} 
 
 }
