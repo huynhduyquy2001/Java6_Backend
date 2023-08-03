@@ -22,6 +22,9 @@ public class FollowService {
 	public List<Follow> getFollowing(String followingId) {
 		return followDao.findByFollowingId(followingId);
 	}
+	public List<Follow> getFollowers(String followerId){
+		return followDao.findByFollowersId(followerId);
+	}
 
 	public AccountAndFollow getFollowingFollower(Users user) {
 		AccountAndFollow obj = new AccountAndFollow();
@@ -58,4 +61,5 @@ public class FollowService {
 	public List<Follow> findAllFollow() {
         return followDao.findAll();
     }
+
 }
