@@ -1,14 +1,15 @@
+
 angular.module('myApp', ['pascalprecht.translate'])
-	.config(function ($translateProvider) {
+.config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
 			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
 		});
-		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 		// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 		$translateProvider.preferredLanguage(storedLanguage);
 	})
-	.controller('myCtrl', function ($scope, $http, $translate) {
+	.controller('myCtrl', function($scope, $http, $translate) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -22,77 +23,78 @@ angular.module('myApp', ['pascalprecht.translate'])
 		$scope.allNotification = [];
 		$scope.violations = [];
 		$scope.selectedPostId = '';
-		//Đa ngôn ngữ	
-		$scope.changeLanguage = function (langKey) {
-			$translate.use(langKey);
-			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
-		};
+
 		$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
 		$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 
-		// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
-		$scope.showMoreComments = function () {
-			$scope.numOfCommentsToShow += $scope.commentsToShowMore;
+		$scope.changeLanguage = function(langKey) {
+			$translate.use(langKey);
+			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
 		};
 
+		// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
+		$scope.showMoreComments = function() {
+			$scope.numOfCommentsToShow += $scope.commentsToShowMore;
+		};
+	
 
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')
-			.then(function (response) {
+			.then(function(response) {
 				var count = response.data;
 				if (count > 0) {
 					$scope.check = true;
 					$scope.unseenmess = count;
 				}
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
 		//Lấy danh sách vi phạm
 		$http.get('/getviolations')
-			.then(function (response) {
+			.then(function(response) {
 				$scope.violations = response.data;
 
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
 
 		$http.get('/findfollowing')
-			.then(function (response) {
+			.then(function(response) {
 				var Posts = response.data;
 				$scope.Posts = Posts;
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
 		$http.get('/findlikedposts')
-			.then(function (response) {
+			.then(function(response) {
 				var likedPosts = response.data;
 				$scope.likedPosts = likedPosts;
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
 		$http.get('/findmyaccount')
-			.then(function (response) {
+			.then(function(response) {
 				var myAccount = response.data;
 				$scope.myAccount = myAccount;
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
-		$scope.openModalBaoCao = function (postId) {
+		$scope.openModalBaoCao = function(postId) {
 			$scope.selectedPostId = postId;
 			$('#modalBaoCao').modal('show');
 		};
 
-		$scope.report = function (postId) {
+		$scope.report = function(postId) {
 			if ($scope.selectedViolationType === null || $scope.selectedViolationType === undefined) {
 				const Toast = Swal.mixin({
 					toast: true,
@@ -112,7 +114,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 				return;
 			}
 			$http.post('/report/' + postId + '/' + $scope.selectedViolationType)
-				.then(function (response) {
+				.then(function(response) {
 					const Toast = Swal.mixin({
 						toast: true,
 						position: 'top-end',
@@ -129,7 +131,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 						title: 'Báo cáo bài viết thành công'
 					})
 				})
-				.catch(function (error) {
+				.catch(function(error) {
 					// Xử lý lỗi
 					console.log(error);
 				});
@@ -137,7 +139,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 		};
 
 
-		$scope.likePost = function (postId) {
+		$scope.likePost = function(postId) {
 			var likedIndex = $scope.likedPosts.indexOf(postId.toString());
 			var likeEndpoint = '/likepost/' + postId;
 			var dislikeEndpoint = '/didlikepost/' + postId;
@@ -149,10 +151,10 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 				// Gửi yêu cầu POST để like bài viết và cập nhật likeCount+1
 				$http.post(likeEndpoint)
-					.then(function (response) {
+					.then(function(response) {
 
 						// Cập nhật thuộc tính likeCount+1 trong đối tượng post
-						var post = $scope.Posts.find(function (item) {
+						var post = $scope.Posts.find(function(item) {
 							return item.postId === postId;
 						});
 						if (post) {
@@ -160,7 +162,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 						}
 					})
-					.catch(function (error) {
+					.catch(function(error) {
 						// Xử lý lỗi
 						console.log(error);
 					});
@@ -171,12 +173,12 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 				// Gửi yêu cầu POST để dislike bài viết và cập nhật likeCount-1
 				$http.post(dislikeEndpoint)
-					.then(function (response) {
+					.then(function(response) {
 						// Xử lý thành công
 						//console.log(response.data);
 
 						// Cập nhật thuộc tính likeCount-1 trong đối tượng post
-						var post = $scope.Posts.find(function (item) {
+						var post = $scope.Posts.find(function(item) {
 							return item.postId === postId;
 						});
 						if (post) {
@@ -184,13 +186,13 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 						}
 					})
-					.catch(function (error) {
+					.catch(function(error) {
 						// Xử lý lỗi
 						console.log(error);
 					});
 			}
 		};
-		$scope.getFormattedTimeAgo = function (date) {
+		$scope.getFormattedTimeAgo = function(date) {
 			var currentTime = new Date();
 			var activityTime = new Date(date);
 			var timeDiff = currentTime.getTime() - activityTime.getTime();
@@ -216,46 +218,46 @@ angular.module('myApp', ['pascalprecht.translate'])
 			}
 		};
 
-		$scope.getPostDetails = function (postId) {
+		$scope.getPostDetails = function(postId) {
 			$http.get('/findpostcomments/' + postId)
-				.then(function (response) {
+				.then(function(response) {
 					var count = response.data;
 					if (count > 0) {
 						$scope.check = true;
 					}
 				})
-				.catch(function (error) {
+				.catch(function(error) {
 					console.log(error);
 				});
 		}
 		$http.get('/findfollowing')
-			.then(function (response) {
+			.then(function(response) {
 				var Posts = response.data;
 				$scope.Posts = Posts;
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
 		$http.get('/findlikedposts')
-			.then(function (response) {
+			.then(function(response) {
 				var likedPosts = response.data;
 				$scope.likedPosts = likedPosts;
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
 		$http.get('/findmyaccount')
-			.then(function (response) {
+			.then(function(response) {
 				var myAccount = response.data;
 				$scope.myAccount = myAccount;
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
 
-		$scope.likePost = function (postId) {
+		$scope.likePost = function(postId) {
 			var likedIndex = $scope.likedPosts.indexOf(postId.toString());
 			var likeEndpoint = '/likepost/' + postId;
 			var dislikeEndpoint = '/didlikepost/' + postId;
@@ -267,10 +269,10 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 				// Gửi yêu cầu POST để like bài viết và cập nhật likeCount+1
 				$http.post(likeEndpoint)
-					.then(function (response) {
+					.then(function(response) {
 
 						// Cập nhật thuộc tính likeCount+1 trong đối tượng post
-						var post = $scope.Posts.find(function (item) {
+						var post = $scope.Posts.find(function(item) {
 							return item.postId === postId;
 						});
 						if (post) {
@@ -278,7 +280,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 						}
 					})
-					.catch(function (error) {
+					.catch(function(error) {
 						// Xử lý lỗi
 						console.log(error);
 					});
@@ -289,12 +291,12 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 				// Gửi yêu cầu POST để dislike bài viết và cập nhật likeCount-1
 				$http.post(dislikeEndpoint)
-					.then(function (response) {
+					.then(function(response) {
 						// Xử lý thành công
 						//console.log(response.data);
 
 						// Cập nhật thuộc tính likeCount-1 trong đối tượng post
-						var post = $scope.Posts.find(function (item) {
+						var post = $scope.Posts.find(function(item) {
 							return item.postId === postId;
 						});
 						if (post) {
@@ -302,13 +304,13 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 						}
 					})
-					.catch(function (error) {
+					.catch(function(error) {
 						// Xử lý lỗi
 						console.log(error);
 					});
 			}
 		};
-		$scope.getFormattedTimeAgo = function (date) {
+		$scope.getFormattedTimeAgo = function(date) {
 			var currentTime = new Date();
 			var activityTime = new Date(date);
 			var timeDiff = currentTime.getTime() - activityTime.getTime();
@@ -334,7 +336,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 			}
 		};
 
-		$scope.post = function () {
+		$scope.post = function() {
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile01');
 
@@ -371,10 +373,10 @@ angular.module('myApp', ['pascalprecht.translate'])
 				headers: {
 					'Content-Type': undefined
 				}
-			}).then(function (response) {
+			}).then(function(response) {
 				// Xử lý phản hồi thành công từ máy chủ
 
-			}, function (error) {
+			}, function(error) {
 				// Xử lý lỗi
 				console.log(error);
 			})
@@ -398,35 +400,35 @@ angular.module('myApp', ['pascalprecht.translate'])
 		};
 
 
-		$scope.getPostDetails = function (postId) {
+		$scope.getPostDetails = function(postId) {
 			$http.get('/findpostcomments/' + postId)
-				.then(function (response) {
+				.then(function(response) {
 					var postComments = response.data;
 					$scope.postComments = postComments;
 
 
 					console.log(response.data);
-				}, function (error) {
+				}, function(error) {
 					// Xử lý lỗi
 					console.log(error);
 				});
 
 			$scope.isReplyEmpty = true;
 			$http.get('/postdetails/' + postId)
-				.then(function (response) {
+				.then(function(response) {
 					var postDetails = response.data;
 					$scope.postDetails = postDetails;
 					// Xử lý phản hồi thành công từ máy chủ
 					$('#chiTietBaiViet').modal('show');
 
-				}, function (error) {
+				}, function(error) {
 					// Xử lý lỗi
 					console.log(error);
 				});
 		};
 
 
-		$scope.addComment = function (postId) {
+		$scope.addComment = function(postId) {
 			var myComment = $scope.myComment;
 			if (myComment === null || myComment === undefined) {
 				const Toast = Swal.mixin({
@@ -447,9 +449,9 @@ angular.module('myApp', ['pascalprecht.translate'])
 				return;
 			}
 			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
-				.then(function (response) {
+				.then(function(response) {
 					$scope.postComments.unshift(response.data);
-					var postToUpdate = $scope.Posts.find(function (post) {
+					var postToUpdate = $scope.Posts.find(function(post) {
 						return post.postId = postId;
 					});
 					if (postToUpdate) {
@@ -458,17 +460,17 @@ angular.module('myApp', ['pascalprecht.translate'])
 					$scope.myComment = '';
 
 
-				}, function (error) {
+				}, function(error) {
 					console.log(error);
 				});
 		};
 
 
-		$scope.logout = function () {
+		$scope.logout = function() {
 			$http.get('/logout')
-				.then(function () {
+				.then(function() {
 					window.location.href = '/login';
-				}, function (error) {
+				}, function(error) {
 					console.log(error);
 				});
 		};
@@ -476,7 +478,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 
 
-		$scope.sendReply = function (receiverId, replyContent, replyId, commentId) {
+		$scope.sendReply = function(receiverId, replyContent, replyId, commentId) {
 			var requestData = {
 				receiverId: receiverId,
 				replyContent: replyContent,
@@ -502,21 +504,21 @@ angular.module('myApp', ['pascalprecht.translate'])
 				return;
 
 			}
-			var postToUpdate = $scope.Posts.find(function (post) {
+			var postToUpdate = $scope.Posts.find(function(post) {
 				return post.postId = $scope.postDetails.postId;
 			});
 			if (postToUpdate) {
 				postToUpdate.commentCount++;
 			}
 			$http.post('/addreply', requestData)
-				.then(function (response) {
-					var comment = $scope.postComments.find(function (comment) {
+				.then(function(response) {
+					var comment = $scope.postComments.find(function(comment) {
 						return comment.commentId === commentId;
 					});
 					comment.reply.unshift(response.data);
 					$scope.replyContent[replyId] = '';
 				})
-				.catch(function (error) {
+				.catch(function(error) {
 					// Xử lý lỗi
 					console.log('Lỗi:', error);
 				});
@@ -525,7 +527,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 
 
-		$scope.sendReplyForComment = function (receiverId, commentId, replyContent) {
+		$scope.sendReplyForComment = function(receiverId, commentId, replyContent) {
 			var requestData = {
 				receiverId: receiverId,
 				replyContent: replyContent,
@@ -552,13 +554,13 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 			}
 			$http.post('/addreply', requestData)
-				.then(function (response) {
-					var comment = $scope.postComments.find(function (comment) {
+				.then(function(response) {
+					var comment = $scope.postComments.find(function(comment) {
 						return comment.commentId === commentId;
 					});
 					comment.reply.unshift(response.data);
 					$scope.replyContent[commentId] = '';
-					var postToUpdate = $scope.Posts.find(function (post) {
+					var postToUpdate = $scope.Posts.find(function(post) {
 						return post.postId = $scope.postDetails.postId;
 					});
 					if (postToUpdate) {
@@ -566,20 +568,20 @@ angular.module('myApp', ['pascalprecht.translate'])
 					}
 
 				})
-				.catch(function (error) {
+				.catch(function(error) {
 					// Xử lý lỗi
 					console.log('Lỗi:', error);
 				});
 
 		};
-		$scope.handleKeyDown = function (event, userId, replyContent, replyId, commentId) {
+		$scope.handleKeyDown = function(event, userId, replyContent, replyId, commentId) {
 			if (event.keyCode === 13) {
 				// Người dùng đã nhấn phím Enter
 				$scope.sendReply(userId, replyContent, replyId, commentId);
 			}
 		};
 
-		$scope.handleKeyDownReplyForComment = function (event, receiverId, commentId, replyContent) {
+		$scope.handleKeyDownReplyForComment = function(event, receiverId, commentId, replyContent) {
 			if (event.keyCode === 13) {
 				// Người dùng đã nhấn phím Enter
 				$scope.sendReplyForComment(receiverId, commentId, replyContent);
@@ -597,89 +599,119 @@ angular.module('myApp', ['pascalprecht.translate'])
 
 		// Khi kết nối WebSocket thành công
 		// Khi kết nối WebSocket thành công
-		stompClient.connect({}, function (frame) {
+		stompClient.connect({}, function(frame) {
 			// Đăng ký hàm xử lý khi nhận thông điệp từ server
 			// Lắng nghe các tin nhắn được gửi về cho người dùng
-			stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function (message) {
+			stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function(message) {
 				$scope.check = true;
 				$http.get('/getunseenmessage')
-					.then(function (response) {
+					.then(function(response) {
 						var count = response.data;
 						if (count > 0) {
 							$scope.check = true;
 							$scope.unseenmess = count;
 						}
 					})
-					.catch(function (error) {
+					.catch(function(error) {
 						console.log(error);
 					});
 				$scope.$apply();
 			});
-		}, function (error) {
+		}, function(error) {
 			console.error('Lỗi kết nối WebSocket:', error);
 		});
 
 		//Load thông báo
-
+		$scope.hasNewNotification = false;
+		$scope.notificationNumber = [];
+		//Load thông báo chưa đọc
 		$http.get('/loadnotification')
-			.then(function (response) {
+			.then(function(response) {
 				$scope.notification = response.data;
+				$scope.notificationNumber = $scope.notification;
+				if($scope.notificationNumber.length != 0){
+					$scope.hasNewNotification = true;
+				}
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
-
+		//Load tất cả thông báo
 		$http.get('/loadallnotification')
-			.then(function (response) {
+			.then(function(response) {
 				$scope.allNotification = response.data;
-				console.log($scope.allNotification.receiver.avatar)
 			})
-			.catch(function (error) {
+			.catch(function(error) {
 				console.log(error);
 			});
-
-		$scope.ConnectNotification = function () {
-
+		//Kết nối websocket
+		$scope.ConnectNotification = function() {
 			var socket = new SockJS('/private-notification');
 			var stompClient = Stomp.over(socket);
 			stompClient.debug = false;
-			stompClient.connect({}, function (frame) {
-				stompClient.subscribe('/private-user', function (response) {
+			stompClient.connect({}, function(frame) {
+				stompClient.subscribe('/private-user', function(response) {
 
 					var data = JSON.parse(response.body)
-					// Thêm dữ liệu mới vào mảng notification
-					for (var i = 0; i < data.length; i++) {
-						// Kiểm tra nếu thông báo chưa tồn tại trong mảng, thì mới thêm vào
-						if (!$scope.isNotificationExists(data[i])) {
-							$scope.notification.push(data[i]);
-							$scope.$apply(); // Cập nhật giao diện khi có dữ liệu mới
-						}
-						$scope.filteredNotifications = $scope.notification.filter(function (notification) {
-							return notification.receiver.userId === $scope.myAccount.user.userId;
-						});
-						$scope.$apply();
+					// Kiểm tra điều kiện đúng với user hiện tại thì thêm thông báo mới
+					if ($scope.myAccount.user.userId === data.receiver.userId) {
+						//thêm vào thông báo mới
+						$scope.notification.push(data);
+						
+						//thêm vào mảng để đếm độ số thông báo
+						$scope.notificationNumber.push(data);
+						//cho hiện thông báo mới
+						$scope.hasNewNotification = true; 
 					}
+					$scope.$apply();
 
 				});
 			});
 		};
 
-		$scope.isNotificationExists = function (newNotification) {
-			return $scope.notification.some(function (notification) {
-
-				return notification.notificationId === newNotification.notificationId;
-			});
+		//xem chi tiết thông báo
+		$scope.seen = function(notificationId) {
+			$scope.getPostDetails(notificationId);
 		}
 
-		$scope.seen = function (notificationId) {
-			$http.put('/seennotification/' + notificationId)
-				.then(function (response) {
-
-				}, function (error) {
-					console.log(error);
+		//Ẩn tất cả thông báo khi click vào xem
+		$scope.hideNotification = function() {
+			$http.post('/setHideNotification', $scope.notification)
+				.then(function(response) {
+					// Xử lý phản hồi từ backend nếu cần
+				})
+				.catch(function(error) {
+					// Xử lý lỗi nếu có
+				});
+			$scope.hasNewNotification = false;
+			$scope.notificationNumber = [];
+		}
+		
+		//Xóa thông báo
+		$scope.deleteNotification = function(notificationId) {
+			$http.delete('/deleteNotification/'+ notificationId)
+				.then(function(response) {
+					$scope.allNotification = $scope.allNotification.filter(function(allNotification) {
+					return allNotification.notificationId !== notificationId;});
+				})
+				.catch(function(error) {
+					// Xử lý lỗi nếu có
 				});
 		}
 
+		//Ẩn thông báo 
+		$scope.hideNotificationById = function(notificationId) {
+			// Ví dụ xóa phần tử có notificationId là 123
+			$scope.removeNotificationById(notificationId);
+		}
+		//Hàm xóa theo ID của mảng
+		$scope.removeNotificationById = function(notificationIdToRemove) {
+			// Lọc ra các phần tử có notificationId khác với notificationIdToRemove
+			$scope.notification = $scope.notification.filter(function(notification) {
+				return notification.notificationId !== notificationIdToRemove;
+			});
+		};
+		//Kết nối khi mở trang web
 		$scope.ConnectNotification();
 		// Hàm này sẽ được gọi sau khi ng-include hoàn tất nạp tập tin "_menuLeft.html"
 

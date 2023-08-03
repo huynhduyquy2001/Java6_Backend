@@ -1,10 +1,10 @@
  angular.module('myApp', ['pascalprecht.translate'])
    .config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
-			prefix: '/json/', // Thay đổi đường dẫn này cho phù hợp
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
 		});
-		// Set the default language
+	// Set the default language
 		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 		$translateProvider.preferredLanguage(storedLanguage);
 	})
@@ -21,7 +21,8 @@
       $http.get('/ListFollower')
       .then(function(response) {
           $scope.users = response.data;
-          console.log("User",$scope.users); // Kiểm tra dữ liệu trong console log
+          console.log("User",$scope.users); // Kiểm tra dữ liệu trong console 
+
         })
         .catch(function(error) {
           console.log("Lỗi load user",error);
@@ -30,7 +31,7 @@
       //Đa ngôn ngữ	
       $scope.changeLanguage = function (langKey) {
           $translate.use(langKey);
-          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage	
+          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
       };
       
       

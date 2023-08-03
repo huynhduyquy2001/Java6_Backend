@@ -20,7 +20,13 @@ public interface ViolationsDao extends JpaRepository<Violations, Integer> {
 	@Query("SELECT DISTINCT v.post.postId, v.post.content, v.post.user.username, v.post.postDate FROM Violations v WHERE v.violationStatus = false and v.post.user.username LIKE %:username%")
 	List<Object> findSearchUserViolation(@Param("username") String username);
 	
+	@Query("SELECT DISTINCT v.post.postId, v.post.content, v.post.user.username, v.post.postDate FROM Violations v WHERE v.violationStatus = true and v.post.user.username LIKE %:username%")
+	List<Object> findSearchUserViolations(@Param("username") String username);
+	
 	@Query("SELECT v FROM Violations v WHERE v.post.postId = :postId")
 	List<Violations> findByPostId(@Param("postId") int postId);
 	
+	@Query("SELECT DISTINCT v.post.postId, v.post.content, v.post.user.username, v.post.postDate FROM Violations v WHERE v.violationStatus = true")
+	Page<Object> findViolationsWithStatusTrue(Pageable pageable);
+
 }

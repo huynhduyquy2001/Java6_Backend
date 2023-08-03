@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.viesonet.AuthConfig;
+import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Message;
 import com.viesonet.entity.MessageRequest;
 import com.viesonet.entity.UserMessage;
@@ -36,10 +39,10 @@ public class MessController {
 	UsersService usersService;
 
 	@Autowired
-	SessionService sessionService;
-
-	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
+	
+	@Autowired
+	private AuthConfig authConfig;
 
 	@GetMapping("/mess")
 	public ModelAndView getHomePage() {
@@ -53,6 +56,7 @@ public class MessController {
 		messagingTemplate.convertAndSendToUser(newMessage.getReceiver().getUserId(), "/queue/receiveMessage",
 				newMessage);
 	}
+	
 
 	@PostMapping("/savemess")
 	public Message saveMess(@RequestBody MessageRequest messageRequest) {
@@ -63,13 +67,16 @@ public class MessController {
 	}
 
 	@GetMapping("/getmess2/{userId}")
-	public List<Message> getListMess2(@PathVariable("userId") String userId) {
-		return messageService.getListMess(sessionService.get("id"), userId);
+	public List<Message> getListMess2(@PathVariable("userId") String userId, Authentication authentication) {
+
+		String myId = authConfig.getLoggedInAccount(authentication).getUserId();
+		return messageService.getListMess(myId, userId);
 	}
 
 	@GetMapping("/getusersmess")
-	public List<Object> getUsersMess() {
-		return messageService.getListUsersMess(sessionService.get("id"));
+	public List<Object> getUsersMess( Authentication authentication) {
+		String myId = authConfig.getLoggedInAccount(authentication).getUserId();
+		return messageService.getListUsersMess(myId);
 	}
 
 	@PostMapping("/getUser/{userId}")
@@ -78,16 +85,18 @@ public class MessController {
 	}
 
 	@GetMapping("/getunseenmessage")
-	public int getListUnseenMessage() {
-		return messageService.getListUnseenMessage(sessionService.get("id"));
+	public int getListUnseenMessage(Authentication authentication) {
+		String myId = authConfig.getLoggedInAccount(authentication).getUserId();
+		return messageService.getListUnseenMessage(myId);
 	}
 
 	@PostMapping("/seen/{userId}")
-	public List<Message> seen(@PathVariable("userId") String senderId) {
-		return messageService.seen(senderId, sessionService.get("id"));
+	public List<Message> seen(@PathVariable("userId") String senderId, Authentication authentication) {
+		String myId = authConfig.getLoggedInAccount(authentication).getUserId();
+		return messageService.seen(senderId, myId);
 	}
-	@GetMapping("/removemess/{messId}")
-	public Message seen(@PathVariable("messId") int messId) {
+	@PostMapping("/removemess/{messId}")
+	public Message reMoveMess(@PathVariable("messId") int messId) {
 		return messageService.removeMess(messageService.getMessById(messId));
 	}
 }

@@ -2,12 +2,13 @@ let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
   angular.module('myApp',['pascalprecht.translate'])
   .config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
-			prefix: '/json/', // Thay đổi đường dẫn này cho phù hợp
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
 		});
 		// Set the default language
+		// Set the default language
 		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
-		$translateProvider.preferredLanguage(storedLanguage);	
+		$translateProvider.preferredLanguage(storedLanguage);
 	})
     .controller('myCtrl', function ($scope, $http, $translate) {
       $scope.Posts = [];
@@ -27,7 +28,7 @@ let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
         var username = $scope.username; // Lấy tên người dùng từ input hoặc form
 
         // Gọi API để tìm kiếm người dùng
-        $http.get('/user/search/users?username=' + username)
+        $http.get('/search/users?username=' + username)
           .then(function(response) {
             // Xử lý kết quả trả về từ API
             $scope.users = response.data;

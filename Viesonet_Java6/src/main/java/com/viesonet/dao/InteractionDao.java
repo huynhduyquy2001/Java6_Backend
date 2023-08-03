@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import com.viesonet.entity.Interaction;
 
 public interface InteractionDao extends JpaRepository<Interaction, String> {
-	@Query("SELECT i FROM Interaction i WHERE i.interactingPerson =:id and i.interactedPerson=:id2")
+	@Query("SELECT i FROM Interaction i WHERE i.interactingPerson.userId =:id and i.interactedPerson.userId =:id2")
 	Interaction findUserInteraction(String id, String id2);
 	
-	@Query("SELECT i.interactingPerson FROM Interaction i WHERE i.interactedPerson =:id")
+	@Query("SELECT i.interactingPerson FROM Interaction i WHERE i.interactedPerson.userId =:id")
 	List<Interaction> findListInteraction(String id);
 }

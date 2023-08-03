@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.viesonet.dao.InteractionDao;
 import com.viesonet.entity.Interaction;
+import com.viesonet.entity.Users;
 
 @Service
 public class InteractionService {
@@ -15,22 +16,32 @@ public class InteractionService {
 	InteractionDao interactionDao;
 
 	public void plusInteraction(String interactingPerson, String interactedPerson) {
-		Interaction interaction = interactionDao.findUserInteraction(interactingPerson, interactedPerson);
-		Interaction interac = new Interaction();
-		Date currentDate = new Date();
-		if (interaction == null) {
-			interac.setInteractedPerson(interactedPerson);
-			interac.setInteractingPerson(interactingPerson);
-			interac.setInteractionCount(1);
-			interac.setMostRecentInteractionDate(currentDate);
-			//lưu
-			interactionDao.saveAndFlush(interac);
-		}else {
-			interaction.setMostRecentInteractionDate(currentDate);
-			interaction.setInteractionCount(interaction.getInteractionCount() + 1);
-			//lưu
-			interactionDao.saveAndFlush(interaction);
-		}
+	    Interaction interaction = interactionDao.findUserInteraction(interactingPerson, interactedPerson);
+	    Interaction interac = new Interaction();
+	    Date currentDate = new Date();
+	    
+	    if (interaction == null) {
+	        // Tạo đối tượng Users cho người được tương tác (interactedPerson)
+	        Users interactedUser = new Users();
+	        interactedUser.setUserId(interactedPerson);
+
+	        // Tạo đối tượng Users cho người tương tác (interactingPerson)
+	        Users interactingUser = new Users();
+	        interactingUser.setUserId(interactingPerson);
+
+	        interac.setInteractedPerson(interactedUser);
+	        interac.setInteractingPerson(interactingUser);
+	        interac.setInteractionCount(1);
+	        interac.setMostRecentInteractionDate(currentDate);
+	        
+	        //lưu
+	        interactionDao.saveAndFlush(interac);
+	    } else {
+	        interaction.setMostRecentInteractionDate(currentDate);
+	        interaction.setInteractionCount(interaction.getInteractionCount() + 1);
+	        //lưu
+	        interactionDao.saveAndFlush(interaction);
+	    }
 	}
 	
 	public void minusInteraction(String interactingPerson, String interactedPerson) {

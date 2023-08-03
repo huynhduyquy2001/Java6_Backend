@@ -34,11 +34,11 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/angular-emoji-picker@0.2.0/dist/css/emoji-picker.min.css">
 <link rel="stylesheet" href="/css/emoji.min.css">
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script><title>Trang chủ</title>
-	<style type="text/css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script><title>Trang chủ</title><title>Trang chủ</title>
+<style type="text/css">
 .dropdown-item {
 	padding-top: 0;
 	padding-bottom: 0;
@@ -115,37 +115,44 @@ div.dropdown-menu.baoCao {
 <body style="padding-top: 70px;" ng-controller="myCtrl">
 	<div style="transition: 0.5s;">
 		<div class="row ">
-			<div ng-include="'/_menuLeft.html'"></div>
-			<nav ng-include="'/_header.html'" class="navbar navbar-expand-sm "
+			<div ng-include="'_menuLeft.html'"></div>
+			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
 				style="padding: 0; position: fixed; top: 0; z-index: 101"></nav>
-			<div class="col-md-7 offset-md-2" style="z-index: 10; padding-left: 4rem">
+			<div class="col-md-7 offset-md-2"
+				style="z-index: 10; padding-left: 4rem">
 				<center>
 					<div class="msger animate__animated animate__zoomIn"
 						style="width: 93%; text-align: left;">
-						<header class="msger-header">
+						<header class="msger-header"
+							style="border-right: 1px solid #dee2e6 !important;">
 							<div class="msger-header-title">
-								<a href="#"><img ng-src="/images/{{ userMess.avatar }}"
+								<a href="#" style="font-weight: 700; color: #212529"><img
+									ng-src="/images/{{ userMess.avatar }}"
 									style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;"
-									alt=""></a> {{ userMess.username }}
+									alt=""> {{ userMess.username }}</a>
 							</div>
 
 						</header>
-						<main class="msger-chat">
+						<main class="msger-chat"
+							style="padding-top: 1rem; border-top: 1px solid #dee2e6 !important;">
 							<div class="msg"
 								ng-class="{'left-msg': mess.sender.userId !== myAccount.user.userId, 'right-msg': mess.sender.userId === myAccount.user.userId}"
 								ng-repeat="mess in ListMess">
 								<div class="msg-img"
-									style="background-image: url(images/{{mess.sender.avatar}})"></div>
+									style="background-image: url(images/{{mess.sender.avatar}}); border: 1px solid gray"></div>
 								<div class="msg-bubble">
 									<div class="msg-info">
-										<div class="msg-info-name">{{mess.sender.username}}</div>
-										<div class="msg-info-time">{{
-											getFormattedTimeAgo(mess.sendDate) }}</div>
+										<!-- Hiển thị nút "Thu hồi" -->
+										<button class="btn-revoke"
+											ng-if="mess.status != 'Đã ẩn' && mess.sender.userId === myAccount.user.userId"
+											ng-click="revokeMessage(mess.messId)">Thu hồi</button>
 									</div>
-									<div class="msg-text">{{mess.content}}</div>
+									<div class="msg-text" ng-if="mess.status != 'Đã ẩn'">{{mess.content}}</div>
+									<div class="msg-text" ng-if="mess.status == 'Đã ẩn'"
+										style="color: #adb5bd">Tin nhắn đã được thu hồi</div>
+									<div class="msg-info-time">{{getFormattedTimeAgo(mess.sendDate)}}</div>
 								</div>
 							</div>
-
 						</main>
 
 						<form ng-show="ListMess.length>0" class="msger-inputarea">
@@ -163,7 +170,7 @@ div.dropdown-menu.baoCao {
 			</div>
 			<div class="col-md-3 menuLeft animate__animated animate__backInRight"
 				style="position: fixed; right: 0; top: 70px;">
-				<input class="form-control" placeholder="Tìm kiếm">
+				<input class="form-control" placeholder="{{ 'TK' | translate }}">
 				<ul class="list-unstyled mb-0">
 					<li ng-repeat="UsersMess in ListUsersMess"
 						class="p-2 border-bottom" style="background-color: white;">
@@ -173,7 +180,7 @@ div.dropdown-menu.baoCao {
 							ng-click="getmess2(UsersMess[2], -1)">
 							<!-- Nội dung khi UsersMess[0] = 'UI010' -->
 							<a href="#"><img ng-src="/images/{{ UsersMess[5] }}"
-								style="border-radius: 100%;" alt=""></a>
+								style="border-radius: 100%; width: 4rem; height: 4rem;" alt=""></a>
 							<div style="width: 100%; line-height: 0.7rem;">
 								<div style="display: flex;">
 									<label class="ng-binding">{{ UsersMess[3] }}</label>
@@ -184,7 +191,11 @@ div.dropdown-menu.baoCao {
 								<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 								<br>
 								<div style="display: flex; justify-content: space-between;">
-									<small style="font-size: 12px;">{{UsersMess[6]}}</small> <small
+									<small ng-if="UsersMess[8] !== 'Đã ẩn'"
+										style="font-size: 12px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">
+										{{ UsersMess[6] }} </small> <small ng-if="UsersMess[8] === 'Đã ẩn'"
+										style="font-size: 12px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">
+										Tin nhắn đã được thu hồi </small> <small
 										style="font-size: 12px; color: #65676b" class="ng-binding">
 										{{getFormattedTimeAgo(UsersMess[7]) }} </small>
 								</div>
@@ -196,7 +207,7 @@ div.dropdown-menu.baoCao {
 							ng-click="getmess2(UsersMess[0] , UsersMess[9])">
 							<!-- Nội dung khi UsersMess[0] khác 'UI010' -->
 							<a href="#"><img ng-src="/images/{{ UsersMess[4] }}"
-								style="border-radius: 100%;" alt=""></a>
+								style="border-radius: 100%; width: 4rem; height: 4rem;" alt=""></a>
 							<div style="width: 100%; line-height: 0.7rem">
 								<div style="display: flex;">
 									<label class="ng-binding">{{ UsersMess[1] }}</label>
@@ -206,7 +217,13 @@ div.dropdown-menu.baoCao {
 								<!-- <i class="fa-solid fa-earth-americas fa-xs"></i> -->
 								<br>
 								<div style="display: flex; justify-content: space-between;">
-									<small style="font-size: 12px;">{{UsersMess[6]}}</small> <small
+									<small ng-if="UsersMess[8] !== 'Đã ẩn'" style="font-size: 12px;">{{UsersMess[6]}}</small>
+									
+									 <small ng-if="UsersMess[8] === 'Đã ẩn'"
+										style="font-size: 12px; overflow: hidden; width: 60%; white-space: nowrap; text-overflow: ellipsis;">
+										Tin nhắn đã được thu hồi </small>
+									
+									 <small
 										style="font-size: 12px; color: #65676b" class="ng-binding">
 										{{getFormattedTimeAgo(UsersMess[7]) }} </small>
 								</div>
@@ -223,19 +240,19 @@ div.dropdown-menu.baoCao {
 
 	<!-- load ảnh -->
 	<script>
-  let input = document.getElementById('inputGroupFile01');
-  let imageList = document.getElementById('imageList');
+    let input = document.getElementById('inputGroupFile01');
+    let imageList = document.getElementById('imageList');
 
-  input.onchange = (e) => {
-    imageList.innerHTML = ''; // Xóa danh sách hình ảnh hiện tại
-    for (let i = 0; i < input.files.length; i++) {
-      let img = document.createElement('img');
-      img.src = URL.createObjectURL(input.files[i]);
-      img.className = 'uploaded-image';
-      imageList.appendChild(img);
-    }
-  };
-</script>
+    input.onchange = (e) => {
+      imageList.innerHTML = ''; // Xóa danh sách hình ảnh hiện tại
+      for (let i = 0; i < input.files.length; i++) {
+        let img = document.createElement('img');
+        img.src = URL.createObjectURL(input.files[i]);
+        img.className = 'uploaded-image';
+        imageList.appendChild(img);
+      }
+    };
+  </script>
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/angular-emoji-picker@0.2.0/Gruntfile.min.js"></script>
@@ -244,9 +261,7 @@ div.dropdown-menu.baoCao {
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-	<script src="/js/Message.js"></script>
-
-
+	<script src="js/Message.js"></script>
 
 </body>
 

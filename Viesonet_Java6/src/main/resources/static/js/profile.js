@@ -1,5 +1,15 @@
-angular.module('myApp', ['ngRoute'])
-	.controller('myCtrl', function($scope, $http) {
+angular.module('myApp', ['ngRoute','pascalprecht.translate'])
+.config(function($translateProvider) {
+		$translateProvider.useStaticFilesLoader({
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			suffix: '.json'
+		});
+	// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
+	})
+	.controller('myCtrl', function($scope, $http ,$translate) {
+
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -12,6 +22,111 @@ angular.module('myApp', ['ngRoute'])
 		$scope.myListFollow = [];
 		$scope.UserInfo = {};
 		$scope.myUserId = '';
+		$scope.notification = [];
+		$scope.allNotification = [];
+		//Đa ngôn ngữ	
+      $scope.changeLanguage = function (langKey) {
+          $translate.use(langKey);
+          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
+      };
+		//Load thông báo
+		$scope.hasNewNotification = false;
+		$scope.notificationNumber = [];
+		//Load thông báo chưa đọc
+		$http.get('/loadnotification')
+			.then(function(response) {
+				$scope.notification = response.data;
+				$scope.notificationNumber = $scope.notification;
+				if($scope.notificationNumber.length != 0){
+					$scope.hasNewNotification = true;
+				}
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+		//Load tất cả thông báo
+		$http.get('/loadallnotification')
+			.then(function(response) {
+				$scope.allNotification = response.data;
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+			
+			
+		//Kết nối websocket
+		$scope.ConnectNotification = function() {
+			var socket = new SockJS('/private-notification');
+			var stompClient = Stomp.over(socket);
+			stompClient.connect({}, function(frame) {
+				stompClient.subscribe('/private-user', function(response) {
+
+					var data = JSON.parse(response.body)
+					// Kiểm tra điều kiện đúng với user hiện tại thì thêm thông báo mới
+					if ($scope.UserInfo.userId === data.receiver.userId) {
+						
+						//thêm vào thông báo mới
+						$scope.notification.push(data);
+						console.log($scope.notification)
+						//thêm vào tất cả thông báo
+						$scope.allNotification.push(data);
+						//thêm vào mảng để đếm độ số thông báo
+						$scope.notificationNumber.push(data);
+						//cho hiện thông báo mới
+						$scope.hasNewNotification = true; 
+					}
+					$scope.$apply();
+
+				});
+			});
+		};
+
+		//xem chi tiết thông báo
+		$scope.seen = function(notificationId) {
+			$scope.getPostDetails(notificationId);
+		}
+
+		//Ẩn tất cả thông báo khi click vào xem
+		$scope.hideNotification = function() {
+			$http.post('/setHideNotification', $scope.notification)
+				.then(function(response) {
+					// Xử lý phản hồi từ backend nếu cần
+				})
+				.catch(function(error) {
+					// Xử lý lỗi nếu có
+				});
+			$scope.hasNewNotification = false;
+			$scope.notificationNumber = [];
+		}
+		
+		//Xóa thông báo
+		$scope.deleteNotification = function(notificationId) {
+			$http.delete('/deleteNotification/'+ notificationId)
+				.then(function(response) {
+					$scope.allNotification = $scope.allNotification.filter(function(allNotification) {
+					return allNotification.notificationId !== notificationId;});
+				})
+				.catch(function(error) {
+					// Xử lý lỗi nếu có
+				});
+		}
+
+		//Ẩn thông báo 
+		$scope.hideNotificationById = function(notificationId) {
+			// Ví dụ xóa phần tử có notificationId là 123
+			$scope.removeNotificationById(notificationId);
+		}
+		//Hàm xóa theo ID của mảng
+		$scope.removeNotificationById = function(notificationIdToRemove) {
+			// Lọc ra các phần tử có notificationId khác với notificationIdToRemove
+			$scope.notification = $scope.notification.filter(function(notification) {
+				return notification.notificationId !== notificationIdToRemove;
+			});
+		};
+		//Kết nối khi mở trang web
+		$scope.ConnectNotification();
+		
+		
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;

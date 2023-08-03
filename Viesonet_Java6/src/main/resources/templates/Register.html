@@ -20,6 +20,7 @@
 <script src="https://kit.fontawesome.com/f737751420.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="/css/style.css">
 <title>Đăng ký</title>
 <style>
@@ -169,7 +170,7 @@ span.psw {
 								pattern="[0-9]{10}" required>
 						</div>
 						<div class="mb-3">
-							<input type="text" class="form-control ip" ng-model="email"
+							<input type="email" class="form-control ip" ng-model="email"
 								aria-describedby="helpId" placeholder="Email"
 								pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
 						</div>
@@ -184,11 +185,13 @@ span.psw {
 								placeholder="Mật khẩu xác nhận" required>
 						</div>
 						<div class="mb-3">
-							<label for="uname">Giới tính</label> <br> <label> <input
-								type="radio" ng-model="gender" id="inputNam" value="true"
-								checked="checked"> Nam
-							</label> &nbsp &nbsp &nbsp &nbsp <label> <input type="radio"
-								ng-model="gender" value="false"> Nữ
+							<label>Giới tính</label> <br> 
+							<label> <input
+								type="radio" ng-model="gender" value="true"
+								 > Nam
+							</label> &nbsp &nbsp &nbsp &nbsp 
+							<label > <input type="radio"
+								 value="false" ng-model="gender"> Nữ
 							</label>
 						</div>
 
@@ -234,6 +237,9 @@ span.psw {
 	var app = angular.module('registerApp', []);
 
 	app.controller('registerCtrl', function($scope, $http) {
+		$scope.gender = 'true';
+
+		
 		$scope.submitForm = function() {
 			// Lấy giá trị từ các trường nhập liệu
 			var phoneNumber = $scope.phoneNumber;
@@ -243,7 +249,7 @@ span.psw {
 			var email = $scope.email;
 			var gender = $scope.gender;
 			var accept = $scope.accept;
-
+			
 			// Tạo đối tượng dữ liệu để gửi đi
 			var data = {
 				phoneNumber : phoneNumber,
@@ -262,9 +268,19 @@ span.psw {
 					// Hiển thị thông báo lỗi cho người dùng
 					$scope.errorMessage = response.data.message;
 				} else {
-					// Xử lý trường hợp đăng ký thành công tại đây
-					// Ví dụ: chuyển hướng người dùng đến trang chủ
-					window.location.href = '/login';
+					Swal.fire({
+                	    title: 'Thành công!',
+                	    text: 'Đăng ký tài khoản!',
+                	    icon: 'success',
+                	    showCancelButton: false,
+                	    confirmButtonText: 'OK'
+                	}).then((result) => {
+                	    // Check if the user clicked the "OK" button
+                	    if (result.isConfirmed) {
+                	        // Redirect to another page
+                	        window.location.href = '/login'; // Replace '/another-page' with the desired URL
+                	    }
+                	});
 				}
 			});
 		};
