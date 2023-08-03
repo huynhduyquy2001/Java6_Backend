@@ -1,6 +1,15 @@
 
-angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $http, $timeout) {
+angular.module('myApp', ['pascalprecht.translate'])
+.config(function($translateProvider) {
+		$translateProvider.useStaticFilesLoader({
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			suffix: '.json'
+		});
+		// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
+	})
+	.controller('myCtrl', function($scope, $http, $translate) {
 		$scope.Posts = [];
 		$scope.likedPosts = [];
 		$scope.myAccount = {};
@@ -18,11 +27,16 @@ angular.module('myApp', [])
 		$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
 		$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 
+		$scope.changeLanguage = function(langKey) {
+			$translate.use(langKey);
+			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorage
+		};
+
 		// Hàm để tăng số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 		$scope.showMoreComments = function() {
 			$scope.numOfCommentsToShow += $scope.commentsToShowMore;
 		};
-
+	
 
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')
@@ -643,8 +657,7 @@ angular.module('myApp', [])
 					if ($scope.myAccount.user.userId === data.receiver.userId) {
 						//thêm vào thông báo mới
 						$scope.notification.push(data);
-						//thêm vào tất cả thông báo
-						$scope.allNotification.push(data);
+						
 						//thêm vào mảng để đếm độ số thông báo
 						$scope.notificationNumber.push(data);
 						//cho hiện thông báo mới

@@ -59,17 +59,35 @@ public class PostsService {
 	}
 
 	public List<Posts> getMyPost(String userId) {
-		return postsDao.getMyPosts(userId);
+		return postsDao.getMyPosts(userId, Sort.by(Sort.Direction.DESC, "postDate"));
 	}
 
 	public int countPost(String userId) {
 		return postsDao.countMyPosts(userId);
 	}
 	
-	public Page<Object> find9Post(int page, int size, String userId){
-		Pageable pageable = PageRequest.of(page, size);
-		return postsDao.find9Post(pageable, userId);
-	}
+
+    public List<Posts> findByUserId(String userId) {
+        return postsDao.findByUserId(userId);
+    }
+
+
+    public Posts getPostById(int postId) {
+        Optional<Posts> postOptional = postsDao.findById(postId);
+        return postOptional.orElse(null);
+    }
+
+    public void savePost(Posts post) {
+    	postsDao.save(post);
+    }
+    
+    public void hidePost(int postId) {
+        Posts existingPost = postsDao.findById(postId).orElse(null);
+        if (existingPost != null) {
+            existingPost.setIsActive(false);
+            postsDao.save(existingPost);
+        }
+    }
 
 	
 }

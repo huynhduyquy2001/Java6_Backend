@@ -17,6 +17,6 @@ public class FollowDTO {
     private String followerId;
     private String followingId;
     private Date followDate;
-
     // Các phương thức getter và setter cho các trường
 }
+

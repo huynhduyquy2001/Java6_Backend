@@ -1,5 +1,14 @@
-angular.module('myApp', [])
-	.controller('myCtrl', function($scope, $window, $http, $timeout) {
+angular.module('myApp', ['pascalprecht.translate'])
+ .config(function($translateProvider) {
+		$translateProvider.useStaticFilesLoader({
+			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
+			suffix: '.json'
+		});
+	// Set the default language
+		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
+		$translateProvider.preferredLanguage(storedLanguage);
+	})
+	.controller('myCtrl', function($scope, $window, $http, $timeout,$translate) {
 		$scope.LikePost = [];
 		$scope.ListUsersMess = [];
 		$scope.ListMessWith = [];
@@ -7,7 +16,11 @@ angular.module('myApp', [])
 		$scope.ListMess = [];
 		$scope.userMess = {};
 		$scope.check = false;
-
+		//Đa ngôn ngữ	
+      		$scope.changeLanguage = function (langKey) {
+          $translate.use(langKey);
+          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
+      };
 		// Tìm acc của mình
 		$http.get('/findmyaccount')
 			.then(function(response) {

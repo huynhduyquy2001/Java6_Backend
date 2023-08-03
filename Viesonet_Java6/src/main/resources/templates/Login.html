@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="myApp">
+<html>
 
 <head>
 <!-- Required meta tags -->
@@ -99,8 +99,8 @@ span.psw {
 </style>
 </head>
 
-<body ng-controller="myController">
-	<header class="header animationTop3" style="background: transparent;">
+<body >
+	<header class="header" style="background: transparent;">
 		<nav class="navbar navbar-expand-sm navbar-light"
 			style="border: none; padding-top: 0; padding-bottom: 0;">
 			<div class="container">
@@ -115,7 +115,7 @@ span.psw {
 				</button>
 				<div class="collapse navbar-collapse" id="collapsibleNavId">
 					<ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-						<li class="nav-item"><a class="nav-link" href="/dangky">
+						<li class="nav-item"><a class="nav-link" href=/register>
 								<p style="color: #5d5d5d;">Đăng kí</p>
 						</a></li>
 					</ul>
@@ -155,7 +155,7 @@ span.psw {
 								id="password" aria-describedby="helpId" placeholder="Mật khẩu?"
 								required>
 						</div>
-						<label><input type="checkbox" name="ghiNho" value="true"><small>Ghi
+						<label><input type="checkbox" name="remember" value="true"><small>Ghi
 								nhớ tài khoản?</small></label>
 					</div>
 					<br>
@@ -164,7 +164,7 @@ span.psw {
 							style="background-color: #007ACC; width: 100%;">Đăng
 							nhập</button>
 					</center>
-					<br> <a href="/quenmatkhau"> <small>Quên mật khẩu?</small>
+					<br> <a href="/forgotpassword"> <small>Quên mật khẩu?</small>
 					</a>
 				</form>
 			</div>

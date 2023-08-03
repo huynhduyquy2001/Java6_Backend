@@ -74,7 +74,7 @@ public class AuthConfig {
                 System.out.println("hashedPassword: " + hashedPassword);
                 return User.builder()
                         .username(account.getPhoneNumber())
-                        .password(hashedPassword)
+                        .password(account.getPassword())
                         .roles(String.valueOf(account.getRole().getRoleId()))
                         .build();
             }
@@ -87,7 +87,9 @@ public class AuthConfig {
         return http
             .csrf().disable()
             .authorizeRequests()
-            .requestMatchers("/login", "/register","/dangky","/login-fail", "/images/**", "/js/**", "/css/**").permitAll()
+            .requestMatchers("/login","/forgotpassword", "/quenmatkhau/**","/change_password", "/doimatkhau2", "/register","/dangky","/login-fail", "/images/**", "/js/**", "/css/**").permitAll()
+            .requestMatchers("/staff/**").hasAnyRole("2", "3")
+            .requestMatchers("/admin/**").hasRole("1")
             .anyRequest().authenticated()
             .and()
             .formLogin()
@@ -98,6 +100,9 @@ public class AuthConfig {
             .passwordParameter("password") // [password]
             .failureUrl("/login-fail")
             .and()
+            .rememberMe()
+            .rememberMeParameter("remember")
+            .and()
             .logout()
             .logoutSuccessUrl("/login")
             .invalidateHttpSession(true)
@@ -105,6 +110,7 @@ public class AuthConfig {
             .deleteCookies("JSESSIONID")
             .and()
             .exceptionHandling() // Xử lý ngoại lệ khi người dùng chưa đăng nhập
+            .accessDeniedPage("/error")
             .authenticationEntryPoint(authenticationEntryPoint())
             .and()
             .build();

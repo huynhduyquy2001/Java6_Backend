@@ -12,6 +12,78 @@ body {
 	font-size: 20px;
 }
 
+.user-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.user-card {
+  flex: 0 0 calc(50% - 20px); /* Hiển thị 2 thẻ người dùng trên một hàng */
+  max-width: 250px;
+  margin: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  margin-left: 50px;
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-details {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 16px;
+  flex: 1 100%; /* Đảm bảo tên người dùng luôn hiển thị trên cùng một dòng */
+}
+
+#follow-btn {
+   border-radius: 5px;
+  width: 100%; /* Đảm bảo cả nút "Follow" và "UnFollow" chiếm hết chiều rộng của `.follow-btn-container` */
+  max-width: 150px; /* Giới hạn chiều rộng tối đa của nút, có thể điều chỉnh theo ý muốn */
+  margin-top: 10px; /* Khoảng cách giữa các nút */
+  margin-left: 70px;
+}
+
+.follow-btn-container {
+ display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; /* Hiển thị nút theo chiều dọc */
+  height: 100%; /* Đảm bảo `.follow-btn-container` chiếm hết chiều cao của `.user-card` */
+}
+
+.colorful-link.active {
+  color: #0d6efd; /* Đặt màu sắc khi thẻ được bấm */
+}
+
+.colorful-link {
+  	margin-right: 30px; /* Tạo khoảng cách giữa các thẻ */
+  	 white-space: nowrap;
+}
+
+.separator {
+  width: 10px; /* Độ rộng của khoảng cách giữa các thẻ */
+  margin-right: 30px;
+}
+
+.separator::before {
+  content: "|"; /* Chèn biểu tượng "|" vào trước thẻ */
+  display: inline-block; /* Đảm bảo biểu tượng "|" hiển thị như một phần của thẻ */
+  color: gray; /* Màu của biểu tượng "|" */
+}
+
 .btn-blue {
 	border-radius: 20px;
 	padding: 10px 20px;

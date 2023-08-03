@@ -28,6 +28,11 @@ public class ChangePasswordController {
 	@Autowired
 	private AuthConfig authConfig;
 
+	@Autowired
+	AuthConfig authConfig; 
+	
+
+	
 	@GetMapping("/changepassword")
 	public ModelAndView getChangePasswordPage() {
 		ModelAndView modelAndView = new ModelAndView("ChangePassword");
@@ -45,13 +50,7 @@ public class ChangePasswordController {
 	        if (matKhauMoi.equalsIgnoreCase(accounts.getPassword())) {
 	            return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu mới không được giống mật khẩu cũ"));
 	        } else {
-	            if (matKhauMoi.equalsIgnoreCase(matKhauXacNhan)) {
-	                accounts.setPassword(matKhauMoi);
-	                accountsService.save(accounts);
-	                return ResponseEntity.ok().build();
-	            } else {
-	                return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu và mật khẩu xác nhận không khớp"));
-	            }
+	            return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu và mật khẩu xác nhận không khớp"));
 	        }
 	    } else {
 	        return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu cũ không trùng khớp"));
