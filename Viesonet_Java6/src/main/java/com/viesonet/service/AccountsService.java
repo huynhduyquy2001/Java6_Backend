@@ -3,6 +3,7 @@ package com.viesonet.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.viesonet.dao.AccountsDao;
+import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.AccountStatus;
 import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Roles;

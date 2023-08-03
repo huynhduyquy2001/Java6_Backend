@@ -39,7 +39,6 @@ public class LoginController {
 	@GetMapping("/login")
 	public ModelAndView getLoginPage() {		
 		ModelAndView modelAndView = new ModelAndView("Login");
-		
 		return modelAndView;
 	}
 	@RequestMapping("/login-fail")
