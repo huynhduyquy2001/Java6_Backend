@@ -41,11 +41,6 @@ public class AuthConfig {
     @Autowired
     private AccountsService accountsService;
     
-
-    @Autowired
-    public AuthConfig(AccountsService accountsService) {
-        this.accountsService = accountsService;
-    }
     
     @Bean
     public CustomAuthenticationEntryPoint authenticationEntryPoint() {
@@ -68,7 +63,15 @@ public class AuthConfig {
             @Override
             public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
                 Accounts account = accountsService.getAccountById(userId);
-            
+//                System.out.println("User ID: " + account.getUserId());
+//                System.out.println("Username: " + account.getPhoneNumber());
+//                System.out.println("Password: " + account.getPassword());
+//                System.out.println("UserId: " + account.getUserId());
+                // ...
+
+                // Mã hóa mật khẩu trước khi trả về UserDetails
+                String hashedPassword = passwordEncoder().encode(account.getPassword());
+                System.out.println("hashedPassword: " + hashedPassword);
                 return User.builder()
                         .username(account.getPhoneNumber())
                         .password(account.getPassword())

@@ -29,16 +29,20 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
           $translate.use(langKey);
           localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
       };
+		
 		//Load thông báo
 		$scope.hasNewNotification = false;
 		$scope.notificationNumber = [];
 		//Load thông báo chưa đọc
 		$http.get('/loadnotification')
 			.then(function(response) {
-				$scope.notification = response.data;
-				$scope.notificationNumber = $scope.notification;
-				if($scope.notificationNumber.length != 0){
+				var data = response.data;
+				for(var i = 0; i < data.length; i++){
+					$scope.notification.push(data[i]);	
+					$scope.notificationNumber = $scope.notification;
+					if($scope.notificationNumber.length != 0){
 					$scope.hasNewNotification = true;
+						}
 				}
 			})
 			.catch(function(error) {
@@ -52,22 +56,19 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 			.catch(function(error) {
 				console.log(error);
 			});
-			
-			
 		//Kết nối websocket
 		$scope.ConnectNotification = function() {
 			var socket = new SockJS('/private-notification');
 			var stompClient = Stomp.over(socket);
+			stompClient.debug = false;
 			stompClient.connect({}, function(frame) {
 				stompClient.subscribe('/private-user', function(response) {
 
 					var data = JSON.parse(response.body)
 					// Kiểm tra điều kiện đúng với user hiện tại thì thêm thông báo mới
-					if ($scope.UserInfo.userId === data.receiver.userId) {
-						
+					if ($scope.myAccount.user.userId === data.receiver.userId) {
 						//thêm vào thông báo mới
 						$scope.notification.push(data);
-						console.log($scope.notification)
 						//thêm vào tất cả thông báo
 						$scope.allNotification.push(data);
 						//thêm vào mảng để đếm độ số thông báo

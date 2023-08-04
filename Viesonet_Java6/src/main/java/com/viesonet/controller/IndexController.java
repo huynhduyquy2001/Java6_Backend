@@ -314,7 +314,12 @@ public class IndexController {
 	@GetMapping("/loadnotification")
 	public List<Notifications> getNotification(Authentication authentication) {
 		Accounts account = authConfig.getLoggedInAccount(authentication);
-		return notificationsService.findNotificationByReceiver(account.getUserId()); // Implement hàm này để lấy thông báo từ CSDL
+		List<Notifications> n = notificationsService.findNotificationByReceiver(account.getUserId()); 
+		if(n.isEmpty()) {
+			return null;
+		}else {
+			return n;
+		}
 	}
 
 	@GetMapping("/loadallnotification")
@@ -327,7 +332,9 @@ public class IndexController {
 	
 	@PostMapping("/setHideNotification")
 	public void setHideNotification(@RequestBody  List<Notifications> notification) {
-		 notificationsService.setFalseNotification(notification);
+		 if(!notification.isEmpty()) {
+			 notificationsService.setFalseNotification(notification);
+		 }
 	}
 	
 	@DeleteMapping("/deleteNotification/{notificationId}")

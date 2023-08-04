@@ -1,28 +1,14 @@
 package com.viesonet.service;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.viesonet.dao.AccountsDao;
 import com.viesonet.dao.UsersDao;
 import com.viesonet.entity.AccountStatus;
 import com.viesonet.entity.Accounts;
 import com.viesonet.entity.Roles;
-import com.viesonet.entity.Users;
 @Service
-public class AccountsService {
+public class AccountsService{
 	@Autowired
 	AccountsDao accountsDao;
 	
