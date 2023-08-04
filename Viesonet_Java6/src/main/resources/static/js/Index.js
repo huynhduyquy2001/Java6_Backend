@@ -1,6 +1,6 @@
 
 angular.module('myApp', ['pascalprecht.translate'])
-.config(function($translateProvider) {
+	.config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
 			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
@@ -36,7 +36,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 		$scope.showMoreComments = function() {
 			$scope.numOfCommentsToShow += $scope.commentsToShowMore;
 		};
-	
+
 
 		//kiểm tra xem còn tin nhắn nào chưa đọc không
 		$http.get('/getunseenmessage')
@@ -192,31 +192,6 @@ angular.module('myApp', ['pascalprecht.translate'])
 					});
 			}
 		};
-		$scope.getFormattedTimeAgo = function(date) {
-			var currentTime = new Date();
-			var activityTime = new Date(date);
-			var timeDiff = currentTime.getTime() - activityTime.getTime();
-			var seconds = Math.floor(timeDiff / 1000);
-			var minutes = Math.floor(timeDiff / (1000 * 60));
-			var hours = Math.floor(timeDiff / (1000 * 60 * 60));
-			var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-			if (days === 0) {
-				if (hours === 0 && minutes < 60) {
-					if (seconds < 60) {
-						return seconds + ' giây trước';
-					} else {
-						return minutes + ' phút trước';
-					}
-				} else if (hours < 24) {
-					return hours + ' giờ trước';
-				}
-			} else if (days === 1) {
-				return 'Hôm qua';
-			} else {
-				return days + ' ngày trước';
-			}
-		};
 
 		$scope.getPostDetails = function(postId) {
 			$http.get('/findpostcomments/' + postId)
@@ -310,6 +285,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 					});
 			}
 		};
+
 		$scope.getFormattedTimeAgo = function(date) {
 			var currentTime = new Date();
 			var activityTime = new Date(date);
@@ -322,7 +298,7 @@ angular.module('myApp', ['pascalprecht.translate'])
 			if (days === 0) {
 				if (hours === 0 && minutes < 60) {
 					if (seconds < 60) {
-						return seconds + ' giây trước';
+						return 'vài giây trước';
 					} else {
 						return minutes + ' phút trước';
 					}
@@ -627,10 +603,13 @@ angular.module('myApp', ['pascalprecht.translate'])
 		//Load thông báo chưa đọc
 		$http.get('/loadnotification')
 			.then(function(response) {
-				$scope.notification = response.data;
-				$scope.notificationNumber = $scope.notification;
-				if($scope.notificationNumber.length != 0){
+				var data = response.data;
+				for(var i = 0; i < data.length; i++){
+					$scope.notification.push(data[i]);	
+					$scope.notificationNumber = $scope.notification;
+					if($scope.notificationNumber.length != 0){
 					$scope.hasNewNotification = true;
+						}
 				}
 			})
 			.catch(function(error) {
@@ -657,7 +636,8 @@ angular.module('myApp', ['pascalprecht.translate'])
 					if ($scope.myAccount.user.userId === data.receiver.userId) {
 						//thêm vào thông báo mới
 						$scope.notification.push(data);
-						
+						//thêm vào tất cả thông báo
+						$scope.allNotification.push(data);
 						//thêm vào mảng để đếm độ số thông báo
 						$scope.notificationNumber.push(data);
 						//cho hiện thông báo mới

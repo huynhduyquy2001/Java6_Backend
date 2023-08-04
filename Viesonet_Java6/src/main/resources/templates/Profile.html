@@ -16,9 +16,7 @@
 	integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
 	crossorigin="anonymous"></script>
 <script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-	integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-	crossorigin="anonymous"></script>
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -77,23 +75,9 @@ ul>.active {
 	border-radius: 50%;
 }
 
-.image-link {
-	display: flex;
-	align-items: center;
-	text-decoration: none;
-	color: #989692;
-	margin-left: 30px;
-}
-
-.content {
-	display: flex;
-	flex-direction: column;
-	margin-left: 10px;
-}
-
 /* CSS */
 .sidebar-scrollable {
-	max-height: 440px;
+	max-height: 550px;
 	/* Đặt chiều cao tối đa của vùng cuộn */
 	overflow-y: auto;
 	/* Tạo thanh cuộn dọc */
@@ -109,8 +93,8 @@ ul>.active {
 	margin: 20px auto;
 }
 
-.sidebar-scrollable::-webkit-scrollbar {
-	width: 5px;
+::-webkit-scrollbar {
+	display: none;
 	/* Độ rộng của thanh cuộn */
 }
 
@@ -237,6 +221,30 @@ video {
 	text-align: center; /* Căn giữa chữ số trong hình tròn */
 	font-size: 13px; /* Kích thước chữ số */
 	line-height: 19px; /* Đảm bảo chữ số được căn giữa theo chiều dọc */
+}
+
+.image-link {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: #5a5957;
+	display: flex;
+}
+
+.notification {
+	border-radius: 10px;
+	background-color: rgba(93, 135, 255, 0.1);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	margin-left: 10px;
+	display: flex;
+}
+
+.content p {
+	margin-bottom: 0;
 }
 </style>
 
@@ -1405,92 +1413,7 @@ video {
 				</div>
 			</div>
 			<!-- Thông báo -->
-	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
-		aria-labelledby="offcanvasRightLabel">
-		<div class="offcanvas-header">
-			<h4 id="offcanvasRightLabel">{{ 'TB' | translate }}</h4>
-			<button type="button" class="btn-close text-reset"
-				data-bs-dismiss="offcanvas" aria-label="Close"></button>
-		</div>
-		<div class="offcanvas-body">
-			<div class="bd-example">
-				<ul class="nav nav-pills" data-toggle="slider-tab" id="myTab"
-					role="tablist">
-					<li class="nav-item" role="presentation">
-						<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-							data-bs-target="#pills-home1" type="button" role="tab"
-							aria-controls="home" aria-selected="true">{{ 'CD' | translate }}</button>
-					</li>
-					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-							data-bs-target="#pills-profile1" type="button" role="tab"
-							aria-controls="profile" aria-selected="false">{{ 'TC' | translate }}</button>
-					</li>
-				</ul>
-				<div class="tab-content" id="pills-tabContent">
-					<div class="tab-pane fade show active" id="pills-home1"
-						role="tabpanel" aria-labelledby="pills-home-tab1">
-						<ul class="sidebar-scrollable mt-3">
-							<li class="sidebar-item notification mt-1 align-items-center d-flex" style="padding: 10px;"
-							 ng-repeat="notify in notification | orderBy:'notificationDate':true">
-							 <a href="#" ng-click="seen(notify.notificationId)" class="image-link"> <img
-									src="/images/{{notify.receiver.avatar}}" width="55" height="55"
-									style="object-fit: cover;" class="rounded-circle">
-									<div class="content">
-										<b style="color: black;">{{ notify.notificationContent }}</b>
-										<p>{{ getFormattedTimeAgo(notify.notificationDate) }}
-										<p>
-									</div>
-							 </a>
-							 <div class="ms-auto">
-									<div class="dropdown">
-										<a href="#" class="link" id="dropdownMenuButton"
-											data-bs-toggle="dropdown" aria-expanded="false"> <i
-											class="fa-regular fa-ellipsis-vertical fa-xl"></i>
-										</a>
-										<ul style="background: whitesmoke;" class="dropdown-menu"
-											aria-labelledby="dropdownMenuButton">
-											<li><a class="dropdown-item" href="#" ng-click="hideNotificationById(notify.notificationId)"> <i class="fa-solid fa-bell-slash"></i> Ẩn thông báo</a></li>
-											</li>
-										</ul>
-									</div>
-							</li>
-						</ul>
-					</div>
-					<div class="tab-pane fade" id="pills-profile1" role="tabpanel"
-						aria-labelledby="pills-profile-tab1">
-						<ul class="sidebar-scrollable mt-3">
-							<li class="sidebar-item mt-1 d-flex align-items-center" style="padding: 10px;"
-								ng-repeat="allnotify in allNotification | orderBy:'notificationDate':true"><a href="#"
-								ng-click="seen(allnotify.notificationId)" class="image-link">
-									<img src="/images/{{allnotify.receiver.avatar}}" alt=""
-									width="55" height="55" class="rounded-circle"
-									style="object-fit: cover;">
-									<div class="content">
-										<b>{{ allnotify.notificationContent }}</b>
-										<p>{{ getFormattedTimeAgo(allnotify.notificationDate) }}
-										<p>
-									</div>
-							</a>
-							<div class="ms-auto">
-									<div class="dropdown">
-										<a href="#" class="link" id="dropdownMenuButton"
-											data-bs-toggle="dropdown" aria-expanded="false"> <i
-											class="fa-regular fa-ellipsis-vertical fa-xl"></i>
-										</a>
-										<ul style="background: whitesmoke;" class="dropdown-menu"
-											aria-labelledby="dropdownMenuButton">
-											<li><a class="dropdown-item" href="#" ng-click="deleteNotification(allnotify.notificationId)"> <i class="fa-solid fa-bell-slash"></i> Xóa thông báo</a></li>
-											</li>
-										</ul>
-									</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div ng-include="'_notification.html'"></div>
 			<!-- Modal báo cáo -->
 			<div class="modal fade" id="modalBaoCao" tabindex="-1" role="dialog"
 				aria-labelledby="modalTitleId" aria-hidden="true">

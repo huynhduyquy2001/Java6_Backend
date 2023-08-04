@@ -28,9 +28,6 @@ public class ChangePasswordController {
 	@Autowired
 	private AuthConfig authConfig;
 
-	@Autowired
-	AuthConfig authConfig; 
-	
 
 	
 	@GetMapping("/changepassword")

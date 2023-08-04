@@ -52,7 +52,7 @@ public class ViolationsService {
 		obj.setReportDate(new Date());
 		obj.setUser(user);
 		obj.setViolationType(violationType);
-		obj.setViolationStatus(false);
+		obj.setViolationStatus(true);
 		violationsDAO.saveAndFlush(obj);
 		return obj;
 	}
