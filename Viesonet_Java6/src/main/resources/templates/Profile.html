@@ -440,7 +440,7 @@ video {
 										Người theo dõi</span>
 								</button>
 							</li>
-							<li class="nav-item" role="presentation">
+							<li class="nav-item" role="presentation">	
 								<button
 									class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
 									id="pills-friends-tab" data-bs-toggle="pill"
@@ -514,7 +514,7 @@ video {
 								</div>
 							</div>
 							<div class="col-lg-8">
-								<div class="card shadow-none border">
+								<div class="card shadow-none border" ng-if=" myUserId == UserInfo.userId">
 									<div class="card-body">
 										<div class="mb-3">
 											<textarea class="form-control"
