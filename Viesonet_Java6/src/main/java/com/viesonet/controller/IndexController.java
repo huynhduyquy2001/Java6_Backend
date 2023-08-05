@@ -363,10 +363,13 @@ public class IndexController {
 		return violationService.report(usersService.getUserById(userId), postsService.findPostById(postId),
 				violationTypesService.getById(violationTypeId));
 	}
+	
 	@GetMapping("/error")
 	public ModelAndView getAccessDenied() {
 		ModelAndView modelAndView = new ModelAndView("error");
 		return modelAndView;
 	} 
+	
+	
 
 }

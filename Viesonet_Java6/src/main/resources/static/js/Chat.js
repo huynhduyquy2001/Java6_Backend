@@ -1,17 +1,4 @@
-angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
-	.config(function($translateProvider, $routeProvider) {
-		$translateProvider.useStaticFilesLoader({
-			prefix: '/json/', // Thay đổi đường dẫn này cho phù hợp
-			suffix: '.json'
-		});
-		// Set the default language
-		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
-		$translateProvider.preferredLanguage(storedLanguage);
-		// Cấu hình các route và template
-
-
-	})
-	.controller('myCtrl', function($scope, $window, $http, $timeout, $translate, $location) {
+app.controller('ChatController', function($scope, $window, $http, $timeout, $translate) {
 		$scope.LikePost = [];
 		$scope.ListUsersMess = [];
 		$scope.ListMessWith = [];
@@ -19,27 +6,7 @@ angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
 		$scope.ListMess = [];
 		$scope.userMess = {};
 		$scope.check = false;
-		var url = window.location.href;
-		var parts = url.split('/');
-		var otherId = parts[parts.length - 1];
-		$scope.otherId = otherId;
-		
-		if (otherId !== 'mess') {
-			$http.post('/getUser/' + otherId)
-				.then(function(response) {
-					$scope.userMess = response.data;
-					return $http.get('/getmess2/' + otherId);
-				})
-				.then(function(response) {
-					$scope.ListMess = response.data;
-					$timeout(function() {
-						$scope.scrollToBottom();
-					}, 100);
-				})
-				.catch(function(error) {
-					console.log(error);
-				});
-		}
+		alert("ok")
 		//Đa ngôn ngữ	
 		$scope.changeLanguage = function(langKey) {
 			$translate.use(langKey);
@@ -268,6 +235,15 @@ angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
 			}
 		};
 
+		$scope.logout = function() {
+			$http.get('/logout')
+				.then(function() {
+					$window.location.href = '/login';
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+		};
 
 		$scope.revokeMessage = function(messId) {
 			$http.post('/removemess/' + messId)
