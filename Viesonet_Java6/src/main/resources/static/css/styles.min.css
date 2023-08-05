@@ -30293,8 +30293,8 @@ textarea.form-control-lg {
 }
 
 .offcanvas,.offcanvas-lg,.offcanvas-md,.offcanvas-sm,.offcanvas-xl,.offcanvas-xxl {
-    --bs-offcanvas-zindex: 1045;
-    --bs-offcanvas-width: 270px;
+    --bs-offcanvas-zindex: 1050;
+    --bs-offcanvas-width: 400px;
     --bs-offcanvas-height: 30vh;
     --bs-offcanvas-padding-x: 1rem;
     --bs-offcanvas-padding-y: 1rem;
@@ -30905,9 +30905,9 @@ textarea.form-control-lg {
 }
 
 .offcanvas-body {
-    flex-grow: 1;
-    padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
-    overflow-y: auto
+	flex-grow: 1;
+    padding: 1rem 1rem;
+    overflow-y: auto;
 }
 
 .placeholder {
@@ -45924,15 +45924,6 @@ html[dir=rtl] .welcome-bg-img {
 
 .navbar-nav .hover-dd:hover .dropdown-menu {
     display: block
-}
-
-.notification {
-    content: "";
-    position: absolute;
-    top: 22px;
-    right: 9px;
-    width: 8px;
-    height: 8px
 }
 
 .notify-badge {
