@@ -139,12 +139,12 @@ ul>.active {
 }
 
 .red-heart {
-	color: red;
+	color: red!important;
 	/* Màu đỏ cho trái tim đã thích */
 }
 
 .gray-heart {
-	color: gray;
+	color: gray!important;
 	/* Màu xám cho trái tim chưa thích */
 }
 
@@ -745,8 +745,9 @@ video {
 											src="/images/{{following.avatar}}" alt=""
 											class="rounded-circle mb-3" width="80" height="80"
 											style="object-fit: cover;">
-											<h5 class="fw-semibold mb-0">{{following.username}}</h5> <span
-											class="text-dark fs-2">{{following.introduction}}</span>
+											<h5 class="fw-semibold mb-0">{{following.username}}</h5> 
+											<span class="text-dark fs-2">{{ following.introduction.length > 30 ? (following.introduction | limitTo: 30) + '...' : following.introduction }}</span>
+
 										</a>
 									</div>
 									<div
