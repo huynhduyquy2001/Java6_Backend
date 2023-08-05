@@ -1,14 +1,14 @@
-angular.module('myApp', ['ngRoute','pascalprecht.translate'])
-.config(function($translateProvider) {
+angular.module('myApp', ['ngRoute', 'pascalprecht.translate'])
+	.config(function($translateProvider) {
 		$translateProvider.useStaticFilesLoader({
 			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
 			suffix: '.json'
 		});
-	// Set the default language
+		// Set the default language
 		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 		$translateProvider.preferredLanguage(storedLanguage);
 	})
-	.controller('myCtrl', function($scope, $http ,$translate) {
+	.controller('myCtrl', function($scope, $http, $translate, $location, $timeout) {
 
 		$scope.Posts = [];
 		$scope.likedPosts = [];
@@ -25,11 +25,11 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 		$scope.notification = [];
 		$scope.allNotification = [];
 		//Đa ngôn ngữ	
-      $scope.changeLanguage = function (langKey) {
-          $translate.use(langKey);
-          localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
-      };
-		
+		$scope.changeLanguage = function(langKey) {
+			$translate.use(langKey);
+			localStorage.setItem('myAppLangKey', langKey); // Lưu ngôn ngữ đã chọn vào localStorages
+		};
+
 		//Load thông báo
 		$scope.hasNewNotification = false;
 		$scope.notificationNumber = [];
@@ -37,12 +37,12 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 		$http.get('/loadnotification')
 			.then(function(response) {
 				var data = response.data;
-				for(var i = 0; i < data.length; i++){
-					$scope.notification.push(data[i]);	
+				for (var i = 0; i < data.length; i++) {
+					$scope.notification.push(data[i]);
 					$scope.notificationNumber = $scope.notification;
-					if($scope.notificationNumber.length != 0){
-					$scope.hasNewNotification = true;
-						}
+					if ($scope.notificationNumber.length != 0) {
+						$scope.hasNewNotification = true;
+					}
 				}
 			})
 			.catch(function(error) {
@@ -74,7 +74,7 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 						//thêm vào mảng để đếm độ số thông báo
 						$scope.notificationNumber.push(data);
 						//cho hiện thông báo mới
-						$scope.hasNewNotification = true; 
+						$scope.hasNewNotification = true;
 					}
 					$scope.$apply();
 
@@ -99,13 +99,14 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 			$scope.hasNewNotification = false;
 			$scope.notificationNumber = [];
 		}
-		
+
 		//Xóa thông báo
 		$scope.deleteNotification = function(notificationId) {
-			$http.delete('/deleteNotification/'+ notificationId)
+			$http.delete('/deleteNotification/' + notificationId)
 				.then(function(response) {
 					$scope.allNotification = $scope.allNotification.filter(function(allNotification) {
-					return allNotification.notificationId !== notificationId;});
+						return allNotification.notificationId !== notificationId;
+					});
 				})
 				.catch(function(error) {
 					// Xử lý lỗi nếu có
@@ -126,8 +127,8 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 		};
 		//Kết nối khi mở trang web
 		$scope.ConnectNotification();
-		
-		
+
+
 		$http.get('/findusers')
 			.then(function(response) {
 				var UserInfo = response.data;
@@ -152,17 +153,8 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 
 		// Hàm cập nhật thông tin người dùng
 		$scope.updateUserInfo = function() {
-			// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
-			$scope.UpdateUser.birthday = $scope.birthday;
-			$http.post('/updateUserInfo', $scope.UpdateUser).then(function(response) {
-				$http.get('/findusers')
-					.then(function(response) {
-						var UserInfo = response.data;
-						$scope.UserInfo = UserInfo;
-					})
-					.catch(function(error) {
-						console.log(error);
-					});
+			// Kiểm tra tên
+			if (!$scope.UpdateUser.username || $scope.UpdateUser.username.length < 3) {
 				const Toast = Swal.mixin({
 					toast: true,
 					position: 'top-end',
@@ -170,35 +162,69 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 					timer: 3000,
 					timerProgressBar: true,
 					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
+						toast.addEventListener('mouseenter', Swal.stopTimer);
+						toast.addEventListener('mouseleave', Swal.resumeTimer);
 					}
-				})
+				});
 				Toast.fire({
-					icon: 'success',
-					title: 'Cập nhật thông tin thành công!'
+					icon: 'error',
+					title: 'Tên phải có ít nhất 3 ký tự!'
+				});
+				return;
+			}
+
+			// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
+			$scope.UpdateUser.birthday = $scope.birthday;
+			$http.post('/updateUserInfo', $scope.UpdateUser)
+				.then(function(response) {
+					$http.get('/findusers')
+						.then(function(response) {
+							var UserInfo = response.data;
+							$scope.UserInfo = UserInfo;
+						})
+						.catch(function(error) {
+							console.log(error);
+						});
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer);
+							toast.addEventListener('mouseleave', Swal.resumeTimer);
+						}
+					});
+					Toast.fire({
+						icon: 'success',
+						title: 'Cập nhật thông tin thành công!'
+					});
 				})
-			}).catch(function(error) {
-				console.error('Error while updating user info:', error);
-			});
+				.catch(function(error) {
+					console.error('Error while updating user info:', error);
+				});
 		};
+
 
 
 		// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
-		$http.get('/getAccInfo').then(function(response) {
-			$scope.AccInfo = response.data;
-			// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
+		$http.get('/getAccInfo')
+			.then(function(response) {
+				$scope.AccInfo = response.data;
+				// Khởi tạo biến $scope.UpdateUser để lưu thông tin cập nhật
 
-			$scope.UpdateAcc = angular.copy($scope.AccInfo);
+				$scope.UpdateAcc = angular.copy($scope.AccInfo);
 
 
-		});
+			})
 
 		// Hàm cập nhật thông tin người dùng
 		$scope.updateAccInfo = function() {
-			// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
-			$http.post('/updateAccInfo/' + $scope.AccInfo.email + "/" + $scope.AccInfo.accountStatus.statusName).then(function(response) {
-				console.log('Account info updated successfully.');
+			// Kiểm tra định dạng email hợp lệ
+			const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			console.log($scope.AccInfo.email);
+			if (!$scope.AccInfo.email || !emailPattern.test($scope.AccInfo.email)) {
 				const Toast = Swal.mixin({
 					toast: true,
 					position: 'top-end',
@@ -206,18 +232,64 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 					timer: 3000,
 					timerProgressBar: true,
 					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
+						toast.addEventListener('mouseenter', Swal.stopTimer);
+						toast.addEventListener('mouseleave', Swal.resumeTimer);
 					}
-				})
+				});
 				Toast.fire({
-					icon: 'success',
-					title: 'Cập nhật tài khoản thành công!'
+					icon: 'error',
+					title: 'Vui lòng nhập định dạng email hợp lệ!'
+				});
+				return;
+			}
+
+			$http.post('/updateAccInfo/' + $scope.AccInfo.email + "/" + $scope.AccInfo.accountStatus.statusName)
+				.then(function(response) {
+					console.log('Account info updated successfully.');
+
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer);
+							toast.addEventListener('mouseleave', Swal.resumeTimer);
+						}
+					});
+					// Cập nhật thành công
+					Toast.fire({
+						icon: 'success',
+						title: 'Cập nhật tài khoản thành công!'
+					});
+
 				})
-			}).catch(function(error) {
-				console.error('Error while updating account info:', error);
-			});
+				.catch(function(error) {
+					console.error('Error while updating account info:', error);
+					if (error.status === 500) {
+						// Lỗi do email đã tồn tại
+						const Toast = Swal.mixin({
+							toast: true,
+							position: 'top-end',
+							showConfirmButton: false,
+							timer: 3000,
+							timerProgressBar: true,
+							didOpen: (toast) => {
+								toast.addEventListener('mouseenter', Swal.stopTimer);
+								toast.addEventListener('mouseleave', Swal.resumeTimer);
+							}
+						});
+						Toast.fire({
+							icon: 'error',
+							title: 'Email đã tồn tại trong hệ thống.'
+						});
+					}
+
+				});
 		};
+
+
 
 		$http.get('/findaccounts')
 			.then(function(response) {
@@ -258,9 +330,8 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 
 		$http.get('/findmyfollow')
 			.then(function(response) {
-				var myAccount = response.data;
-				$scope.myAccount = myAccount;
-				console.log($scope.myAccount);
+				var myUserAccount = response.data;
+				$scope.myUserAccount = myUserAccount;
 			})
 			.catch(function(error) {
 				console.log(error);
@@ -269,11 +340,25 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 			.then(function(response) {
 				var myPosts = response.data;
 				$scope.myPosts = myPosts;
-
-				$scope.totalImagesCount = myPosts.reduce(function(total, post) {
-					return total + post.images.length;
-				}, 0);
-
+				$http.get('/getListImage')
+					.then(function(response) {
+						// Dữ liệu trả về từ API sẽ nằm trong response.data
+						$scope.imageList = response.data;
+						$scope.totalImagesCount = $scope.imageList.length;
+						$scope.displayedImages = $scope.imageList.slice(0, 9);
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+				$http.get('/getListVideo')
+					.then(function(response) {
+						// Dữ liệu trả về từ API sẽ nằm trong response.data
+						$scope.videoList = response.data;
+						$scope.totalVideosCount = $scope.videoList.length;
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
 			});
 
 		$http.get('/countmypost')
@@ -395,7 +480,7 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 				}
 			}).then(function(response) {
 				// Xử lý phản hồi thành công từ máy chủ
-
+				$scope.loadContent();
 			}, function(error) {
 				// Xử lý lỗi
 				console.log(error);
@@ -412,7 +497,7 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 					toast.addEventListener('mouseleave', Swal.resumeTimer)
 				}
 			})
-
+			$scope.loadContent();
 			Toast.fire({
 				icon: 'success',
 				title: 'Bài viết được đăng thành công'
@@ -723,10 +808,31 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 		$scope.changeBackground = function() {
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile02');
-
+			if (fileInput.files.length === 0) {
+				// Hiển thị thông báo lỗi vì không có ảnh được chọn
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'error',
+					title: 'Vui lòng chọn ảnh'
+				});
+				return;
+			}
 			for (var i = 0; i < fileInput.files.length; i++) {
 				formData.append('photoFiles2', fileInput.files[i]);
 			}
+			// Kiểm tra nếu content là undefined hoặc rỗng thì gán một khoảng trắng
+			$scope.content = $scope.content === undefined || $scope.content.trim() === '' ? ' ' : $scope.content;
+
 			formData.append('content', $scope.content);
 
 			$http.post('/updateBackground', formData, {
@@ -737,20 +843,93 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 			}).then(function(response) {
 				// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh bìa)
 				$scope.content = '';
-				alert("Đăng bài và cập nhật ảnh bìa thành công!");
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'success',
+					title: 'Đăng bài và cập nhật ảnh bìa thành công'
+				})
 			}, function(error) {
-				// Xử lý lỗi
-				console.log(error);
-				alert("Đăng bài và cập nhật ảnh bìa thành công!");
+				// Xử lý ngoại lệ "baddata" hoặc lỗi khác mà bạn muốn bắt
+				if (error.status !== "baddata") {
+					console.log(error);
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'success',
+						title: 'Đăng bài và cập nhật ảnh đại diện thành công!'
+					});
+					$scope.content = '';
+					fileInput.value = null;
+					$scope.loadContent();
+				} else {
+					// Nếu lỗi là "baddata", tiến hành hiển thị thông báo thành công
+					$scope.content = '';
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'error',
+						title: 'Đã có lỗi xảy ra lúc cập nhật ảnh bìa!'
+					});
+					$scope.loadContent();
+				}
 			});
 		};
 		$scope.changeAvatar = function() {
 			var formData = new FormData();
 			var fileInput = document.getElementById('inputGroupFile03');
-
+			if (fileInput.files.length === 0) {
+				// Hiển thị thông báo lỗi vì không có ảnh được chọn
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'error',
+					title: 'Vui lòng chọn ảnh'
+				});
+				return;
+			}
 			for (var i = 0; i < fileInput.files.length; i++) {
 				formData.append('photoFiles3', fileInput.files[i]);
 			}
+			// Kiểm tra nếu content là undefined hoặc rỗng thì gán một khoảng trắng
+			$scope.content = $scope.content === undefined || $scope.content.trim() === '' ? ' ' : $scope.content;
+
 			formData.append('content', $scope.content);
 
 			$http.post('/updateAvatar', formData, {
@@ -759,21 +938,88 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 					'Content-Type': undefined
 				}
 			}).then(function(response) {
-				// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh bìa)
+				// Xử lý phản hồi thành công từ máy chủ (cập nhật ảnh đại diện)
 				$scope.content = '';
-				alert("Đăng bài và cập nhật ảnh đại diện thành công!");
-			}, function(error) {
-				// Xử lý lỗi
-				console.log(error);
-				alert("Đăng bài và cập nhật ảnh đại diện thành công1!");
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'success',
+					title: 'Đăng bài và cập nhật ảnh đại diện thành công'
+				});
+				$scope.content = '';
+				fileInput.value = null;
+				$scope.loadContent();
+			}).catch(function(error) {
+				// Xử lý ngoại lệ "baddata" hoặc lỗi khác mà bạn muốn bắt
+				if (error.status !== "baddata") {
+					console.log(error);
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'success',
+						title: 'Đăng bài và cập nhật ảnh đại diện thành công!'
+					});
+					$scope.content = '';
+					fileInput.value = null;
+					$scope.loadContent();
+				} else {
+					// Nếu lỗi là "baddata", tiến hành hiển thị thông báo thành công
+					$scope.content = '';
+					const Toast = Swal.mixin({
+						toast: true,
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+						didOpen: (toast) => {
+							toast.addEventListener('mouseenter', Swal.stopTimer)
+							toast.addEventListener('mouseleave', Swal.resumeTimer)
+						}
+					})
+					Toast.fire({
+						icon: 'error',
+						title: 'Đã có lỗi xảy ra lúc cập nhật ảnh đại diện!'
+					});
+					$scope.loadContent();
+				}
 			});
 		};
+
 
 		$http.get('/getListImage')
 			.then(function(response) {
 				// Dữ liệu trả về từ API sẽ nằm trong response.data
 				$scope.imageList = response.data;
+				$scope.totalImagesCount = $scope.imageList.length;
 				$scope.displayedImages = $scope.imageList.slice(0, 9);
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+
+		$http.get('/getListVideo')
+			.then(function(response) {
+				// Dữ liệu trả về từ API sẽ nằm trong response.data
+				$scope.videoList = response.data;
+				$scope.totalVideosCount = $scope.videoList.length;
 			})
 			.catch(function(error) {
 				console.log(error);
@@ -846,11 +1092,7 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 						$scope.myPosts[index].isActive = false;
 					}
 
-					// Tính lại tổng số lượng ảnh
-					$scope.totalImagesCount = $scope.myPosts.reduce(function(total, post) {
-						return total + post.images.length;
-					}, 0);
-
+					$scope.loadContent();
 					// Hiển thị thông báo SweetAlert2
 					Swal.fire({
 						icon: 'success',
@@ -886,6 +1128,34 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 				$scope.sendReplyForComment(receiverId, commentId, replyContent);
 			}
 		};
+		$scope.loadContent = function() {
+			console.log(1);
+			$http.get('/getmypost')
+				.then(function(response) {
+					var myPosts = response.data;
+					$scope.myPosts = myPosts;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			$http.get('/getListImage')
+				.then(function(response) {
+					$scope.imageList = response.data;
+					$scope.totalImagesCount = $scope.imageList.length;
+					$scope.displayedImages = $scope.imageList.slice(0, 9);
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			$http.get('/getListVideo')
+				.then(function(response) {
+					$scope.videoList = response.data;
+					$scope.totalVideosCount = $scope.videoList.length;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+		};
 
 		//---------------------------------------------------------------------------
 		$scope.goToProfile = function(userId) {
@@ -902,8 +1172,12 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 			$scope.UserInfo = [];
 			$scope.AccInfo = {};
 			$scope.myPosts = [];
+			$scope.videoList = [];
 			$scope.selectedPostId = '';
 			console.log(userId)
+			$timeout(function() {
+				$location.path(userId);
+			}, 0);
 			$http.post('/getOtherUserId/' + userId)
 				.then(function(response) {
 					var UserInfo = response.data;
@@ -931,7 +1205,6 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 					$scope.totalImagesCount = myPosts.reduce(function(total, post) {
 						return total + post.images.length;
 					}, 0);
-					console.log($scope.totalImagesCount)
 
 				});
 			//
@@ -989,48 +1262,48 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 			},
 
 				//
-			$scope.followUser = function(followingId) {
+				$scope.followUser = function(followingId) {
+					var currentUserId = $scope.myUserId;
+					var data = {
+						followerId: currentUserId,
+						followingId: followingId
+					};
+
+					$http.post('/followOther', data)
+						.then(function(response) {
+
+							// Thêm follow mới đã chuyển đổi vào myListFollow
+							$scope.myListFollow = response.data;
+
+							// Cập nhật trạng thái follow và cập nhật giao diện
+							$scope.updateFollowStatus();
+							$scope.refreshFollowList();
+						})
+						.catch(function(error) {
+							console.log(error);
+						});
+				};
+
+			$scope.unfollowUser = function(followingId) {
 				var currentUserId = $scope.myUserId;
 				var data = {
 					followerId: currentUserId,
 					followingId: followingId
 				};
-
-				$http.post('/followOther', data)
+				$http.delete('/unfollowOther', { data: data, headers: { 'Content-Type': 'application/json' } })
 					.then(function(response) {
+						// Cập nhật lại danh sách follow sau khi xóa thành công
+						$scope.myListFollow = $scope.myListFollow.filter(function(follow) {
+							return !(follow.followerId === currentUserId && follow.followingId === followingId);
+						});
+						console.log("Unfollow dc nhen")
 
-						// Thêm follow mới đã chuyển đổi vào myListFollow
-						$scope.myListFollow = response.data;
-
-						// Cập nhật trạng thái follow và cập nhật giao diện
-						$scope.updateFollowStatus();
-						$scope.refreshFollowList();
+						$scope.refreshFollowList(); // Cập nhật trạng thái isFollowing cho các người dùng còn lại
 					})
 					.catch(function(error) {
 						console.log(error);
 					});
 			};
-
-		$scope.unfollowUser = function(followingId) {
-			var currentUserId = $scope.myUserId;
-			var data = {
-				followerId: currentUserId,
-				followingId: followingId
-			};
-			$http.delete('/unfollowOther', { data: data, headers: { 'Content-Type': 'application/json' } })
-				.then(function(response) {
-					// Cập nhật lại danh sách follow sau khi xóa thành công
-					$scope.myListFollow = $scope.myListFollow.filter(function(follow) {
-						return !(follow.followerId === currentUserId && follow.followingId === followingId);
-					});
-					console.log("Unfollow dc nhen")
-
-					$scope.refreshFollowList(); // Cập nhật trạng thái isFollowing cho các người dùng còn lại
-				})
-				.catch(function(error) {
-					console.log(error);
-				});
-		};
 			//
 			$http.get('/getallfollow')
 				.then(function(response) {
@@ -1057,11 +1330,21 @@ angular.module('myApp', ['ngRoute','pascalprecht.translate'])
 					// Dữ liệu trả về từ API sẽ nằm trong response.data
 					$scope.imageList = response.data;
 					$scope.displayedImages = $scope.imageList.slice(0, 9);
+					$scope.totalImagesCount = $scope.imageList.length;
 				})
 				.catch(function(error) {
 					console.log(error);
 				});
-
+			//
+			$http.post('/getListVideo/' + userId)
+				.then(function(response) {
+					// Dữ liệu trả về từ API sẽ nằm trong response.data
+					$scope.videoList = response.data;
+					$scope.totalVideosCount = $scope.videoList.length;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
 			//Lấy danh sách vi phạm
 			$http.get('/getviolations')
 				.then(function(response) {
