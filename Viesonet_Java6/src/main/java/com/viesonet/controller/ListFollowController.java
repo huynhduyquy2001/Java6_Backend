@@ -44,6 +44,9 @@ public class ListFollowController {
 
 	@Autowired
 	private UsersService UsersService;
+	
+	@Autowired
+	private AuthConfig authConfig;
 
 	@GetMapping("/user/listFollow")	
 	public ModelAndView getHomePage() {

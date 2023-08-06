@@ -199,18 +199,19 @@ div.dropdown-menu.baoCao {
 					<div style="width: 85%; text-align: left;" data-bs-toggle="modal">
 						<!--Tìm kiếm-->
 						<div style="width: 85%; text-align: left;" data-bs-toggle="modal">
-							<form class="position-relative">
+							<form class="position-relative" ng-submit="LS()"
+								onsubmit="return validateSearch()">
 								<input type="search" class="form-control search-chat py-2 ps-5"
 									ng-blur="checkInput()" ng-focus="resetError()"
-									ng-submit="LS()" ng-keyup="searchUser()" ng-model="username"
-									id="text-srh" placeholder="{{ 'TK' | translate }}"
-									style="border: 1px solid #ccc;"> <a ng-click="LS()"><i style="cursor: pointer;" class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
-									<!--  <button ng-click="LS()">Tìm kiếm</button> -->	
+									ng-keyup="searchUser()" ng-model="username" id="text-srh"
+									placeholder="{{ 'TK' | translate }}"
+									style="border: 1px solid #ccc;"> <a ng-click="LS()"><i
+									style="cursor: pointer;"
+									class="fa-solid fa-magnifying-glass fa-2xs position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i></a>
+								<!--  <button ng-click="LS()">Tìm kiếm</button> -->
 							</form>
-							<span ng-show="showError" style="color: red;">Vui lòng nhập kí tự ạ.</span>
-  								
 						</div>
-						
+					</div>
 				</center>
 				<center>
 					<div class="user-container">
@@ -260,6 +261,21 @@ div.dropdown-menu.baoCao {
  //     console.log("Load Error", error);
  // });
 </script>
+<script>
+  function validateSearch() {
+    var inputElement = document.getElementById("text-srh");
+
+    // Lấy giá trị của input (username)
+    var username = inputElement.value.trim();
+
+    // Kiểm tra nếu người dùng không nhập kí tự
+    if (username === "") {
+      return false; // Ngăn chặn việc submit form
+    }
+    // Nếu người dùng đã nhập kí tự thì cho phép submit form
+    return true;
+  }
+</script>	
 <script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script
