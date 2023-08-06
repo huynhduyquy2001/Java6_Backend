@@ -1,8 +1,10 @@
 package com.viesonet.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -10,14 +12,20 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import com.viesonet.AuthConfig;
 import com.viesonet.entity.Accounts;
@@ -49,6 +57,7 @@ public class MessController {
 		ModelAndView modelAndView = new ModelAndView("Message");
 		return modelAndView;
 	}
+	
 
 	@MessageMapping("/sendnewmess")
 	@SendToUser("/queue/receiveMessage")
@@ -80,7 +89,8 @@ public class MessController {
 	}
 
 	@PostMapping("/getUser/{userId}")
-	public Users findUserById(@PathVariable("userId") String userId) {
+	public Users findUserById(@PathVariable("userId") String userId, Model model) {
+		System.out.println("hả:"+(String) model.getAttribute("userId"));
 		return usersService.findUserById(userId);
 	}
 
@@ -98,5 +108,12 @@ public class MessController {
 	@PostMapping("/removemess/{messId}")
 	public Message reMoveMess(@PathVariable("messId") int messId) {
 		return messageService.removeMess(messageService.getMessById(messId));
+	}
+	
+	@RequestMapping(value = "/mess/{otherId}", method = RequestMethod.GET)
+	public ModelAndView loadUserPage(@PathVariable("otherId") String id) {
+	    ModelAndView modelAndView = new ModelAndView("Message.html");
+	    modelAndView.addObject("otherId", id);
+	    return modelAndView;
 	}
 }

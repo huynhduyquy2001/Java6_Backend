@@ -41,10 +41,12 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
 <script src="js/translate.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
@@ -136,6 +138,7 @@ div.dropdown-menu.baoCao {
 .content p {
 	margin-bottom: 0;
 }
+
 .sidebar-scrollable {
 	max-height: 550px; /* Đặt chiều cao tối đa của vùng cuộn */
 	overflow-y: auto; /* Tạo thanh cuộn dọc */
@@ -164,8 +167,6 @@ div.dropdown-menu.baoCao {
 	<div style="transition: 0.5s;">
 		<div class="row ">
 			<div ng-include="'_menuLeft.html'"></div>
-
-
 
 			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
 				style="padding: 0; position: fixed; top: 0; z-index: 101">
@@ -210,11 +211,8 @@ div.dropdown-menu.baoCao {
 															<p class="mb-0 fs-3">Thông tin điều khoản</p>
 														</a> <a href="#"
 															class="d-flex align-items-center gap-2 dropdown-item">
-															<i class="ti ti-list-check fs-6"></i>
 															<p class="mb-0 fs-3">Nâng cấp</p>
-														</a>
-														</a> 
-														<a ng-click="logout()"
+														</a> </a> <a ng-click="logout()"
 															class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
 															xuất</a>
 
@@ -252,8 +250,8 @@ div.dropdown-menu.baoCao {
 											style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
 									</center>
 									<textarea class="form-control"
-										placeholder="{{ 'HV' | translate }}"
-										id="floatingTextarea2" style="height: 137px; opacity: 0.4"></textarea>
+										placeholder="{{ 'HV' | translate }}" id="floatingTextarea2"
+										style="height: 137px; opacity: 0.4"></textarea>
 								</form>
 								<div class="d-flex  gap-2"
 									style="margin-top: 5px; text-align: right;"></div>
@@ -298,7 +296,8 @@ div.dropdown-menu.baoCao {
 													<br> <small style="font-size: 12px; color: #65676b">
 														<b>{{ 'ST' | translate }}:</b> {{ post.user.address }}
 													</small> <br> <small style="font-size: 12px; color: #65676b">
-														<b>{{ 'MQH' | translate }}:</b> {{ post.user.relationship }}
+														<b>{{ 'MQH' | translate }}:</b> {{ post.user.relationship
+														}}
 													</small>
 
 												</div>
@@ -315,7 +314,8 @@ div.dropdown-menu.baoCao {
 												<div class="dropdown-menu" aria-labelledby="triggerId">
 													<a class="dropdown-item"
 														ng-click="openModalBaoCao(post.postId)"
-														style="color: #E53F31; font-size: 13px">{{ 'BCVP' | translate }}</a>
+														style="color: #E53F31; font-size: 13px">{{ 'BCVP' |
+														translate }}</a>
 												</div>
 											</div>
 										</div>
@@ -406,10 +406,10 @@ div.dropdown-menu.baoCao {
 													style="color: #f50000;">❤️&nbsp;{{ post.likeCount }}</span>
 												<span ng-click="likePost(post.postId)"
 													ng-if="likedPosts.indexOf(post.postId.toString()) === -1">🤍&nbsp;{{
-													post.likeCount }}</span> 
-													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-													<span ng-click="getPostDetails(post.postId)"><i class="fa-light fa-comments" ></i>&nbsp;{{ post.commentCount}}</span> 
-													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
+													post.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+													ng-click="getPostDetails(post.postId)"><i
+													class="fa-light fa-comments"></i>&nbsp;{{
+													post.commentCount}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span><i
 													class="fa-light fa-share-nodes"></i></span>
 											</div>
 										</div>
@@ -469,10 +469,12 @@ div.dropdown-menu.baoCao {
 
 								<ul style="font-size: 13px">
 									<li><b>{{ 'TP' | translate }}:</b> <span id="city"></span></li>
-									<li><b>{{ 'NDD' | translate }}:</b> <span id="temperature"></span> °C</li>
+									<li><b>{{ 'NDD' | translate }}:</b> <span id="temperature"></span>
+										°C</li>
 									<li><b>{{ 'MT' | translate }}:</b> <span id="description"></span></li>
 									<li><b>{{ 'DA' | translate }}:</b> <span id="humidity"></span>%</li>
-									<li><b>{{ 'TDG' | translate }}:</b> <span id="wind-speed"></span> m/s</li>
+									<li><b>{{ 'TDG' | translate }}:</b> <span id="wind-speed"></span>
+										m/s</li>
 								</ul>
 							</div>
 						</div>
@@ -504,7 +506,8 @@ div.dropdown-menu.baoCao {
 								<div style="display: flex; align-items: center;">
 									<div class="circle2 mb-2"
 										style="margin-bottom: 0 !important; background-color: green"></div>
-									&nbsp; <small style="font-size: 12px"> {{ 'DHD' | translate }} </small>
+									&nbsp; <small style="font-size: 12px"> {{ 'DHD' |
+										translate }} </small>
 								</div>
 							</div>
 						</div>
@@ -515,12 +518,13 @@ div.dropdown-menu.baoCao {
 						<br>
 						<div id="dropArea" ondrop="dropHandler(event);"
 							ondragover="dragOverHandler(event);"
-							ondragleave="dragLeaveHandler(event);">{{ 'KEO' | translate }}</div>
+							ondragleave="dragLeaveHandler(event);">{{ 'KEO' | translate
+							}}</div>
 
-						<div class="input-group mb-3">
+						<div hidden class="input-group mb-3">
 							<label class="input-group-text" for="inputGroupFile01"> <i
 								class="fa-regular fa-image"></i>{{ 'HAVD' | translate }}
-							</label> <input hidden type="file" class="form-control" name="mediaFiles"
+							</label> <input type="file" class="form-control" name="mediaFiles"
 								id="inputGroupFile01" multiple>
 						</div>
 
@@ -530,7 +534,8 @@ div.dropdown-menu.baoCao {
 				<div class="modal-footer">
 					<button ng-click="post()" style="width: 500px; border: none;"
 						class="btn-blue" data-bs-target="#exampleModalToggle2"
-						data-bs-toggle="modal" data-bs-dismiss="modal">{{ 'DB' | translate }}</button>
+						data-bs-toggle="modal" data-bs-dismiss="modal">{{ 'DB' |
+						translate }}</button>
 				</div>
 			</div>
 		</div>
@@ -624,7 +629,8 @@ div.dropdown-menu.baoCao {
 												id="triggerId" data-bs-toggle="dropdown"
 												aria-haspopup="true" aria-expanded="false"></span>
 											<div class="dropdown-menu" aria-labelledby="triggerId">
-												<a class="dropdown-item" href="#">{{ 'BCVP' | translate }}</a>
+												<a class="dropdown-item" href="#">{{ 'BCVP' | translate
+													}}</a>
 											</div>
 										</div>
 									</div>
@@ -636,15 +642,12 @@ div.dropdown-menu.baoCao {
 											class="ip form-control" style="width: 80%;"
 											placeholder="{{ 'BLCB' | translate }}" required="">
 										<button class="btn01" type="submit"
-											style="background: #007ACC; color: white;height: 70%;
-    transform: translateY(80%);
-    border-radius: 3px;
-    margin-left: 5px;"
-											ng-click="addComment(postDetails.postId)">{{ 'BL' | translate }}</button>
+											style="background: #007ACC; color: white; height: 70%; transform: translateY(60%); border-radius: 3px; margin-left: 5px; padding: 3px"
+											ng-click="addComment(postDetails.postId)">{{ 'BL' |
+											translate }}</button>
 									</div>
 								</form>
 							</div>
-							
 							<div
 								style="overflow-y: scroll; max-height: 60vh; padding-right: 0.2rem">
 								<div
@@ -814,14 +817,111 @@ div.dropdown-menu.baoCao {
 		</div>
 	</div>
 	<!-- Thông báo -->
-	<div ng-include="'_notification.html'"></div>
+	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+		aria-labelledby="offcanvasRightLabel">
+		<div class="offcanvas-header">
+			<h4 id="offcanvasRightLabel">{{ 'TB' | translate }}</h4>
+			<button type="button" class="btn-close text-reset"
+				data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<div class="bd-example">
+				<ul class="nav nav-pills" data-toggle="slider-tab" id="myTab"
+					role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+							data-bs-target="#pills-home1" type="button" role="tab"
+							aria-controls="home" aria-selected="true">{{ 'CD' |
+							translate }}</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+							data-bs-target="#pills-profile1" type="button" role="tab"
+							aria-controls="profile" aria-selected="false">{{ 'TC' |
+							translate }}</button>
+					</li>
+				</ul>
+				<div class="tab-content" id="pills-tabContent">
+					<div class="tab-pane fade show active" id="pills-home1"
+						role="tabpanel" aria-labelledby="pills-home-tab1">
+						<ul class="sidebar-scrollable mt-3">
+							<li
+								class="sidebar-item notification mt-1 align-items-center d-flex"
+								style="padding: 10px;"
+								ng-repeat="notify in notification | orderBy:'notificationDate':true">
+								<a href="#" ng-click="seen(notify.post.postId)"
+								class="image-link"> <img
+									src="/images/{{notify.receiver.avatar}}" width="55" height="55"
+									style="object-fit: cover;" class="rounded-circle">
+									<div class="content">
+										<b style="color: black;">{{ notify.notificationContent }}</b>
+										<p>{{ getFormattedTimeAgo(notify.notificationDate) }}
+										<p>
+									</div>
+							</a>
+								<div class="ms-auto">
+									<div class="dropdown">
+										<a href="#" class="link" id="dropdownMenuButton"
+											data-bs-toggle="dropdown" aria-expanded="false"> <i
+											class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+										</a>
+										<ul style="background: whitesmoke;" class="dropdown-menu"
+											aria-labelledby="dropdownMenuButton">
+											<li><a class="dropdown-item" href="#"
+												ng-click="hideNotificationById(notify.notificationId)">
+													<i class="fa-solid fa-bell-slash"></i> Ẩn thông báo
+											</a></li>
+							</li>
+						</ul>
+					</div>
+					</li>
+					</ul>
+				</div>
+				<div class="tab-pane fade" id="pills-profile1" role="tabpanel"
+					aria-labelledby="pills-profile-tab1">
+					<ul class="sidebar-scrollable mt-3">
+						<li class="sidebar-item mt-1 d-flex align-items-center"
+							style="padding: 10px;"
+							ng-repeat="allnotify in allNotification | orderBy:'notificationDate':true"><a
+							href="#" ng-click="seen(allnotify.post.postId)"
+							class="image-link"> <img
+								src="/images/{{allnotify.receiver.avatar}}" alt="" width="55"
+								height="55" class="rounded-circle" style="object-fit: cover;">
+								<div class="content">
+									<b>{{ allnotify.notificationContent }}</b>
+									<p>{{ getFormattedTimeAgo(allnotify.notificationDate) }}
+									<p>
+								</div>
+						</a>
+							<div class="ms-auto">
+								<div class="dropdown">
+									<a href="#" class="link" id="dropdownMenuButton"
+										data-bs-toggle="dropdown" aria-expanded="false"> <i
+										class="fa-regular fa-ellipsis-vertical fa-xl"></i>
+									</a>
+									<ul style="background: whitesmoke;" class="dropdown-menu"
+										aria-labelledby="dropdownMenuButton">
+										<li><a class="dropdown-item" href="#"
+											ng-click="deleteNotification(allnotify.notificationId)">
+												<i class="fa-solid fa-bell-slash"></i> Xóa thông báo
+										</a></li></li>
+					</ul>
+				</div>
+				</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
 	<!-- Modal báo cáo -->
 	<div class="modal fade" id="modalBaoCao" tabindex="-1" role="dialog"
 		aria-labelledby="modalTitleId" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="modalTitleId">{{ 'NDTC' | translate }}</h5>
+					<h5 class="modal-title" id="modalTitleId">{{ 'NDTC' |
+						translate }}</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -948,26 +1048,27 @@ div.dropdown-menu.baoCao {
 			event.target.classList.remove('active');
 		}
 		function toggleColor(link) {
-			  var allLinks = document.getElementsByClassName("colorful-link");
+			var allLinks = document.getElementsByClassName("colorful-link");
 
-			  for (var i = 0; i < allLinks.length; i++) {
-			    var currentLink = allLinks[i];
-			    currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
+			for (var i = 0; i < allLinks.length; i++) {
+				var currentLink = allLinks[i];
+				currentLink.classList.remove("active"); // Loại bỏ lớp 'active' từ tất cả các thẻ
 
-			    if (currentLink === link) {
-			      link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
-			    }
-			  }
+				if (currentLink === link) {
+					link.classList.add("active"); // Thêm lớp 'active' vào thẻ được bấm
+				}
 			}
+		}
 	</script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-	<script src="js/Index.js">
+	<script src="/js/Index.js">
+		
 	</script>
-	<script src="js/addActive.js">
+	<script src="/js/addActive.js">
 		
 	</script>
 

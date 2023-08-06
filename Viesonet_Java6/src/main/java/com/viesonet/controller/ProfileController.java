@@ -205,16 +205,16 @@ public class ProfileController {
 	    follow.setFollowDate(new Date());
 	    
 	    followService.saveFollow(follow);
-	    
+	    //Cập nhật danh sách follow
 	    List<Follow> listFollow = followService.findAllFollow();
 	    List<FollowDTO> listFollowDTO = new ArrayList<>();
 
 	    for (Follow follow1 : listFollow) {
 	        FollowDTO followDTO1 = new FollowDTO();
-	        followDTO1.setFollowId(follow.getFollowId());
-	        followDTO1.setFollowerId(follow.getFollower().getUserId());
-	        followDTO1.setFollowingId(follow.getFollowing().getUserId());
-	        followDTO1.setFollowDate(follow.getFollowDate());
+	        followDTO1.setFollowId(follow1.getFollowId());
+	        followDTO1.setFollowerId(follow1.getFollower().getUserId());
+	        followDTO1.setFollowingId(follow1.getFollowing().getUserId());
+	        followDTO1.setFollowDate(follow1.getFollowDate());
 
 	        listFollowDTO.add(followDTO1);
 	    }
@@ -347,6 +347,13 @@ public class ProfileController {
 		return imagesService.getImagesByUserId(account.getUserId());
     }
 	
+	//Lấy danh sách video theo UserId
+	@GetMapping("/getListVideo")
+    public List<Images> getVideosByUserIdFromSession(Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication); 
+		return imagesService.getVideosByUserId(account.getUserId());
+    }
+	
     //Cập nhật bài viết
     @PutMapping("/updatePost/{postId}")
     public void updatePost(@PathVariable int postId, @RequestBody Posts posts) {
@@ -426,7 +433,11 @@ public class ProfileController {
     public List<Images> getImagesByUserId(@PathVariable String userId) {
          return imagesService.getImagesByUserId(userId);
     }
-	
+	//Lấy danh sách video theo UserId
+	@PostMapping("/getListVideo/{userId}")
+    public List<Images> getVideosByUserId(@PathVariable String userId) {
+		return imagesService.getVideosByUserId(userId);
+    }
 	@GetMapping("/user/getviolations")
 	public List<ViolationTypes> getViolations() {
 		return violationTypesService.getViolations();

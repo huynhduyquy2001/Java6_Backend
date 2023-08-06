@@ -33,39 +33,42 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<script
+<script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script><title>Trang chủ</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<title>Trang chủ</title>
 </head>
 <style>
 body {
 	font-family: 'Plus Jakarta Sans', sans-serif;
 }
+
 .notification {
 	border-radius: 10px;
 	background-color: rgba(93, 135, 255, 0.1);
 }
-.modal-backdrop{
+
+.modal-backdrop {
 	z-index: 0;
 }
+
 .content p {
 	margin-bottom: 0;
 }
+
 .btnuf:hover {
 	color: red;
 }
 
 .btnf:hover {
 	color: blue;
-}
-
-ul>.active {
-	border-bottom: 2px solid #5D87FF;
-	color: #5D87FF !important;
 }
 
 .circle {
@@ -123,12 +126,12 @@ ul>.active {
 }
 
 .red-heart {
-	color: red;
+	color: red !important;
 	/* Màu đỏ cho trái tim đã thích */
 }
 
 .gray-heart {
-	color: gray;
+	color: gray !important;
 	/* Màu xám cho trái tim chưa thích */
 }
 
@@ -207,6 +210,7 @@ video {
 	display: inline-block;
 	transition: transform 0.5s;
 }
+
 .circle {
 	position: absolute; /* Đảm bảo thẻ con có vị trí tuyệt đối */
 	top: 14px;
@@ -252,7 +256,8 @@ video {
 	<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
 		data-navbarbg="skin6" data-sidebartype="full"
 		data-sidebar-position="fixed" data-header-position="fixed">
-		<div ng-include="'/_menuLeft.html'" style="position: fixed; z-index: 0"></div>
+		<div ng-include="'/_menuLeft.html'"
+			style="position: fixed; z-index: 0"></div>
 		<nav ng-include="'/_header.html'" class="navbar navbar-expand-sm "
 			style="padding: 0; position: fixed; top: 0; z-index: 101">
 			<div class="container" style="width: 100%; padding: 0;">
@@ -423,20 +428,22 @@ video {
 							</div>
 						</div>
 						<ul
-							class="nav nav-pills user-profile-tab justify-content-end mt-2 rounded-2 text-dark"
+							class="nav nav-pills user-profile-tab justify-content mt-2 rounded-2 text-dark"
 							id="pills-tab" role="tablist" style="background-color: #ebf3fe;">
-							<li class="nav-item active" role="presentation">
+							<li class="nav-item flex-fill active" role="presentation">
 								<button
 									class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 active"
 									id="pills-profile-tab" data-bs-toggle="pill"
 									data-bs-target="#pills-profile" type="button" role="tab"
 									aria-controls="pills-profile" aria-selected="true">
-									<i class="fa-regular fa-square-user" style="color: #5d87ff;"></i>
-									<span class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
-										Hồ sơ</span>
+									<div class="d-flex align-items-center justify-content-center">
+										<i class="fa-regular fa-square-user" style="color: #5d87ff;"></i>
+										<span class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
+											Hồ sơ</span>
+									</div>
 								</button>
 							</li>
-							<li class="nav-item" role="presentation">
+							<li class="nav-item flex-fill" role="presentation">
 								<button
 									class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
 									id="pills-followers-tab" data-bs-toggle="pill"
@@ -448,7 +455,7 @@ video {
 										Người theo dõi</span>
 								</button>
 							</li>
-							<li class="nav-item" role="presentation">
+							<li class="nav-item flex-fill" role="presentation">
 								<button
 									class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
 									id="pills-friends-tab" data-bs-toggle="pill"
@@ -460,7 +467,7 @@ video {
 										Theo dõi</span>
 								</button>
 							</li>
-							<li class="nav-item me-1" role="presentation">
+							<li class="nav-item flex-fill" role="presentation">
 								<button
 									class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
 									id="pills-gallery-tab" data-bs-toggle="pill"
@@ -470,6 +477,17 @@ video {
 									<i class="fa-solid fa-rectangle-vertical-history"
 										style="color: #5d87ff;"></i> <span class="d-none d-md-block"
 										style="color: #5D87FF;">&nbsp; Bộ sưu tập</span>
+								</button>
+							</li>
+							<li class="nav-item " role="presentation">
+								<button
+									class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
+									id="pills-video-tab" data-bs-toggle="pill"
+									data-bs-target="#pills-video" type="button" role="tab"
+									aria-controls="pills-video" aria-selected="false" tabindex="-1">
+									<i class="fa-solid fa-video" style="color: #5d87ff;"></i> <span
+										class="d-none d-md-block" style="color: #5D87FF;">&nbsp;
+										Video</span>
 								</button>
 							</li>
 						</ul>
@@ -522,7 +540,8 @@ video {
 								</div>
 							</div>
 							<div class="col-lg-8">
-								<div class="card shadow-none border">
+								<div class="card shadow-none border"
+									ng-if=" myUserId == UserInfo.userId">
 									<div class="card-body">
 										<div class="mb-3">
 											<textarea class="form-control"
@@ -689,11 +708,6 @@ video {
 								Người theo dõi <span
 									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.followers}}</span>
 							</h3>
-							<form class="position-relative">
-								<input type="text" class="form-control search-chat py-2 ps-5"
-									id="text-srh" placeholder="Tìm kiếm?"> <i
-									class="fa-solid fa-magnifying-glass fa-sm position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
-							</form>
 						</div>
 						<div class="row">
 							<div class=" col-md-6 col-xl-4" ng-repeat="follower in followers"
@@ -736,11 +750,6 @@ video {
 								Theo dõi <span
 									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.following}}</span>
 							</h3>
-							<form class="position-relative">
-								<input type="text" class="form-control search-chat py-2 ps-5"
-									id="text-srh" placeholder="Tìm kiếm?"> <i
-									class="fa-solid fa-magnifying-glass fa-sm position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
-							</form>
 						</div>
 						<div class="row">
 
@@ -754,7 +763,10 @@ video {
 											class="rounded-circle mb-3" width="80" height="80"
 											style="object-fit: cover;">
 											<h5 class="fw-semibold mb-0">{{following.username}}</h5> <span
-											class="text-dark fs-2">{{following.introduction}}</span>
+											class="text-dark fs-2">{{
+												following.introduction.length > 30 ? (following.introduction
+												| limitTo: 30) + '...' : following.introduction }}</span>
+
 										</a>
 									</div>
 									<div
@@ -781,7 +793,7 @@ video {
 						<div
 							class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
 							<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
-								Bộ sưu tập <span
+								Hình ảnh <span
 									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">
 									{{totalImagesCount}}</span>
 							</h3>
@@ -789,7 +801,6 @@ video {
 
 						<div class="row">
 							<div class="rounded-2 d-flex flex-wrap">
-								<div></div>
 								<div class="col-4 d-flex" ng-repeat="img in imageList">
 									<img ng-src="/images/{{img.imageUrl}}"
 										class="img-fluid w-100 me-1"
@@ -798,6 +809,29 @@ video {
 								</div>
 							</div>
 						</div>
+					</div>
+					<div class="tab-pane fade" id="pills-video" role="tabpanel"
+						aria-labelledby="pills-video-tab" tabindex="0">
+						<div
+							class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+							<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
+								Video<span
+									class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">
+									{{totalVideosCount}}</span>
+							</h3>
+						</div>
+						<div class="row">
+							<div class="rounded-2 d-flex flex-wrap">
+								<div class="col-4 d-flex" ng-repeat="vid in videoList">
+									<video controls class="w-100" ng-src="/images/{{vid.imageUrl}}"
+										style="border-radius: 10px; padding: 5px;"> Sorry,
+										your browser doesn't support embedded videos.
+									</video>
+								</div>
+
+							</div>
+						</div>
+
 					</div>
 					<!-- <div class="col-3" style="border: 1px solid red;"> </div> -->
 				</div>
@@ -857,9 +891,16 @@ video {
 								</div>
 								<div ng-if="selectedPost.images.length === 1">
 									<!-- Single image HTML code -->
-									<img ng-click="getPostDetails(selectedPost.postId)"
+									<img ng-if="selectedPost.images[0].type === true" ng-click="getPostDetails(selectedPost.postId)"
 										ng-src="/images/{{ selectedPost.images[0].imageUrl }}"
 										class="w-100" alt="Single image">
+									<video ng-if="selectedPost.images[0].type === false"
+										ng-click="getPostDetails(selectedPost.postId)" autoplay controls
+										style="width: 100%;">
+										<source ng-src="images/{{ selectedPost.images[0].imageUrl }}"
+											type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
 								</div>
 
 								<!-- Hiển thị nội dung của bài viết -->
@@ -940,7 +981,7 @@ video {
 							</div>
 							<div class="modal-footer">
 								<button ng-click="post()" style="width: 500px; border: none;"
-									class="btn-blue" data-bs-target="#exampleModalToggle2"
+									class="btn btn-primary" data-bs-target="#exampleModalToggle2"
 									data-bs-toggle="modal" data-bs-dismiss="modal">Đăng
 									bài</button>
 							</div>
@@ -989,7 +1030,8 @@ video {
 										<label class="input-group-text" for="inputGroupFile03">
 											<i class="fa-regular fa-image"></i>Hình ảnh
 										</label> <input type="file" class="form-control" name="photoFiles3"
-											id="inputGroupFile03" multiple accept="image/*">
+											id="inputGroupFile03" accept="image/*"
+											onchange="displayAvatar()">
 									</div>
 								</form>
 							</div>
@@ -1036,15 +1078,17 @@ video {
 										style="width: 100%; border: 0px; outline: none; border-bottom: 1px solid #ccc; background: transparent; resize: none;">Đổi ảnh bìa</textarea>
 									<br>
 									<center>
-										<img id="img" src="" width="45%"
+										<img id="imgBackground" src="" width="100%"
 											style="border-radius: 10px; border: 1px solid rgb(184, 182, 182)">
 									</center>
+									<br>
 									<div id="imageList"></div>
 									<div class="input-group mb-3">
 										<label class="input-group-text" for="inputGroupFile02">
 											<i class="fa-regular fa-image"></i>Hình ảnh
-										</label> <input type="file" class="form-control" name="photoFiles2"
-											id="inputGroupFile02" multiple accept="image/*">
+										</label> </label> <input type="file" class="form-control" name="photoFiles2"
+											id="inputGroupFile02" accept="image/*"
+											onchange="displayBackground()">
 									</div>
 								</form>
 							</div>
@@ -1057,7 +1101,7 @@ video {
 						</div>
 					</div>
 				</div>
-
+				<!-- Modal bài viết chi tiết -->
 				<div class="modal fade" id="chiTietBaiViet" tabindex="-1"
 					role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
 					<div class="modal-dialog modal-xl modal-fullscreen" role="document">
@@ -1067,7 +1111,6 @@ video {
 									<div ng-if="postDetails.images.length > 0"
 										class="col-md-6 trai "
 										style="overflow-y: scroll; max-height: 100vh">
-										<center>
 											<center>
 												<div ng-if="postDetails.images.length > 1">
 													<!-- Carousel HTML code -->
@@ -1107,13 +1150,20 @@ video {
 													</div>
 												</div>
 												<div ng-if="postDetails.images.length === 1">
+												<video ng-if="postDetails.images[0].type === false"
+														ng-click="getPostDetails(postDetails.postId)" autoplay controls
+														style="width: 100%;">
+														<source ng-src="images/{{ postDetails.images[0].imageUrl }}"
+															type="video/mp4">
+														Your browser does not support the video tag.
+													</video>
 													<!-- Single image HTML code -->
-													<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
+													<img ng-if="postDetails.images[0].type === true" ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 														class="w-100" alt="Single image"
 														style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
 												</div>
 											</center>
-										</center>
+										
 									</div>
 									<div class="col-md-6 phai ">
 										<div>
@@ -1413,7 +1463,7 @@ video {
 				</div>
 			</div>
 			<!-- Thông báo -->
-	<div ng-include="'_notification.html'"></div>
+			<div ng-include="'_notification.html'"></div>
 			<!-- Modal báo cáo -->
 			<div class="modal fade" id="modalBaoCao" tabindex="-1" role="dialog"
 				aria-labelledby="modalTitleId" aria-hidden="true">
@@ -1497,7 +1547,6 @@ video {
 				});
 			</script>
 			<script type="text/javascript" src="/js/profile.js"></script>
-			<script type="text/javascript" src="/js/service.js"></script>
 			<script src="js/addActive.js"></script>
 
 			<script>
@@ -1609,6 +1658,51 @@ video {
 				function dragLeaveHandler(event) {
 					event.preventDefault();
 					event.target.classList.remove('active');
+				}
+				function displayAvatar() {
+					var input = document.getElementById('inputGroupFile03');
+					var imgElement = document.getElementById('img');
+
+					// Kiểm tra xem người dùng đã chọn ảnh hay chưa
+					if (input.files && input.files[0]) {
+						var reader = new FileReader();
+
+						reader.onload = function(e) {
+							imgElement.src = e.target.result; // Gán đường dẫn của ảnh cho src của thẻ img
+						}
+
+						reader.readAsDataURL(input.files[0]); // Đọc và chuyển đổi ảnh thành đường dẫn dạng Base64
+					}
+				}
+				function displayBackground() {
+					var input = document.getElementById('inputGroupFile02');
+					var imgElement = document.getElementById('imgBackground');
+
+					// Kiểm tra xem người dùng đã chọn ảnh hay chưa
+					if (input.files && input.files[0]) {
+						var reader = new FileReader();
+
+						reader.onload = function(e) {
+							imgElement.src = e.target.result; // Gán đường dẫn của ảnh cho src của thẻ img
+						}
+
+						reader.readAsDataURL(input.files[0]); // Đọc và chuyển đổi ảnh thành đường dẫn dạng Base64
+					}
+				}
+				function displayImagePreview(inputId, imgId) {
+				    var input = document.getElementById(inputId);
+				    var imgElement = document.getElementById(imgId);
+
+				    // Kiểm tra xem người dùng đã chọn ảnh hay chưa
+				    if (input.files && input.files[0]) {
+				        var reader = new FileReader();
+
+				        reader.onload = function(e) {
+				            imgElement.src = e.target.result; // Gán đường dẫn của ảnh cho src của thẻ img
+				        }
+
+				        reader.readAsDataURL(input.files[0]); // Đọc và chuyển đổi ảnh thành đường dẫn dạng Base64
+				    }
 				}
 			</script>
 		</div>
