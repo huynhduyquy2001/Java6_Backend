@@ -87,7 +87,7 @@ public class AuthConfig {
         return http
             .csrf().disable()
             .authorizeRequests()
-            .requestMatchers("/login", "/forgotpassword", "/quenmatkhau/**","/change_password", "/doimatkhau2", "/register","/dangky","/login-fail", "/images/**", "/js/**", "/css/**").permitAll()
+            .requestMatchers("/**", "css/**", "js/**").permitAll()
             .requestMatchers("/staff/**").hasAnyRole("2", "1")
             .requestMatchers("/admin/**").hasRole("1")
             .anyRequest().authenticated()
