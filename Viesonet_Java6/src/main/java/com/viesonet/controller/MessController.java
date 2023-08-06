@@ -52,11 +52,11 @@ public class MessController {
 	@Autowired
 	private AuthConfig authConfig;
 
-	@GetMapping("/mess")
-	public ModelAndView getHomePage() {
-		ModelAndView modelAndView = new ModelAndView("Message");
-		return modelAndView;
-	}
+//	@GetMapping("/mess")
+//	public ModelAndView getHomePage() {
+//		ModelAndView modelAndView = new ModelAndView("Message");
+//		return modelAndView;
+//	}
 	
 
 	@MessageMapping("/sendnewmess")

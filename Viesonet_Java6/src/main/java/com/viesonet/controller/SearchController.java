@@ -30,10 +30,10 @@ public class SearchController {
         return ResponseEntity.ok(users);
     }
 
-	@GetMapping("/search")
-	public ModelAndView getHomePage() {
-        ModelAndView modelAndView = new ModelAndView("search");
-        return modelAndView;
-    }
+//	@GetMapping("/search")
+//	public ModelAndView getHomePage() {
+//        ModelAndView modelAndView = new ModelAndView("search");
+//        return modelAndView;
+//    }
 	
 }
