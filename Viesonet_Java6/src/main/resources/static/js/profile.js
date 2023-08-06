@@ -330,8 +330,8 @@ angular.module('myApp', ['ngRoute', 'pascalprecht.translate'])
 
 		$http.get('/findmyfollow')
 			.then(function(response) {
-				var myUserAccount = response.data;
-				$scope.myUserAccount = myUserAccount;
+				var myAccount = response.data;
+				$scope.myAccount = myAccount;
 			})
 			.catch(function(error) {
 				console.log(error);
