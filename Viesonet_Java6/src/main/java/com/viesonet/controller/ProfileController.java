@@ -205,16 +205,16 @@ public class ProfileController {
 	    follow.setFollowDate(new Date());
 	    
 	    followService.saveFollow(follow);
-	    
+	    //Cập nhật danh sách follow
 	    List<Follow> listFollow = followService.findAllFollow();
 	    List<FollowDTO> listFollowDTO = new ArrayList<>();
 
 	    for (Follow follow1 : listFollow) {
 	        FollowDTO followDTO1 = new FollowDTO();
-	        followDTO1.setFollowId(follow.getFollowId());
-	        followDTO1.setFollowerId(follow.getFollower().getUserId());
-	        followDTO1.setFollowingId(follow.getFollowing().getUserId());
-	        followDTO1.setFollowDate(follow.getFollowDate());
+	        followDTO1.setFollowId(follow1.getFollowId());
+	        followDTO1.setFollowerId(follow1.getFollower().getUserId());
+	        followDTO1.setFollowingId(follow1.getFollowing().getUserId());
+	        followDTO1.setFollowDate(follow1.getFollowDate());
 
 	        listFollowDTO.add(followDTO1);
 	    }

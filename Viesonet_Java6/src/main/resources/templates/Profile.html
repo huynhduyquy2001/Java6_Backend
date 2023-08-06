@@ -1111,7 +1111,6 @@ video {
 									<div ng-if="postDetails.images.length > 0"
 										class="col-md-6 trai "
 										style="overflow-y: scroll; max-height: 100vh">
-										<center>
 											<center>
 												<div ng-if="postDetails.images.length > 1">
 													<!-- Carousel HTML code -->
@@ -1151,13 +1150,20 @@ video {
 													</div>
 												</div>
 												<div ng-if="postDetails.images.length === 1">
+												<video ng-if="postDetails.images[0].type === false"
+														ng-click="getPostDetails(postDetails.postId)" autoplay controls
+														style="width: 100%;">
+														<source ng-src="images/{{ postDetails.images[0].imageUrl }}"
+															type="video/mp4">
+														Your browser does not support the video tag.
+													</video>
 													<!-- Single image HTML code -->
-													<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
+													<img ng-if="postDetails.images[0].type === true" ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 														class="w-100" alt="Single image"
 														style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
 												</div>
 											</center>
-										</center>
+										
 									</div>
 									<div class="col-md-6 phai ">
 										<div>
