@@ -77,7 +77,6 @@ public class MessController {
 
 	@GetMapping("/getmess2/{userId}")
 	public List<Message> getListMess2(@PathVariable("userId") String userId, Authentication authentication) {
-
 		String myId = authConfig.getLoggedInAccount(authentication).getUserId();
 		return messageService.getListMess(myId, userId);
 	}
@@ -88,9 +87,8 @@ public class MessController {
 		return messageService.getListUsersMess(myId);
 	}
 
-	@PostMapping("/getUser/{userId}")
+	@GetMapping("/getUser/{userId}")
 	public Users findUserById(@PathVariable("userId") String userId, Model model) {
-		System.out.println("hả:"+(String) model.getAttribute("userId"));
 		return usersService.findUserById(userId);
 	}
 

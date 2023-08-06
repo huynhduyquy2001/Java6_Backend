@@ -1,5 +1,5 @@
 <!doctype html>
-<html >
+<html>
 
 <head>
 <!-- Required meta tags -->
@@ -7,16 +7,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Nạp các thư viện cần thiết -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+	crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/f737751420.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
 
 <!-- Nạp các tệp tài nguyên CSS -->
 <link rel="stylesheet" href="/css/style.css">
@@ -87,7 +99,6 @@ div.dropdown-menu.baoCao {
 </style>
 <!-- Trong file index.html -->
 </head>
-
 <body style="padding-top: 70px;" ng-app="myApp" ng-controller="myCtrl">
 	<div style="transition: 0.5s;">
 		<div class="row ">
@@ -109,7 +120,6 @@ div.dropdown-menu.baoCao {
 									style="border-radius: 100%; width: 35px; height: 35px; object-fit: cover;"
 									alt=""> {{ userMess.username }}</a>
 							</div>
-
 						</header>
 						<main class="msger-chat"
 							style="padding-top: 1rem; border-top: 1px solid #dee2e6 !important;">
@@ -132,19 +142,15 @@ div.dropdown-menu.baoCao {
 								</div>
 							</div>
 						</main>
-
 						<form ng-show="ListMess.length>0" class="msger-inputarea">
 							<emoji-picker ng-model="emoji" on-select="addEmoji(emoji)"></emoji-picker>
 							<input ng-model="newMess" type="text" class=" form-control"
 								placeholder="Nhập tin nhắn của bạn...">
 							<button type="submit" class="msger-send-btn"
 								ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">Gửi</button>
-
 						</form>
-
 					</div>
 				</center>
-
 			</div>
 			<div class="col-md-3 menuLeft animate__animated animate__backInRight"
 				style="position: fixed; right: 0; top: 70px;">
@@ -215,7 +221,7 @@ div.dropdown-menu.baoCao {
 	</div>
 
 	<!-- load ảnh -->
-	
+
 
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
@@ -223,12 +229,10 @@ div.dropdown-menu.baoCao {
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 	<script src="/js/Message.js">
-	
-	
+		
 	</script>
 	<script src="/js/addActive.js">
-	
-	
+		
 	</script>
 
 </body>

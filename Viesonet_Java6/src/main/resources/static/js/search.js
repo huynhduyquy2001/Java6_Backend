@@ -1,22 +1,22 @@
 let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
-  angular.module('myApp',['pascalprecht.translate'])
-  .config(function($translateProvider) {
-		$translateProvider.useStaticFilesLoader({
-			prefix: 'json/', // Thay đổi đường dẫn này cho phù hợp
-			suffix: '.json'
-		});
-		// Set the default language
-		// Set the default language
-		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
-		$translateProvider.preferredLanguage(storedLanguage);
-	})
-    .controller('myCtrl', function ($scope, $http, $translate) {
+
+    app.controller('SearchController', function ($scope, $http, $translate, $rootScope) {
       $scope.Posts = [];
       $scope.likedPosts = [];
       $scope.myAccount = {};
       $scope.postData = {};
       $scope.item = {};
       $scope.listFollow=[];
+      
+      // Kiểm tra xem còn tin nhắn nào chưa đọc không
+	$http.get('/getunseenmessage')
+		.then(function(response) {
+			$rootScope.check = response.data > 0;
+			$rootScope.unseenmess = response.data;
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
       
       //Đa ngôn ngữ	
 		$scope.changeLanguage = function(langKey) {
