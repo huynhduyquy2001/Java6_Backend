@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -374,6 +376,12 @@ public class ProfileController {
 		ModelAndView modelAndView = new ModelAndView("Profile");
         return modelAndView;
 	}
+//	@RequestMapping(value = "/profile/{otherId}", method = RequestMethod.GET)
+//	public ModelAndView loadUserPage(@PathVariable("otherId") String id) {
+//	    ModelAndView modelAndView = new ModelAndView("Profile.html");
+//	    
+//	    return modelAndView.addObject("otherId", id);
+//	}
 	//----------------------------OtherProfile-----------------------------
 	//Lấy thông tin người dùng khác
 	@PostMapping("/getOtherUserId/{userId}")
@@ -448,4 +456,5 @@ public class ProfileController {
 		return violationService.report(usersService.getUserById(userId), postsService.findPostById(postId),
 				violationTypesService.getById(violationTypeId));
 	}
+	
 }

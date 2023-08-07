@@ -8,7 +8,7 @@ angular.module('myApp', ['ngRoute', 'pascalprecht.translate'])
 		var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 		$translateProvider.preferredLanguage(storedLanguage);
 	})
-	.controller('myCtrl', function($scope, $http, $translate, $location, $timeout) {
+	.controller('myCtrl', function($scope, $http, $translate) {
 
 		$scope.Posts = [];
 		$scope.likedPosts = [];
@@ -561,42 +561,47 @@ angular.module('myApp', ['ngRoute', 'pascalprecht.translate'])
 		};
 
 
-		$scope.addComment = function(postId) {
+$scope.addComment = function(postId) {
+
 			var myComment = $scope.myComment;
-			if (myComment === null || myComment === undefined) {
+
+			if (myComment === undefined || myComment.trim() === '') {
 				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 1000,
-					timerProgressBar: true,
-					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
-					}
-				})
-				Toast.fire({
-					icon: 'warning',
-					title: 'Bạn phải nhập nội dung bình luận'
-				})
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+
+			Toast.fire({
+				icon: 'warning',
+				title: 'Bạn chưa nhập nội dung bình luận'
+			})
 				return;
 			}
-			$http.post('/addcomment/' + postId + '?myComment=' + myComment)
+			$http.post('/addcomment/' + postId + '?myComment=' + myComment.trim())
 				.then(function(response) {
 					$scope.postComments.unshift(response.data);
 					var postToUpdate = $scope.Posts.find(function(post) {
-						return post.postId = postId;
+						return post.postId === postId; // Sửa thành '===' thay vì '='
 					});
 					if (postToUpdate) {
 						postToUpdate.commentCount++;
 					}
-					$scope.myComment = '';
-
 
 				}, function(error) {
 					console.log(error);
 				});
+
+			$scope.myComment = '';
+
 		};
+
 
 
 		$scope.logout = function() {
@@ -1175,9 +1180,6 @@ angular.module('myApp', ['ngRoute', 'pascalprecht.translate'])
 			$scope.videoList = [];
 			$scope.selectedPostId = '';
 			console.log(userId)
-			$timeout(function() {
-				$location.path(userId);
-			}, 0);
 			$http.post('/getOtherUserId/' + userId)
 				.then(function(response) {
 					var UserInfo = response.data;

@@ -75,6 +75,7 @@ body {
 	background-position: center;
 	background-size: cover;
 	border-radius: 50%;
+	transform: translateY(-70%);
 }
 .msg:last-of-type {
 	margin: 0;
@@ -133,7 +134,42 @@ body {
 	background-color: #f5f5f5;
 	/* Màu sắc của vùng di chuyển thanh cuộn */
 }
+#mediaList img {
+	width: 100%!;
+	box-sizing: border-box;
+	padding: 0.1rem;
+	border-radius: 6px;
+	border: 1px solid gray;
+}
 
+#mediaList video {
+	width: 50%;
+	box-sizing: border-box;
+	padding: 0.1rem;
+	border-radius: 6px;
+}
+#mediaList{
+	flex-wrap: wrap;
+	display: flex;
+}
+.previewMediaContainer {
+	width: 30%;
+	height: auto;
+	margin: 5px;
+	border-radius: 5px;
+	position: relative;
+}
+
+.previewMediaContainer button {
+	position:absolute;
+	top:0;
+	right:0;
+	border-radius: 3px;
+	background-color: red;
+	color: white;
+	border: none;
+	padding: 3px;
+}
 .follow {
 	color: #222;
 }
@@ -190,7 +226,7 @@ div.dropdown-menu.baoCao {
 }
 
 #mediaList img {
-	max-width: 25%;
+	max-width: 100%;
 	box-sizing: border-box;
 	padding: 0.1rem;
 	border-radius: 6px;
@@ -294,70 +330,7 @@ video {
 	<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
 		data-navbarbg="skin6" data-sidebartype="full"
 		data-sidebar-position="fixed" data-header-position="fixed">
-		<div ng-include="'/_menuLeft.html'"
-			style="position: fixed; z-index: 0"></div>
-		<nav ng-include="'/_header.html'" class="navbar navbar-expand-sm "
-			style="padding: 0; position: fixed; top: 0; z-index: 101">
-			<div class="container" style="width: 100%; padding: 0;">
-				<div class="collapse navbar-collapse" id="collapsibleNavId">
-					<ul class="navbar-nav me-auto mt-2 mt-lg-0">
-					</ul>
-					<div class="body-wrapper">
-						<header class="app-header">
-							<nav class="navbar navbar-expand-lg navbar-light">
-								<div class="navbar-collapse justify-content-end px-0"
-									id="navbarNav">
-									<ul
-										class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-										<li class="nav-item dropdown"><a
-											data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-											aria-controls="offcanvasRight"
-											class="nav-link nav-icon-hover" href="#">
-												<div class="notification-icon">
-													<i class="fa-regular fa-bell fa-lg"></i>
-													<div class="circle">
-														<span>5+</span>
-													</div>
-												</div>
-										</a></li>
-										<li class="nav-item dropdown"><a
-											class="nav-link nav-icon-hover" href="#" id="drop2"
-											data-bs-toggle="dropdown" aria-expanded="false"> <img
-												src="images/{{UserInfo.avatar}}" alt="" width="35"
-												height="35" class="rounded-circle">
-										</a>
-											<div class="dropdown-menu dropdown-menu-end"
-												aria-labelledby="drop2">
-												<div class="message-body">
-													<a href="/changepassword"
-														class="d-flex align-items-center gap-2 dropdown-item">
-														<i class="ti ti-user fs-6"></i>
-														<p class="mb-0 fs-3">Đổi mật khẩu</p>
-													</a> <a href="#"
-														class="d-flex align-items-center gap-2 dropdown-item">
-														<i class="ti ti-mail fs-6"></i>
-														<p class="mb-0 fs-3">Thông tin điều khoản</p>
-													</a> <a href="#"
-														class="d-flex align-items-center gap-2 dropdown-item">
-														<i class="ti ti-list-check fs-6"></i>
-														<p class="mb-0 fs-3">Nâng cấp</p>
-													</a> <a ng-click="logout()"
-														class="btn btn-outline-primary mx-3 mt-2 d-block">Đăng
-														xuất</a>
-												</div>
-											</div></li>
-									</ul>
-								</div>
-							</nav>
-						</header>
-						<div class="container-fluid">
-							<div class="row"></div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</nav>
+		
 
 
 
@@ -636,8 +609,7 @@ video {
 														ng-if="myPost.user.userId != myUserId ">
 														<li><a class="dropdown-item" href="#"
 															ng-click="openModalBaoCao(myPost.postId)"
-															style="color: #E53F31; font-size: 13px">Tố cáo bài
-																viết</a></li>
+															style="color: #E53F31; font-size: 13px">Báo cáo vi phạm</a></li>
 													</ul>
 
 												</div>
@@ -1229,7 +1201,9 @@ video {
 															id="triggerId" data-bs-toggle="dropdown"
 															aria-haspopup="true" aria-expanded="false"></span>
 														<div class="dropdown-menu" aria-labelledby="triggerId">
-															<a class="dropdown-item" href="#">Báo cáo vi phạm</a>
+															<li><a class="dropdown-item" href="#"
+															ng-click="openModalBaoCao(myPost.postId)"
+															style="color: #E53F31; font-size: 13px">Báo cáo vi phạm</a></li>
 														</div>
 													</div>
 												</div>
@@ -1254,14 +1228,14 @@ video {
 											style="overflow-y: scroll; max-height: 60vh; padding-right: 0.2rem">
 											<div
 												ng-repeat="comment in postComments | limitTo:numOfCommentsToShow">
-												<div class="msg ng-scope left-msg" ng-class="left-msg">
+												<div class="msg ng-scope left-msg mb-4" ng-class="left-msg">
 													<div class="msg-img"
-														style="background-image: url(/images/{{comment.user.avatar}}); transform: translateY(-100%); border: 1px solid #ebf1f6;">
+														style="background-image: url(/images/{{comment.user.avatar}}); border: 1px solid #ebf1f6;">
 													</div>
 													
 													<div class="msg-bubble" style="border-radius: 15px;">
 
-														<div>
+														<div style="padding: 10px;">
 															<div>
 																<label class="nhan"
 																	style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{comment.user.username}}</label>
@@ -1283,8 +1257,8 @@ video {
 																	ng-if="comment.reply.length > 0"
 																	style="font-size: 10px; cursor: pointer;">{{comment.reply.length}}
 																		phản hồi</small>
-																</label> &nbsp; <small style="font-size: 10px; cursor: pointer;">
-																	<label> <input type="checkbox"
+																</label > &nbsp; <small style="font-size: 10px;">
+																	<label  style="cursor: pointer;"> <input type="checkbox"
 																		ng-model="o_reply" hidden="true"> <i
 																		class="fa-sharp fa-regular fa-reply"></i> Trả lời
 																</label>
@@ -1334,11 +1308,11 @@ video {
 														<div class="msg left-msg" 
 															style="margin-left: 4rem;">
 															<div class="msg-img"
-																style="background-image: url(/images/{{obj.responder.avatar}}); transform: translateY(-100%); border: 1px solid #ebf1f6;">
+																style="background-image: url(/images/{{obj.responder.avatar}}); border: 1px solid #ebf1f6; transform: translateY(-30%);">
 															</div>
 															<div class="msg-bubble" style="border-radius: 15px;">
 
-																<div>
+																<div style="padding: 10px;">
 																	<div>
 																		<label class="nhan ng-binding"
 																			style="font-size: 15px; font-size: 1rem !important; margin: 0; color: #050505;">{{obj.responder.username}}</label>
