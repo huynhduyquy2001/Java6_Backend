@@ -14,6 +14,8 @@ public interface ImagesDao extends JpaRepository<Images, Integer> {
 	// Custom query to find images by userId
     @Query("SELECT i FROM Images i JOIN i.post p JOIN p.user u WHERE u.userId = :userId AND post.isActive = true AND i.type = True")
     List<Images> findImagesByUserId(String userId);
-
+    
+    @Query("SELECT i FROM Images i JOIN i.post p JOIN p.user u WHERE u.userId = :userId AND post.isActive = true AND i.type = False")
+    List<Images> findVideosByUserId(String userId);
 }
 	

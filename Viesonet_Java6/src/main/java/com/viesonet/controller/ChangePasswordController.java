@@ -5,10 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,10 +24,10 @@ public class ChangePasswordController {
 
 	@Autowired
 	private AccountsService accountsService;
-
-	@Autowired
-	AuthConfig authConfig; 
 	
+	@Autowired
+	private AuthConfig authConfig;
+
 
 	
 	@GetMapping("/changepassword")
@@ -41,27 +38,14 @@ public class ChangePasswordController {
 
 	@PostMapping("/doimatkhau")
 	public ResponseEntity<?> doimatkhau(@RequestBody Map<String, Object> data, Authentication authentication) {
+		Accounts account = authConfig.getLoggedInAccount(authentication);
 	    String matKhau = (String) data.get("matKhau");
 	    String matKhauMoi = (String) data.get("matKhauMoi");
 	    String matKhauXacNhan = (String) data.get("matKhauXacNhan");
-
-	    
-	    
-	    
-	    Accounts accounts = authConfig.getLoggedInAccount(authentication);
-	    System.out.println("Mật khẩu cũ trong sql: "+ accounts.getPassword());
-	    
-	    String hashedPassword = authConfig.passwordEncoder().encode(matKhau);
-	    System.out.println("Mật khẩu mã hóa trong input: "+ hashedPassword);
-	    PasswordEncoder passwordEncoder = authConfig.passwordEncoder();
-	    
-	    if (passwordEncoder.matches(matKhau, accounts.getPassword())) {
-	        String hashedNewPassword = passwordEncoder.encode(matKhauMoi);
-	        // Kiểm tra tính khớp giữa mật khẩu mới và mật khẩu xác nhận
-	        if (matKhauMoi.equals(matKhauXacNhan)) {
-	            accounts.setPassword(hashedNewPassword);
-	            accountsService.save(accounts);
-	            return ResponseEntity.ok().build();
+	    Accounts accounts = accountsService.findByPhoneNumber(account.getPhoneNumber());
+	    if (matKhau.equalsIgnoreCase(accounts.getPassword())) {
+	        if (matKhauMoi.equalsIgnoreCase(accounts.getPassword())) {
+	            return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu mới không được giống mật khẩu cũ"));
 	        } else {
 	            return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu và mật khẩu xác nhận không khớp"));
 	        }

@@ -44,15 +44,15 @@ public class ListFollowController {
 
 	@Autowired
 	private UsersService UsersService;
-	
+
 	@Autowired
 	private AuthConfig authConfig;
 
-	@GetMapping("/user/listFollow")	
-	public ModelAndView getHomePage() {
-		ModelAndView modelAndView = new ModelAndView("ListFollow");
-		return modelAndView;
-	}
+//	@GetMapping("/listFollow")
+//	public ModelAndView getHomePage() {
+//		ModelAndView modelAndView = new ModelAndView("ListFollow");
+//		return modelAndView;
+//	}
 
 	// Lấy thông tin chi tiết các followers
 	@GetMapping("/ListFollower")

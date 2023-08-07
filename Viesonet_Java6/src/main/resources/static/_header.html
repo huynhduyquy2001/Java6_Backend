@@ -26,8 +26,8 @@
 							<li class="nav-item dropdown"><a
 								class="nav-link nav-icon-hover" href="#" id="drop2"
 								data-bs-toggle="dropdown" aria-expanded="false"> <img
-									src="images/duyQuy.jpg" alt="" width="35" height="35"
-									class="rounded-circle">
+									src="/images/{{myAccount.user.avatar}}" alt="" width="35" height="35"
+									class="rounded-circle" style="object-fit: cover;">
 							</a>
 								<div style="background: whitesmoke;"
 									class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
@@ -62,7 +62,7 @@
 											<p class="mb-0 fs-3">English</p>
 										</a>
 										</div>
-										<a ng-click="logout()"
+										<a href="/logout"
 											class="btn btn-outline-primary mx-3 mt-2 d-block">{{ 'DX' | translate }}
 											</a>
 									</div>

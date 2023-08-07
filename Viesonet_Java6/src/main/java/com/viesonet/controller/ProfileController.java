@@ -120,18 +120,28 @@ public class ProfileController {
 		return usersService.findUserById(account.getUserId());
 	}
 	//Lấy thông tin chi tiết của người dùng trong bảng Account
-	@GetMapping("/findaccounts")
-	public Accounts findmyi2(Authentication authentication) {
-		Accounts account = authConfig.getLoggedInAccount(authentication);
-		return accountsService.getAccountByUsers(account.getUserId());
-	}	
 	//Lấy thông tin các bài viết người dùng hiện tại
-	@GetMapping("/getmypost")
-	public List<Posts> getMyPost(Authentication authentication){
-		Accounts account = authConfig.getLoggedInAccount(authentication);
-		return postsService.getMyPost(account.getUserId());
-	}
+//	@GetMapping("/getmypost")
+//	public List<Posts> getMyPost(Authentication authentication){
+//		Accounts account = authConfig.getLoggedInAccount(authentication);
+//		return postsService.getMyPost(account.getUserId());
+//	}
+	//Lấy danh sách video theo UserId
 	
+		@GetMapping("/getListVideo/{userId}")
+	    public List<Images> getVideosByUserId(@PathVariable String userId) {
+			return imagesService.getVideosByUserId(userId);
+	    }
+		
+		@GetMapping("/findaccounts/{userId}")
+		public Accounts findmyi2(@PathVariable String userId) {
+			return accountsService.getAccountByUsers(userId);
+		}	
+		@GetMapping("/findmyusers")
+		public Users findmyi2(Authentication authentication) {
+			Accounts account = authConfig.getLoggedInAccount(authentication);
+			return usersService.findUserById(account.getUserId());
+		}
 	//Đếm số bài viết của người dùng hiện tại
 	@GetMapping("/countmypost")
 	public int countMyPosts(Authentication authentication) {
@@ -154,9 +164,8 @@ public class ProfileController {
 
 	// Phương thức này thực hiện cập nhật thông tin người dùng (Users) dựa vào dữ liệu từ request body.
 	@PostMapping("/updateUserInfo")
-	public void updateUserInfo(@RequestBody Users userInfo, Authentication authentication) {      
-		Accounts account = authConfig.getLoggedInAccount(authentication);
-		usersService.updateUserInfo(userInfo, account.getUserId());
+	public void updateUserInfo(@RequestBody Users userInfo) {      
+		usersService.updateUserInfo(userInfo);
 	}
 
 	// Phương thức này thực hiện cập nhật thông tin tài khoản (Accounts) dựa vào dữ liệu từ các path variable email và statusId.
@@ -205,16 +214,16 @@ public class ProfileController {
 	    follow.setFollowDate(new Date());
 	    
 	    followService.saveFollow(follow);
-	    
+	    //Cập nhật danh sách follow
 	    List<Follow> listFollow = followService.findAllFollow();
 	    List<FollowDTO> listFollowDTO = new ArrayList<>();
 
 	    for (Follow follow1 : listFollow) {
 	        FollowDTO followDTO1 = new FollowDTO();
-	        followDTO1.setFollowId(follow.getFollowId());
-	        followDTO1.setFollowerId(follow.getFollower().getUserId());
-	        followDTO1.setFollowingId(follow.getFollowing().getUserId());
-	        followDTO1.setFollowDate(follow.getFollowDate());
+	        followDTO1.setFollowId(follow1.getFollowId());
+	        followDTO1.setFollowerId(follow1.getFollower().getUserId());
+	        followDTO1.setFollowingId(follow1.getFollowing().getUserId());
+	        followDTO1.setFollowDate(follow1.getFollowDate());
 
 	        listFollowDTO.add(followDTO1);
 	    }
@@ -340,11 +349,13 @@ public class ProfileController {
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 		return "success";
 	}
-	//Lấy danh sách ảnh theo UserId
-	@GetMapping("/getListImage")
-    public List<Images> getImagesByUserIdFromSession(Authentication authentication) {
+
+	
+	//Lấy danh sách video theo UserId
+	@GetMapping("/getListVideo")
+    public List<Images> getVideosByUserIdFromSession(Authentication authentication) {
 		Accounts account = authConfig.getLoggedInAccount(authentication); 
-		return imagesService.getImagesByUserId(account.getUserId());
+		return imagesService.getVideosByUserId(account.getUserId());
     }
 	
     //Cập nhật bài viết
@@ -361,12 +372,6 @@ public class ProfileController {
     public void hidePost(@PathVariable int postId) {
         postsService.hidePost(postId);
     }
-	//Hiển thị trang cá nhân
-	@GetMapping("/profile")
-	public ModelAndView profile() {
-		ModelAndView modelAndView = new ModelAndView("Profile");
-        return modelAndView;
-	}
 	//----------------------------OtherProfile-----------------------------
 	//Lấy thông tin người dùng khác
 	@PostMapping("/getOtherUserId/{userId}")
@@ -389,11 +394,7 @@ public class ProfileController {
 	public List<Posts> getMyPost(@PathVariable String userId){
 		return postsService.getMyPost(userId);
 	}
-	//Lấy thông tin chi tiết của người dùng trong bảng Account
-	@PostMapping("/findaccounts/{userId}")
-	public Accounts findmyi2(@PathVariable String userId) {
-		return accountsService.getAccountByUsers(userId);
-	}	
+
 	//Lấy thông tin chi tiết các followers
 	@PostMapping("/findmyfollowers/{userId}")
     public List<Users> getFollowersInfoByOtherId(@PathVariable String userId) {
@@ -422,11 +423,15 @@ public class ProfileController {
 		    return listFollowDTO;	
 	}
 	//Lấy danh sách ảnh theo UserId
-	@PostMapping("/getListImage/{userId}")
+	@GetMapping("/getListImage/{userId}")
     public List<Images> getImagesByUserId(@PathVariable String userId) {
          return imagesService.getImagesByUserId(userId);
     }
-	
+	//Lấy danh sách video theo UserId
+	@PostMapping("/getListVideo/{userId}")
+    public List<Images> getVideosByUserId1(@PathVariable String userId) {
+		return imagesService.getVideosByUserId(userId);
+    }
 	@GetMapping("/user/getviolations")
 	public List<ViolationTypes> getViolations() {
 		return violationTypesService.getViolations();

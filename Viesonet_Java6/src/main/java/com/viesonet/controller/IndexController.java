@@ -226,8 +226,9 @@ public class IndexController {
 		System.out.println("postId :"+postId);
 		
 		// thêm thông báo
+		Users user = usersService.findUserById(receiverId);
 		Posts post = postsService.findPostById(postId);
-		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0, post.getUser(), post, 6);
+		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0, user, post, 6);
 		messagingTemplate.convertAndSend("/private-user", notifications);
 		
 		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(account.getUserId()), replyContent,
@@ -314,7 +315,12 @@ public class IndexController {
 	@GetMapping("/loadnotification")
 	public List<Notifications> getNotification(Authentication authentication) {
 		Accounts account = authConfig.getLoggedInAccount(authentication);
-		return notificationsService.findNotificationByReceiver(account.getUserId()); // Implement hàm này để lấy thông báo từ CSDL
+		List<Notifications> n = notificationsService.findNotificationByReceiver(account.getUserId()); 
+		if(n.isEmpty()) {
+			return null;
+		}else {
+			return n;
+		}
 	}
 
 	@GetMapping("/loadallnotification")
@@ -327,7 +333,9 @@ public class IndexController {
 	
 	@PostMapping("/setHideNotification")
 	public void setHideNotification(@RequestBody  List<Notifications> notification) {
-		 notificationsService.setFalseNotification(notification);
+		 if(!notification.isEmpty()) {
+			 notificationsService.setFalseNotification(notification);
+		 }
 	}
 	
 	@DeleteMapping("/deleteNotification/{notificationId}")
@@ -363,10 +371,13 @@ public class IndexController {
 		return violationService.report(usersService.getUserById(userId), postsService.findPostById(postId),
 				violationTypesService.getById(violationTypeId));
 	}
+	
 	@GetMapping("/error")
 	public ModelAndView getAccessDenied() {
 		ModelAndView modelAndView = new ModelAndView("error");
 		return modelAndView;
 	} 
+	
+	
 
 }

@@ -21,6 +21,8 @@ import com.viesonet.entity.Users;
 public class SearchController {
 	@Autowired
 	private SearchService SearchService;
+	@Autowired
+	private UsersDao UsersDao;
 	
 	@GetMapping("/user/search/{username}")
 	 public ResponseEntity<List<Users>> searchUsersByUsername(@RequestParam("username") String username) {
@@ -28,10 +30,10 @@ public class SearchController {
         return ResponseEntity.ok(users);
     }
 
-	@GetMapping("/user/search")
-	public ModelAndView getHomePage() {
-        ModelAndView modelAndView = new ModelAndView("search");
-        return modelAndView;
-    }
+//	@GetMapping("/search")
+//	public ModelAndView getHomePage() {
+//        ModelAndView modelAndView = new ModelAndView("search");
+//        return modelAndView;
+//    }
 	
 }

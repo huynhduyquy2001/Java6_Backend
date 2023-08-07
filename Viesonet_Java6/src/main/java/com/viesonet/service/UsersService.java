@@ -66,14 +66,15 @@ public class UsersService {
 		return usersDao.saveAndFlush(user);
 	}
 	
-	public void updateUserInfo(Users user,String userId) {
-		Users currentUser = usersDao.findByuserId(userId);
+	public void updateUserInfo(Users user) {
+		Users currentUser = usersDao.findByuserId(user.getUserId());
 		currentUser.setUsername(user.getUsername());
         currentUser.setBirthday(user.getBirthday());
         currentUser.setGender(user.isGender());
         currentUser.setAddress(user.getAddress());
         currentUser.setRelationship(user.getRelationship());
         currentUser.setIntroduction(user.getIntroduction());
+        currentUser.setAccount(user.getAccount());
 		usersDao.saveAndFlush(user);
     }
 	 public Users getUserById(String userId) {

@@ -34,8 +34,10 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.19.0/angular-translate.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/angular-translate-loader-static-files@2.19.0/angular-translate-loader-static-files.min.js"></script>
 <title>Trang chủ</title>
 <style type="text/css">
 .dropdown-item {
@@ -99,7 +101,6 @@ div.dropdown-menu.baoCao {
 	margin-bottom: 7px;
 }
 </style>
-
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script src="/js/thoiTiet.js"></script>
@@ -108,8 +109,8 @@ div.dropdown-menu.baoCao {
 <body style="padding-top: 70px;" ng-controller="myCtrl">
 	<div style="transition: 0.5s;">
 		<div class="row ">
-			<div ng-include="'/_menuLeft.html'"></div>
-			<nav ng-include="'/_header.html'" class="navbar navbar-expand-sm "
+			<div ng-include="'_menuLeft.html'"></div>
+			<nav ng-include="'_header.html'" class="navbar navbar-expand-sm "
 				style="padding: 0; position: fixed; top: 0; z-index: 101">
 				<div class="container" style="width: 100%; padding: 0;">
 					<div class="collapse navbar-collapse" id="collapsibleNavId">
@@ -189,56 +190,19 @@ div.dropdown-menu.baoCao {
 							<div class="container-fluid">
 								<div class="row"></div>
 							</div>
-
 						</div>
 					</div>
 				</div>
 			</nav>
-
-			<div class="col-md-6 offset-md-4" style="z-index: 10;">
-			<label style="font-size: 25px; font: bold;">{{ 'GYTD' | translate }}</label>			
-				<center>
-					<div class="row">
-						<div class="col-md-6" ng-repeat="user in users" ng-if="followings.indexOf(user.userId	.toString())===-1"
-							style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px">
-							<div class="user-profile">
-								<img src="/	images/{{user.avatar}}" class="img-thumbnail" alt="" style="border-radius: 35%; width:25%; height: auto;">
-								<div>
-									<label>{{ user.username }}</label> <br> 
-								</div>
-							</div>
-							<div> 
-								<a href="" role="button" class="btn btn-primary"  ng-if="!isFollowing(follower.userId)"
-																				ng-click="followUser(user.userId)"
-									style="background-color: #5D87FF; color: #fff; margin-right: 50px ">Follow</a>
-									<a href="" role="button" class="btn btn-primary"  ng-if="isFollowing(follower.userId)"
-																				ng-click="unfollowUser(user.userId)"
-									style="background-color: #5D87FF; color: #fff; margin-right: 50px ">Unfollow</a>
-							</div>
-						</div>
-					</div>
-				</center>
-			</div>
 		</div>
 	</div>
-	<!-- load ảnh -->
+	<!-- load ảnh-->
 	<script>
-  let input = document.getElementById('inputGroupFile01');
-  let imageList = document.getElementById('imageList');
+		
+	</script>
 
-  input.onchange = (e) => {
-    imageList.innerHTML = ''; // Xóa danh sách hình ảnh hiện tại
-    for (let i = 0; i < input.files.length; i++) {
-      let img = document.createElement('img');
-      img.src = URL.createObjectURL(input.files[i]);
-      img.className = 'uploaded-image';
-      imageList.appendChild(img);
-    }
-  };
-</script>
-
-	<script src="/js/LF.js"></script>
-	<script src="/js/addActive.js"></script>
+	<script src="js/LF.js"></script>
+	<script src="js/addActive.js"></script>
 
 </body>
 

@@ -35,6 +35,7 @@ public class Interaction {
 	@ManyToOne
 	@JoinColumn(name = "interactedPerson")
 	private Users interactedPerson;
+	
 	private int interactionCount;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date mostRecentInteractionDate;
