@@ -23189,7 +23189,6 @@ sup {
 }
 
 a {
-    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
     text-decoration: underline
 }
 
@@ -27680,7 +27679,8 @@ textarea.form-control-lg {
     }
 
     .navbar-expand-sm .navbar-nav .dropdown-menu {
-        position: absolute
+        position: absolute;
+        left: -250px;
     }
 
     .navbar-expand-sm .navbar-nav .nav-link {
@@ -53123,18 +53123,6 @@ table.footable thead tr.footable-filtering th ul.dropdown-menu li .checkbox labe
 
 .user-profile {
     position: relative
-}
-
-.user-profile::after {
-    position: absolute;
-    right: -5px;
-    top: 15px;
-    content: "";
-    width: 15px;
-    height: 15px;
-    background-color: #13deb9;
-    border-radius: 50%;
-    border: 2px solid #fff
 }
 
 .nav-tabs,.nav-tabs .nav-link {
