@@ -127,10 +127,12 @@ public class ProfileController {
 //		return postsService.getMyPost(account.getUserId());
 //	}
 	//Lấy danh sách video theo UserId
+	
 		@GetMapping("/getListVideo/{userId}")
 	    public List<Images> getVideosByUserId(@PathVariable String userId) {
 			return imagesService.getVideosByUserId(userId);
 	    }
+		
 		@GetMapping("/findaccounts/{userId}")
 		public Accounts findmyi2(@PathVariable String userId) {
 			return accountsService.getAccountByUsers(userId);
@@ -427,7 +429,7 @@ public class ProfileController {
     }
 	//Lấy danh sách video theo UserId
 	@PostMapping("/getListVideo/{userId}")
-    public List<Images> getVideosByUserId(@PathVariable String userId) {
+    public List<Images> getVideosByUserId1(@PathVariable String userId) {
 		return imagesService.getVideosByUserId(userId);
     }
 	@GetMapping("/user/getviolations")
