@@ -1,5 +1,5 @@
 
-<div ng-controller="IndexController">
+<div ng-controller="HomeController">
 	<div class="col-md-6" style="z-index: 10;">
 		<div
 			style="width: 100%; text-align: left; background-color: transparent;"
@@ -215,7 +215,7 @@
 				</ul>
 				<div class="profile-link">
 
-					<a class="btn-blue" href="/profile"
+					<a class="btn-blue" href="#!/profile/{{myAccount.user.userId}}"
 						style="background-color: #3a57e8; border-radius: 2px; border: 1px solid #3a57e8; box-sizing: border-box; color: white; display: inline-block; font-family: Arial, sans-serif; font-size: 14px; line-height: 16.8px; margin: 0px 3px 10px; padding: 10px 14px; text-decoration-line: none; transition: all 0.2s; width: 98%;"
 						rel="noopener noreferrer"><i class="fa-light fa-address-card"></i>{{
 						'XTCN' | translate }} </a>
@@ -309,9 +309,8 @@
 			<div class="modal-content">
 				<div class="modal-body">
 					<div class="row">
-						<div ng-if="postDetails.images.length > 0" class="col-md-6 trai "
+						<div class="col-md-6 trai "
 							style="overflow-y: scroll; max-height: 100vh">
-							<center>
 								<center>
 									<div ng-if="postDetails.images.length > 1">
 										<!-- Carousel HTML code -->
@@ -354,14 +353,13 @@
 										<!-- Single image HTML code -->
 										<img ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 											class="w-100" alt="Single image"
-											style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
+											style="margin-top: 10px; margin-bottom: 10px; object-fit: cover;">
 
 									</div>
 
 
 								</center>
 
-							</center>
 						</div>
 						<div class="col-md-6 phai ">
 							<div>

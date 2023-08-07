@@ -1581,7 +1581,7 @@ img {
 }
 
 #mediaList video {
-	width: 50%;
+	width: 100%;
 	box-sizing: border-box;
 	padding: 0.1rem;
 	border-radius: 6px;

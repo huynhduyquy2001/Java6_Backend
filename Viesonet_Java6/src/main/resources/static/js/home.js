@@ -1,12 +1,9 @@
 
 
-app.controller('HomeController', function($scope, $http, $translate, $window, $rootScope) {
+app.controller('HomeController', function($scope, $http, $translate, $window, $rootScope, $location) {
 	$scope.Posts = [];
 	$scope.likedPosts = [];
-
 	$scope.postData = {};
-	$scope.postDetails = {};
-	$scope.postComments = [];
 	$scope.replyContent = {}; // Khởi tạo replyContent      
 	$rootScope.check = false;
 	$scope.unseenmess = 0;
@@ -14,6 +11,17 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 	$scope.allNotification = [];
 	$scope.violations = [];
 	$scope.selectedPostId = '';
+	
+	if (!$location.path().startsWith('/profile/')) {
+  // Tạo phần tử link stylesheet
+  var styleLink = document.createElement('link');
+  styleLink.rel = 'stylesheet';
+  styleLink.href = '/css/style.css';
+  
+  // Thêm phần tử link vào thẻ <head>
+  document.head.appendChild(styleLink);
+}
+
 
 	$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
 	$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
@@ -383,7 +391,7 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 		$http.get('/findpostcomments/' + postId)
 			.then(function(response) {
 				var postComments = response.data;
-				$scope.postComments = postComments;
+				$rootScope.postComments = postComments;
 				console.log(response.data);
 			}, function(error) {
 				// Xử lý lỗi
@@ -394,7 +402,7 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 		$http.get('/postdetails/' + postId)
 			.then(function(response) {
 				var postDetails = response.data;
-				$scope.postDetails = postDetails;
+				$rootScope.postDetails = postDetails;
 				// Xử lý phản hồi thành công từ máy chủ
 				$('#chiTietBaiViet').modal('show');
 

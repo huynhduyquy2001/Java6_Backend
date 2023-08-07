@@ -7,6 +7,15 @@ app.controller('MessController', function($scope, $rootScope, $window, $http, $t
 	$scope.ListMess = [];
 	$scope.userMess = {};
 
+if (!$location.path().startsWith('/profile/')) {
+  // Tạo phần tử link stylesheet
+  var styleLink = document.createElement('link');
+  styleLink.rel = 'stylesheet';
+  styleLink.href = '/css/style.css';
+  
+  // Thêm phần tử link vào thẻ <head>
+  document.head.appendChild(styleLink);
+}
 
 	$scope.isEmptyObject = function(obj) {
 		return Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -26,6 +35,7 @@ app.controller('MessController', function($scope, $rootScope, $window, $http, $t
 			.catch(function(error) {
 				console.log(error);
 			});
+		
 	}
 
 	$http.post('/seen/' + $routeParams.otherId)

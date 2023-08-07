@@ -18,7 +18,11 @@ app.config(function($translateProvider, $routeProvider) {
 	}).when('/message/:otherId', {
 		templateUrl: "/ngview/message.html",
 		controller: 'MessController'
-	});
+	}).when('/profile/:userId', {
+		templateUrl: "/ngview/profile.html",
+		controller: 'ProfileController'
+	})
+	;
 	// Set the default language
 	var storedLanguage = localStorage.getItem('myAppLangKey') || 'vie';
 	$translateProvider.preferredLanguage(storedLanguage);

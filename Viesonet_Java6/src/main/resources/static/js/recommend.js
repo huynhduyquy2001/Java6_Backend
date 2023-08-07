@@ -1,5 +1,5 @@
 
-app.controller('RecommendController', function($scope, $http, $translate, $rootScope) {
+app.controller('RecommendController', function($scope, $http, $translate, $rootScope, $location) {
 	$scope.Posts = [];
 	$scope.likedPosts = [];
 	$scope.myAccount = {};
@@ -9,7 +9,16 @@ app.controller('RecommendController', function($scope, $http, $translate, $rootS
 	$scope.followings = [];
 	$scope.users = [];
 	$scope.listFollow = [];
-	
+	if (!$location.path().startsWith('/profile/')) {
+  // Tạo phần tử link stylesheet
+  var styleLink = document.createElement('link');
+  styleLink.rel = 'stylesheet';
+  styleLink.href = '/css/style.css';
+  
+  // Thêm phần tử link vào thẻ <head>
+  document.head.appendChild(styleLink);
+}
+
 	// Kiểm tra xem còn tin nhắn nào chưa đọc không
 	$http.get('/getunseenmessage')
 		.then(function(response) {

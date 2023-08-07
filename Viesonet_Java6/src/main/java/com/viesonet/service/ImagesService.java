@@ -48,5 +48,9 @@ public class ImagesService {
 	public List<Images> getImagesByUserId(String userId) {
         return imagesDao.findImagesByUserId(userId);
     }
+	
+	public List<Images> getVideosByUserId(String userId) {
+        return imagesDao.findVideosByUserId(userId);
+    }
 
 }

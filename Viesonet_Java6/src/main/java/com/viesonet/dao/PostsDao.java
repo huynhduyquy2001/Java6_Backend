@@ -29,6 +29,5 @@ public interface PostsDao extends JpaRepository<Posts, Integer>{
 	@Query("SELECT b FROM Posts b WHERE b.user.userId = :userId")
 	List<Posts> findByUserId(@Param("userId") String userId);
 
-	
 }
 	

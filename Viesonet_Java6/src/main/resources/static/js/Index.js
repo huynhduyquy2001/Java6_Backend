@@ -1,10 +1,75 @@
 
 var app = angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
 
-app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope) {
+app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope, $location) {
 	$scope.myAccount = {};
 	$rootScope.unseenmess=0;
 	$rootScope.check=false;
+	$scope.notification =[];
+	$scope.allNotification =[];
+	$rootScope.postComments=[];
+	$rootScope.postDetails={};
+	
+	
+
+	
+	//xem chi tiết thông báo
+	$scope.getPostDetails = function(postId) {
+		$http.get('/findpostcomments/' + postId)
+		
+			.then(function(response) {
+				var postComments = response.data;
+				$rootScope.postComments = postComments;
+				console.log(response.data);
+			}, function(error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+		$scope.isReplyEmpty = true;
+		$http.get('/postdetails/' + postId)
+			.then(function(response) {
+				var postDetails = response.data;
+				$rootScope.postDetails = postDetails;
+				// Xử lý phản hồi thành công từ máy chủ
+				$('#chiTietBaiViet').modal('show');
+
+			}, function(error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+	};
+	
+	$scope.getFormattedTimeAgo = function(date) {
+		var currentTime = new Date();
+		var activityTime = new Date(date);
+		var timeDiff = currentTime.getTime() - activityTime.getTime();
+		var seconds = Math.floor(timeDiff / 1000);
+		var minutes = Math.floor(timeDiff / (1000 * 60));
+		var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+		var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+		if (days === 0) {
+			if (hours === 0 && minutes < 60) {
+				if (seconds < 60) {
+					return 'vài giây trước';
+				} else {
+					return minutes + ' phút trước';
+				}
+			} else if (hours < 24) {
+				return hours + ' giờ trước';
+			}
+		} else if (days === 1) {
+			return 'Hôm qua';
+		} else if (days <= 7) {
+			return days + ' ngày trước';
+		} else {
+			// Hiển thị ngày, tháng và năm của activityTime
+			var formattedDate = activityTime.getDate();
+			var formattedMonth = activityTime.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
+			var formattedYear = activityTime.getFullYear();
+			return formattedDate + '-' + formattedMonth + '-' + formattedYear;
+		}
+	};
 	$http.get('/findmyaccount')
 		.then(function(response) {
 			var myAccount = response.data;
@@ -35,6 +100,7 @@ app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope
 	$http.get('/loadnotification')
 		.then(function(response) {
 			var data = response.data;
+			console.log(data)
 			for (var i = 0; i < data.length; i++) {
 				$scope.notification.push(data[i]);
 				$scope.notificationNumber = $scope.notification;
@@ -58,7 +124,6 @@ app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope
 	$scope.ConnectNotification = function() {
 		var socket = new SockJS('/private-notification');
 		var stompClient = Stomp.over(socket);
-		stompClient.debug = false;
 		stompClient.connect({}, function(frame) {
 			stompClient.subscribe('/private-user', function(response) {
 
@@ -115,13 +180,6 @@ app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope
 		console.error('Lỗi kết nối WebSocket:', error);
 	});
 	
-	
-	
-
-	//xem chi tiết thông báo
-	$scope.seen = function(notificationId) {
-		$scope.getPostDetails(notificationId);
-	}
 
 	//Ẩn tất cả thông báo khi click vào xem
 	$scope.hideNotification = function() {
