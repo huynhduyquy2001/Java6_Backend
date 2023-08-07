@@ -266,10 +266,27 @@ video {
 	flex-direction: column;
 	margin-left: 10px;
 	display: flex;
+	width: 270px;
 }
 
 .content p {
 	margin-bottom: 0;
+}
+
+.circle2 {
+	/* Đảm bảo thẻ con có vị trí tuyệt đối */
+	top: 14px;
+	/* Điều chỉnh vị trí theo chiều dọc để đặt số chính giữa chuông */
+	right: -16px;
+	/* Điều chỉnh vị trí theo chiều ngang để đặt số chính giữa chuông */
+	background-color: green; /* Màu nền của hình tròn */
+	color: white; /* Màu chữ số */
+	width: 10px; /* Kích thước chiều rộng của hình tròn */
+	height: 10px; /* Kích thước chiều cao của hình tròn */
+	border-radius: 50%; /* Đảm bảo hình dạng là hình tròn */
+	text-align: center; /* Căn giữa chữ số trong hình tròn */
+	font-size: 13px; /* Kích thước chữ số */
+	line-height: 19px; /* Đảm bảo chữ số được căn giữa theo chiều dọc */
 }
 </style>
 
@@ -694,16 +711,14 @@ video {
 											</center>
 
 											<div class="d-flex align-items-center my-3">
-												<div class="d-flex align-items-center gap-2">
-													<span ng-click="likePost(myPost.postId);"
-														ng-if="likedPosts.indexOf(myPost.postId) !== -1"
-														style="color: #f50000;">❤️&nbsp;{{ myPost.likeCount
-														}} </span>
-												</div>
 												<div class="d-flex align-items-center gap-2 ms-4">
-													<span ng-click="likePost(myPost.postId)"
-														ng-if="likedPosts.indexOf(myPost.postId) === -1">🤍&nbsp;{{
-														myPost.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+														<span ng-click="likePost(myPost.postId)"
+														ng-if="likedPosts.indexOf(myPost.postId.toString()) !== -1"
+														style="color: #f50000; cursor: pointer;">❤️&nbsp;{{ myPost.likeCount
+														}} </span>
+													<span ng-click="likePost(myPost.postId)" style="cursor: pointer;"
+														ng-if="likedPosts.indexOf(myPost.postId.toString()) === -1">🤍&nbsp;{{
+														myPost.likeCount }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="cursor: pointer;"
 														ng-click="getPostDetails(myPost.postId)"> <i
 														class="fa-sharp fa-light fa-comment"></i>&nbsp;
 													</span>{{myPost.commentCount}}
@@ -1030,7 +1045,7 @@ video {
 										<div>
 											<label>{{UserInfo.username}}</label> <br>
 											<div style="display: flex; align-items: center;">
-												<div class="circle mb-2"
+												<div class="circle2 mb-2"
 													style="margin-bottom: 0 !important; background-color: green"></div>
 												&nbsp; <small style="font-size: 12px"> Đang hoạt
 													động </small>
@@ -1086,7 +1101,7 @@ video {
 										<div>
 											<label>{{UserInfo.username}}</label> <br>
 											<div style="display: flex; align-items: center;">
-												<div class="circle mb-2"
+												<div class="circle2 mb-2"
 													style="margin-bottom: 0 !important; background-color: green"></div>
 												&nbsp; <small style="font-size: 12px"> Đang hoạt
 													động </small>
@@ -1181,7 +1196,7 @@ video {
 													<!-- Single image HTML code -->
 													<img ng-if="postDetails.images[0].type === true" ng-src="/images/{{ postDetails.images[0].imageUrl }}"
 														class="w-100" alt="Single image"
-														style="margin-top: 10px; margin-bottom: 10px; max-height: 90vh; object-fit: cover;">
+														width="">
 												</div>
 											</center>
 										
@@ -1226,7 +1241,7 @@ video {
 														class="ip form-control" style="width: 80%;"
 														placeholder="Bình luận của bạn" required="">
 													<button class="btn01" type="submit"
-														style="background: #3a57e8; color: white; width: 20%; height: 65%; border-radius: 3px; transform: translateY(85%); margin-left: 0.2rem;"
+														style="background: #3a57e8; color: white; width: 20%; border-radius: 3px; margin-left: 0.2rem;"
 														ng-click="addComment(postDetails.postId)">Bình
 														luận</button>
 												</div>
