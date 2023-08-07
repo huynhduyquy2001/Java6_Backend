@@ -511,9 +511,9 @@ angular.module('myApp', ['ngRoute', 'pascalprecht.translate'])
 				.then(function(response) {
 					var postComments = response.data;
 					$scope.postComments = postComments;
+					
 
-
-					console.log(response.data);
+					console.log(postComments);
 				}, function(error) {
 					// Xử lý lỗi
 					console.log(error);
