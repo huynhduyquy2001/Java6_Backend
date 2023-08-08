@@ -35,16 +35,19 @@ public class AccessTimeInterceptor implements HandlerInterceptor {
         if (authentication != null && authentication.isAuthenticated()) {
             
         	Accounts account = authConfig.getLoggedInAccount(SecurityContextHolder.getContext().getAuthentication());
-
-    		String userId = account.getUserId();
-    		System.out.println("userId" + userId);
-
+        	String userId = "";
+        	if (account != null) {
+        	     userId = account.getUserId();
+        	    System.out.println("userId" + userId);
+        	 // Cập nhật thời gian đăng nhập
+                usersService.updateLoginTime(userId);
+        	    // ...
+        	} else {
+        	    System.out.println("Account is null.");
+        	}
             
-            // Cập nhật thời gian đăng nhập
-            usersService.updateLoginTime(userId);
+            
         }
         return true;
     }
-
-    // Các phương thức khác của Interceptor...
 }

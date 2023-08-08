@@ -81,8 +81,8 @@ public class AuthConfig {
 				.defaultSuccessUrl("/", false) // Chuyển hướng đến URL "/" sau khi đăng nhập thành công
 				.usernameParameter("username") // [username]
 				.passwordParameter("password") // [password]
-				.failureUrl("/login-fail").and().rememberMe().rememberMeParameter("remember").and().logout().logoutUrl("/logout")
-				.logoutSuccessUrl("/login").invalidateHttpSession(true).clearAuthentication(true)
+				.failureUrl("/login-fail").and().rememberMe().rememberMeParameter("remember").and().logout()
+				.logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true).clearAuthentication(true)
 				.deleteCookies("JSESSIONID").and().exceptionHandling() // Xử lý ngoại lệ khi người dùng chưa đăng nhập
 				.accessDeniedPage("/error").authenticationEntryPoint(authenticationEntryPoint()).and().build();
 	}
