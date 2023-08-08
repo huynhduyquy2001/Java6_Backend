@@ -24,16 +24,16 @@ public class SearchController {
 	@Autowired
 	private UsersDao UsersDao;
 	
-	@GetMapping("search/{username}")
+	@GetMapping("/user/search/{username}")
 	 public ResponseEntity<List<Users>> searchUsersByUsername(@RequestParam("username") String username) {
         List<Users> users = SearchService.searchUsersByUsername(username);
         return ResponseEntity.ok(users);
     }
 
-	@GetMapping("/search")
-	public ModelAndView getHomePage() {
-        ModelAndView modelAndView = new ModelAndView("search");
-        return modelAndView;
-    }
+//	@GetMapping("/search")
+//	public ModelAndView getHomePage() {
+//        ModelAndView modelAndView = new ModelAndView("search");
+//        return modelAndView;
+//    }
 	
 }
