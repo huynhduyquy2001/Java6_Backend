@@ -42,7 +42,7 @@ public class Users {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date accessTime;
 	
-	
+	@JsonIgnore
 	@OneToOne(mappedBy = "user")
 	private Accounts account;
 	

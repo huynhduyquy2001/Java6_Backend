@@ -226,9 +226,8 @@ public class IndexController {
 		System.out.println("postId :"+postId);
 		
 		// thêm thông báo
-		Users user = usersService.findUserById(receiverId);
 		Posts post = postsService.findPostById(postId);
-		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0, user, post, 6);
+		Notifications notifications = notificationsService.createNotifications(usersService.findUserById(account.getUserId()), 0, post.getUser(), post, 6);
 		messagingTemplate.convertAndSend("/private-user", notifications);
 		
 		return ResponseEntity.ok(replyService.addReply(usersService.findUserById(account.getUserId()), replyContent,

@@ -785,7 +785,7 @@ video {
 								ng-if="follower.userId != myUserId ">
 								<div class="card">
 									<div class="card-body p-4 d-flex align-items-center gap-3">
-										<a href="#!/profile/{{follower.userId}}"><img
+										<a href="#" ng-click="goToProfile(follower.userId)"><img
 											ng-src="/images/{{follower.avatar}}" class="rounded-circle"
 											width="40" height="40" style="object-fit: cover;"></a>
 										<div>

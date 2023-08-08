@@ -1,19 +1,20 @@
-setTimeout(function() {
-	const currentURL = window.location.href;
-	const menuLinks = document.querySelectorAll("#sidebarnav .sidebar-link");
-	var check = false;
-	for (let i = 0; i < menuLinks.length; i++) {
-		const link = menuLinks[i];
-		const linkURL = link.getAttribute("href");
+// Hàm xử lý khi trang đã tải xong với độ trễ 100 mili-giây
+  setTimeout(function () {
+    // Lấy URL hiện tại
+    const currentURL = window.location.href;
 
-		if (currentURL.includes(linkURL) && linkURL !== "/") {
-			link.classList.add("active");
-			check = true;
-			break;
-			 // Thoát khỏi vòng lặp sau khi thêm lớp "active"
-		}
-	}
-	if(check==false){
-		menuLinks[0].classList.add("active");
-	}
-}, 100);
+    // Lấy tất cả các thẻ <a> trong menu
+    const menuLinks = document.querySelectorAll("#sidebarnav .sidebar-link");
+
+    // Lặp qua tất cả các thẻ <a> và thêm sự kiện click cho mỗi thẻ
+    menuLinks.forEach(link => {
+      // Lấy href của thẻ <a>
+      const linkURL = link.getAttribute("href");
+
+      // So sánh URL hiện tại với href của thẻ <a>
+      if (currentURL.includes(linkURL)) {
+        // Thêm lớp "active" vào thẻ <a> nếu URL chứa href của thẻ
+        link.classList.add("active");
+      }
+    });
+  }, 100);
