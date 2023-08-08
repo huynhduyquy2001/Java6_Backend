@@ -2,13 +2,14 @@
 
 app.controller('SearchController', function($scope, $http, $translate, $rootScope, $location) {
 	let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
+	var url = `${host}/history.json`;
 	$scope.Posts = [];
 	$scope.likedPosts = [];
 	$scope.myAccount = {};
 	$scope.postData = {};
 	$scope.item = {};
 	$scope.listFollow = [];
-
+	$scope.items = []
 	if (!$location.path().startsWith('/profile/')) {
 		// Tạo phần tử link stylesheet
 		var styleLink = document.createElement('link');
@@ -55,7 +56,7 @@ app.controller('SearchController', function($scope, $http, $translate, $rootScop
 			});
 	};
 	//đây là code hiện lên lịch sử người dùng
-	var url = `${host}/history.json`;
+
 	$http.get(url).
 		then(resp => {
 			$scope.items = resp.data;
@@ -74,35 +75,46 @@ app.controller('SearchController', function($scope, $http, $translate, $rootScop
 		});
 	}
 	//Đơn giản là check input
-	$scope.checkInput = function() {
-		// Kiểm tra nếu người dùng không nhập dữ liệu
-		if (!$scope.username) {
-			$scope.showError = true;
-		} else {
-			$scope.showError = false;
-			$scope.LS = function() {
-				var item = angular.copy($scope.username);
-				var url = `${host}/history.json`;
+		$scope.checkInput = function() {
+			// Kiểm tra nếu người dùng không nhập dữ liệu
+			if (!$scope.username) {
+				$scope.showError = true;
+			} else {
+				$scope.showError = false;
+				$scope.LS = function() {
+					var item = angular.copy($scope.username);
+					var url = `${host}/history.json`;
 
-				$http.post(url, { username: item })
-					.then(function(response) {
-						$scope.key = response.data.name;
-						$scope.item[$scope.key] = item;
-						console.log("OK", response);
-					})
-					.catch(function(error) {
-						console.log("Error", error);
-					});
+					$http.post(url, { username: item })
+						.then(function(response) {
+							$scope.key = response.data.name;
+							$scope.item[$scope.key] = item;
+							console.log("OK", response);
+						})
+						.catch(function(error) {
+							console.log("Error", error);
+						});
+				}
 			}
-		}
-	};
+		};
+	function loadHistory() {
+		$http.get(url)
+			.then(function(response) {
+				$scope.items = response.data;
+				console.log("Load OK", response);
+			})
+			.catch(function(error) {
+				console.log("Load Error", error);
+			});
+	}
+
 	$scope.LS = function() {
-		var item = angular.copy($scope.username);
-		var url = `${host}/history.json`;
-		if (item.trim() === "") {
-			console.log("Vui lòng nhập kí tự vào ô tìm kiếm.");
-			return; // Không gọi API, dừng hàm tìm kiếm ở đây
-		} else {
+			var item = angular.copy($scope.username);
+			var url = `${host}/history.json`;
+			if (item.trim() === "") {	
+				console.log("Vui lòng nhập kí tự vào ô tìm kiếm.");
+				return; // Không gọi API, dừng hàm tìm kiếm ở đây
+			}else{
 			$http.post(url, { username: item })
 				.then(function(response) {
 					$scope.key = response.data.name;
@@ -113,8 +125,12 @@ app.controller('SearchController', function($scope, $http, $translate, $rootScop
 				.catch(function(error) {
 					console.log("Error", error);
 				});
-		}
-	};
+				}
+		};
+
+
+
+
 	$scope.reset = function() {
 			var url = `${host}/history.json`;
 			$http.get(url).

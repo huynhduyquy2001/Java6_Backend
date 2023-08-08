@@ -3,20 +3,41 @@ var app = angular.module('myApp', ['pascalprecht.translate', 'ngRoute'])
 
 app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope, $location) {
 	$scope.myAccount = {};
-	$rootScope.unseenmess=0;
-	$rootScope.check=false;
-	$scope.notification =[];
-	$scope.allNotification =[];
-	$rootScope.postComments=[];
-	$rootScope.postDetails={};
-	
-	
+	$rootScope.unseenmess = 0;
+	$rootScope.check = false;
+	$scope.notification = [];
+	$scope.allNotification = [];
+	$rootScope.postComments = [];
+	$rootScope.postDetails = {};
 
-	
+
+	$scope.handleLinkClick = function(linkURL) {
+		var ck = 0;
+		const menuLinks = document.querySelectorAll("#sidebarnav .sidebar-link");
+
+		// Lặp qua danh sách liên kết
+		for (let i = 0; i < menuLinks.length; i++) {
+			const link = menuLinks[i];
+			if (link.getAttribute("href") === linkURL) {
+				// Gỡ bỏ lớp "active" khỏi tất cả các liên kết
+				menuLinks.forEach(link => link.classList.remove("active"));
+
+				// Thêm lớp "active" vào liên kết được nhấp vào
+				link.classList.add("active");
+				ck = ck + 1;
+			}
+
+		}
+		if (ck == 0) {
+			menuLinks[0].classList.add("active");
+		}
+	};
+
+
 	//xem chi tiết thông báo
 	$scope.getPostDetails = function(postId) {
 		$http.get('/findpostcomments/' + postId)
-		
+
 			.then(function(response) {
 				var postComments = response.data;
 				$rootScope.postComments = postComments;
@@ -38,7 +59,7 @@ app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope
 				console.log(error);
 			});
 	};
-	
+
 	$scope.getFormattedTimeAgo = function(date) {
 		var currentTime = new Date();
 		var activityTime = new Date(date);
@@ -92,7 +113,7 @@ app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope
 		.catch(function(error) {
 			console.log(error);
 		});
-		
+
 	//Load thông báo
 	$scope.hasNewNotification = false;
 	$scope.notificationNumber = [];
@@ -144,8 +165,8 @@ app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope
 			});
 		});
 	};
-	
-	
+
+
 	//Kết nối khi mở trang web
 	$scope.ConnectNotification();
 	// Hàm này sẽ được gọi sau khi ng-include hoàn tất nạp tập tin "_menuLeft.html"
@@ -167,19 +188,19 @@ app.controller('myCtrl', function($scope, $http, $translate, $window, $rootScope
 		// Lắng nghe các tin nhắn được gửi về cho người dùng
 		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function(message) {
 			// Kiểm tra xem còn tin nhắn nào chưa đọc không
-	$http.get('/getunseenmessage')
-		.then(function(response) {
-			$rootScope.check = response.data > 0;
-			$rootScope.unseenmess = response.data;
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
+			$http.get('/getunseenmessage')
+				.then(function(response) {
+					$rootScope.check = response.data > 0;
+					$rootScope.unseenmess = response.data;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
 		});
 	}, function(error) {
 		console.error('Lỗi kết nối WebSocket:', error);
 	});
-	
+
 
 	//Ẩn tất cả thông báo khi click vào xem
 	$scope.hideNotification = function() {

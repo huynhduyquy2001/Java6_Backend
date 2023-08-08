@@ -22,34 +22,38 @@
 										class="ti ti-dots nav-small-cap-icon fs-4"></i> <b
 										class="hide-menu">{{ 'chung' | translate }}</b></li>
 									<br>
-									<li class="sidebar-item"><a class="sidebar-link" href="/"
+									<li class="sidebar-item"><a class="sidebar-link" ng-click="handleLinkClick('')" href="/"
 										aria-expanded="false"> <span> <i
 												class="fa-sharp fa-regular fa-house"></i>
 										</span> <span class="hide-menu">&nbsp;{{ 'home' | translate }}</span>
 									</a></li>
-									<li class="sidebar-item"><a class="sidebar-link"
-										href="#!search" aria-expanded="false"> <span> <i
+									<li class="sidebar-item"><a class="sidebar-link" ng-click="handleLinkClick('/search')"
+										href="#!/search " aria-expanded="false"> <span> <i
 												class="fa-regular fa-magnifying-glass"></i>
 										</span> <span class="hide-menu">&nbsp; {{ 'TK' | translate }}</span>
 									</a></li>
-									<li class="sidebar-item"><a class="sidebar-link"
+									<li class="sidebar-item"><a class="sidebar-link" ng-click="handleLinkClick('recommend')"
 										href="#!recommend" aria-expanded="false"> <span> <i
 												class="fa-light fa-handshake"></i>
 										</span> <span class="hide-menu">&nbsp; {{ 'GY' | translate }}</span>
 									</a></li>
-									<li class="sidebar-item"><a class="sidebar-link"
+									<li class="sidebar-item"><a class="sidebar-link" ng-click="handleLinkClick('/message')"
 										href="#!message" aria-expanded="false"> <span> <i
 												class="fa-regular fa-messages"></i>
 										</span> <span class="hide-menu">&nbsp; {{ 'TN' | translate }}</span>
 											<span class="badge" ng-show="check" style="background: red">{{unseenmess}}</span>
 									</a></li>
-									<li ng-if="myAccount.user.account.role.roleId==1 || myAccount.user.account.role.roleId==2" class="nav-small-cap"><i
+									<li
+										ng-if="myAccount.user.account.role.roleId==1 || myAccount.user.account.role.roleId==2"
+										class="nav-small-cap"><i
 										class="ti ti-dots nav-small-cap-icon fs-4"></i> <b
 										class="hide-menu">{{ 'QL' | translate }}</b></li>
 									<br>
-									<li class="sidebar-item"><a ng-if="myAccount.user.account.role.roleId==1 || myAccount.user.account.role.roleId==2" class="sidebar-link "
-										href="/admin/usermanager" aria-expanded="false"> <span>
-												<svg class="svg-inline--fa fa-users" aria-hidden="true"
+									<li class="sidebar-item"><a
+										ng-if="myAccount.user.account.role.roleId==1 || myAccount.user.account.role.roleId==2"
+										class="sidebar-link " href="/admin/usermanager"
+										aria-expanded="false"> <span> <svg
+													class="svg-inline--fa fa-users" aria-hidden="true"
 													focusable="false" data-prefix="far" data-icon="users"
 													role="img" xmlns="http://www.w3.org/2000/svg"
 													viewBox="0 0 640 512" data-fa-i2svg="">
@@ -59,7 +63,9 @@
                                                                 </path>
                                                             </svg> <!-- <i class="fa-regular fa-users"></i> -->
 										</span> <span class="hide-menu">{{ 'ND' | translate }}</span>
-									</a> <a ng-if="myAccount.user.account.role.roleId==1 || myAccount.user.account.role.roleId==2" class="sidebar-link" href="/admin/postsviolation"
+									</a> <a
+										ng-if="myAccount.user.account.role.roleId==1 || myAccount.user.account.role.roleId==2"
+										class="sidebar-link" href="/admin/postsviolation"
 										aria-expanded="false"> <span> <svg
 													class="svg-inline--fa fa-memo-pad" aria-hidden="true"
 													focusable="false" data-prefix="far" data-icon="memo-pad"
@@ -72,7 +78,8 @@
                                                             </svg> <!-- <i class="fa-regular fa-memo-pad"></i> -->
 										</span> <span class="hide-menu"> &nbsp; &nbsp;{{ 'BV' |
 												translate }}</span>
-									</a> <a ng-if="myAccount.user.account.role.roleId==1" class="sidebar-link" href="/admin/report"
+									</a> <a ng-if="myAccount.user.account.role.roleId==1"
+										class="sidebar-link" href="/admin/report"
 										aria-expanded="false"> <i
 											class="fa-regular fa-chart-tree-map"></i> <span
 											class="hide-menu"> &nbsp;{{ 'BVVP' | translate }}</span>

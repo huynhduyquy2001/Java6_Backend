@@ -401,14 +401,14 @@
 											class="ip form-control" style="width: 80%;"
 											placeholder="{{ 'BLCB' | translate }}" required="">
 										<button class="btn01" type="submit"
-											style="background: #007ACC; color: white; height: 70%; transform: translateY(60%); border-radius: 3px; margin-left: 5px; padding: 3px"
+											style="background: #007ACC; color: white; height: 60%; transform: translateY(30%); border-radius: 3px; margin-left: 5px; padding: 6px"
 											ng-click="addComment(postDetails.postId)">{{ 'BL' |
 											translate }}</button>
 									</div>
 								</form>
 							</div>
 							<div
-								style="overflow-y: scroll; max-height: 60vh; padding-right: 0.2rem">
+								style="overflow-y: scroll; max-height: 85vh; padding-right: 0.2rem">
 								<div
 									ng-repeat="comment in postComments | limitTo:numOfCommentsToShow">
 									<div class="msg ng-scope left-msg" ng-class="left-msg">
@@ -420,9 +420,9 @@
 											<div>
 												<div>
 													<label class="nhan"
-														style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{comment.user.username}}</label>
+														style=" margin: 0; color: #050505; font-weight: 700 !important;">{{comment.user.username}}</label>
 												</div>
-												<small style="font-size: 12px;"> <svg
+												<small > <svg
 														class="svg-inline--fa fa-comment" aria-hidden="true"
 														focusable="false" data-prefix="far" data-icon="comment"
 														role="img" xmlns="http://www.w3.org/2000/svg"
@@ -433,13 +433,13 @@
                           </svg> {{comment.content}}
 												</small><br>
 												<div>
-													<small style="font-size: 10px;">{{getFormattedTimeAgo(comment.commentDate)}}</small>
+													<small style="font-size: 12px;"><i class="fa-regular fa-clock"></i> {{getFormattedTimeAgo(comment.commentDate)}}</small>
 													&nbsp; <label> <input type="checkbox"
 														ng-model="o_checkbox" hidden="true"> <small
 														ng-if="comment.reply.length > 0"
-														style="font-size: 10px; cursor: pointer;">{{comment.reply.length}}
+														style="font-size: 12px; cursor: pointer;">{{comment.reply.length}}
 															phản hồi</small>
-													</label> &nbsp; <small style="font-size: 10px; cursor: pointer;">
+													</label> &nbsp; <small style="font-size: 12px; cursor: pointer;">
 														<label> <input type="checkbox" ng-model="o_reply"
 															hidden="true"> <i
 															class="fa-sharp fa-regular fa-reply"></i> Trả lời
@@ -459,7 +459,7 @@
 										<div style="width: 70%">
 											<small style="font-size: 12px;" class="ng-binding"> <i
 												class="fa-regular fa-tag"></i> <small
-												style="font-size: 12px;" class="ng-binding"> Bạn
+												 class="ng-binding"> Bạn
 													đang trả lời: {{comment.user.username}} </small>
 
 											</small><br>
@@ -498,25 +498,26 @@
 													<div>
 														<div>
 															<label class="nhan ng-binding"
-																style="font-size: 0.9rem !important; margin: 0; color: #050505; font-weight: 700 !important;">{{obj.responder.username}}</label>
+																style="margin: 0; color: #050505; font-weight: 700 !important;">{{obj.responder.username}}</label>
 														</div>
 														<small style="font-size: 12px;" class="ng-binding">
-															<small style="font-size: 12px;" class="ng-binding">
-																<i class="fa-regular fa-comments"></i> <label
+															<small style="font-size: 0.875rem;" class="ng-binding">
+																<i class="fa-regular fa-comments"></i> <b
 																class="nhan ng-binding"
-																style="font-size: 13px; color: #313131; font-weight: bolder;">{{obj.receiver.username}}</label>
+																style=" color: #313131;">{{obj.receiver.username}}</b>
 																{{obj.replyContent}}
 														</small>
 														</small><br>
 														<div>
-															<small style="font-size: 10px;" class="ng-binding">{{getFormattedTimeAgo(obj.replyDate)}}</small>
+															<small style="font-size: 12px;" class="ng-binding"><i class="fa-regular fa-clock"></i> {{getFormattedTimeAgo(obj.replyDate)}}</small>
 															&nbsp; <label> <input type="checkbox"
 																ng-model="o_checkbox" hidden="true"
 																class="ng-pristine ng-untouched ng-valid ng-empty">
 																<!-- ngIf: comment.reply.length > 0 -->
-															</label> &nbsp; <small style="font-size: 10px; cursor: pointer;">
+															</label> &nbsp; <small style="font-size: 12px; cursor: pointer;">
 																<label> <input type="checkbox"
-																	ng-model="o_reply2" hidden="true"> Trả lời
+																	ng-model="o_reply2" hidden="true"> <i
+															class="fa-sharp fa-regular fa-reply"></i> Trả lời
 															</label>
 															</small>
 														</div>
@@ -571,6 +572,35 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalBaoCao" tabindex="-1" role="dialog"
+		aria-labelledby="modalTitleId" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTitleId">{{ 'NDTC' |
+						translate }}</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" style="line-height: 30px">
+					<div ng-repeat="violation in violations">
+						<label> <input type="radio" name="violationOption"
+							ng-model="$parent.selectedViolationType"
+							ng-value="violation.violationTypeId">
+							{{violation.violationDescription}}
+						</label>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">{{ 'D' | translate }}</button>
+					<button type="button" class="btn btn-primary"
+						ng-click=report(selectedPostId)>{{ 'BC' | translate }}</button>
 				</div>
 			</div>
 		</div>

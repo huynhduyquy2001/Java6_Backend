@@ -11,16 +11,18 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 	$scope.allNotification = [];
 	$scope.violations = [];
 	$scope.selectedPostId = '';
-	
+
+
+
 	if (!$location.path().startsWith('/profile/')) {
-  // Tạo phần tử link stylesheet
-  var styleLink = document.createElement('link');
-  styleLink.rel = 'stylesheet';
-  styleLink.href = '/css/style.css';
-  
-  // Thêm phần tử link vào thẻ <head>
-  document.head.appendChild(styleLink);
-}
+		// Tạo phần tử link stylesheet
+		var styleLink = document.createElement('link');
+		styleLink.rel = 'stylesheet';
+		styleLink.href = '/css/style.css';
+
+		// Thêm phần tử link vào thẻ <head>
+		document.head.appendChild(styleLink);
+	}
 
 
 	$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
