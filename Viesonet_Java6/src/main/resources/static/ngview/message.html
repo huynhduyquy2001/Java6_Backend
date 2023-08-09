@@ -1,10 +1,13 @@
 <div ng-controller="MessController">
-	<div class="col-md-7"  style="z-index: 10;">
+	<div class="col-md-7" style="z-index: 10;">
 
 		<!-- Your HTML template -->
-	<center><h4 ng-show="isEmptyObject(userMess)">Hãy chọn người nào đó để trò chuyện ngay nào</h4></center>
-		<div class="msger "  ng-show="!isEmptyObject(userMess)"
-			style="width: 93%; text-align: left;">
+		<center>
+			<h4 ng-show="isEmptyObject(userMess)">Hãy chọn người nào đó để
+				trò chuyện ngay nào</h4>
+		</center>
+		<div class="msger " ng-show="!isEmptyObject(userMess)"
+			style="width: 100%; text-align: left; margin-left: 0; border-radius: 5px">
 			<header class="msger-header"
 				style="border-right: 1px solid #dee2e6 !important;">
 				<div class="msger-header-title">
@@ -14,14 +17,15 @@
 						alt=""> {{ userMess.username }}</a>
 				</div>
 			</header>
-			<main class="msger-chat"
+
+			<main class="msger-chat" ng-drop="onDrop($event)"
 				style="padding-top: 1rem; border-top: 1px solid #dee2e6 !important;">
 				<div class="msg"
 					ng-class="{
   'left-msg animate__animated animate__backInLeft': mess.sender.userId !== myAccount.user.userId,
   'right-msg animate__animated animate__backInRight': mess.sender.userId === myAccount.user.userId
 }"
- ng-repeat="mess in ListMess">
+					ng-repeat="mess in ListMess">
 					<div class="msg-img"
 						style="background-image: url(/images/{{mess.sender.avatar}}); border: 1px solid gray"></div>
 					<div class="msg-bubble">
@@ -39,11 +43,15 @@
 				</div>
 			</main>
 
-			<form ng-show="userMess" class="msger-inputarea">
+
+
+			<form ng-show="userMess" class="msger-inputarea"
+				style="background: transparent;">
 				<emoji-picker ng-model="emoji" on-select="addEmoji(emoji)"></emoji-picker>
 				<input ng-model="newMess" type="text" class=" form-control"
 					placeholder="Nhập tin nhắn của bạn...">
 				<button type="submit" class="msger-send-btn"
+					style="background: #3a57e8"
 					ng-click="sendMessage(myAccount.user.userId, newMess, userMess.userId)">Gửi</button>
 
 			</form>
@@ -51,15 +59,18 @@
 		</div>
 
 	</div>
-	<div class="col-md-3"
-		style="position: fixed; right: 0; top: 70px;">
+
+	<div class="col-md-3" style="position: fixed; right: 2rem; top: 70px;">
 		<input class="form-control" placeholder="{{ 'TK' | translate }}">
+
+
 		<ul class="list-unstyled mb-0">
 			<li ng-repeat="UsersMess in ListUsersMess" class="p-2 border-bottom"
 				style="background-color: white;">
 
 				<div class="user-profile"
-					ng-if="UsersMess[0] === myAccount.user.userId" ng-click="getmess2(UsersMess[0] , UsersMess[9], UsersMess[8])">
+					ng-if="UsersMess[0] === myAccount.user.userId"
+					ng-click="getmess2(UsersMess[0] , UsersMess[9], UsersMess[8])">
 					<!-- Nội dung khi UsersMess[0] = 'UI010' -->
 					<a href="#!/message/{{UsersMess[2]}}"><img
 						ng-src="/images/{{ UsersMess[5] }}"
@@ -86,7 +97,8 @@
 				</div>
 
 				<div class="user-profile"
-					ng-if="UsersMess[0] !== myAccount.user.userId" ng-click="getmess2(UsersMess[2], -1)"> 
+					ng-if="UsersMess[0] !== myAccount.user.userId"
+					ng-click="getmess2(UsersMess[2], -1)">
 					<!-- Nội dung khi UsersMess[0] khác 'UI010' -->
 					<a href="#!/message/{{UsersMess[0]}}"><img
 						ng-src="/images/{{ UsersMess[4] }}"

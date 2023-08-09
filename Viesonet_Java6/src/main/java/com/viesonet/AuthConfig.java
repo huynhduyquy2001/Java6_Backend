@@ -62,7 +62,6 @@ public class AuthConfig {
 
 				// Mã hóa mật khẩu trước khi trả về UserDetails
 				String hashedPassword = passwordEncoder().encode(account.getPassword());
-				System.out.println("hashedPassword: " + hashedPassword);
 				return User.builder().username(account.getPhoneNumber()).password(account.getPassword())
 						.roles(String.valueOf(account.getRole().getRoleId())).build();
 			}

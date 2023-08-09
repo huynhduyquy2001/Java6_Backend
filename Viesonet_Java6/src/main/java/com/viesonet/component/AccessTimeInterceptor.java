@@ -38,14 +38,12 @@ public class AccessTimeInterceptor implements HandlerInterceptor {
         	String userId = "";
         	if (account != null) {
         	     userId = account.getUserId();
-        	    System.out.println("userId" + userId);
         	 // Cập nhật thời gian đăng nhập
                 usersService.updateLoginTime(userId);
         	    // ...
         	} else {
         	    System.out.println("Account is null.");
         	}
-            
             
         }
         return true;

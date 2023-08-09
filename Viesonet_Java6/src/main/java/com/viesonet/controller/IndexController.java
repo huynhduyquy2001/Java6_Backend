@@ -305,8 +305,6 @@ public class IndexController {
 			}
 		}
 
-		// thêm thông báo
-
 		// Xử lý và lưu thông tin bài viết kèm ảnh vào cơ sở dữ liệu
 		return "success";
 	}

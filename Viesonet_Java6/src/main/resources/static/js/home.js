@@ -325,6 +325,35 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 		var formData = new FormData();
 		var fileInput = document.getElementById('inputGroupFile01');
 
+		for (var i = 0; i < fileInput.files.length; i++) {
+			var file = fileInput.files[i];
+			var fileSizeMB = file.size / (1024 * 1024); // Kích thước tệp tin tính bằng megabyte (MB)
+
+			if (fileSizeMB > 1000) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				});
+
+				Toast.fire({
+					icon: 'warning',
+					title: 'Kích thước tệp tin quá lớn (giới hạn 1GB)'
+				});
+
+				return; // Return without doing anything
+			}
+
+		}
+
+
+
 		// Check if no files are selected
 		if (fileInput.files.length === 0) {
 			const Toast = Swal.mixin({
