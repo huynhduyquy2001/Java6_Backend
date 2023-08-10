@@ -1,5 +1,4 @@
 
-
 app.controller('SearchController', function($scope, $http, $translate, $rootScope, $location) {
 	let host = "https://search-history-453d4-default-rtdb.firebaseio.com";
 	$scope.Posts = [];
@@ -37,7 +36,7 @@ app.controller('SearchController', function($scope, $http, $translate, $rootScop
 	// đây là code tim kiếm người dùng (tất cả)
 	$scope.searchUser = function() {
 		var username = $scope.username; // Lấy tên người dùng từ input hoặc form
-		var username = $scope.username.trim(); // Lấy tên người dùng từ input hoặc form và loại bỏ khoảng trắng thừa
+		//var username = $scope.username.trim(); // Lấy tên người dùng từ input hoặc form và loại bỏ khoảng trắng thừa
 
 		// Kiểm tra nếu không có kí tự nào trong ô tìm kiếm
 		if (username === "") {
@@ -49,17 +48,22 @@ app.controller('SearchController', function($scope, $http, $translate, $rootScop
 			.then(function(response) {
 				// Xử lý kết quả trả về từ API
 				$scope.users = response.data;
+				console.log("Tim kim thanh cong");
 			})
 			.catch(function(error) {
 				console.log('Lỗi khi tìm kiếm người dùng:', error);
 			});
+	};
+	$scope.TimKiem = function(key){		
+		//$scope.LS();
+		$scope.showName(key);
 	};
 	//đây là code hiện lên lịch sử người dùng
 	var url = `${host}/history.json`;
 	$http.get(url).
 		then(resp => {
 			$scope.items = resp.data;
-			console.log("Load OK", response);
+			console.log("Load OK lS", resp);
 		}).catch(function(error) {
 			console.log("Load Error", error);
 		});
@@ -68,34 +72,43 @@ app.controller('SearchController', function($scope, $http, $translate, $rootScop
 		var url = `${host}/history/${key}.json`;
 		$http.delete(url).then(resp => {
 			delete $scope.items[key];
-			console.log("Xóa OK", response);
+			console.log("Xóa OK", resp);
 		}).catch(function(error) {
 			console.log("Xóa Error", error);
 		});
 	}
-	//Đơn giản là check input
-	$scope.checkInput = function() {
-		// Kiểm tra nếu người dùng không nhập dữ liệu
-		if (!$scope.username) {
-			$scope.showError = true;
-		} else {
-			$scope.showError = false;
-			$scope.LS = function() {
-				var item = angular.copy($scope.username);
-				var url = `${host}/history.json`;
-
-				$http.post(url, { username: item })
-					.then(function(response) {
-						$scope.key = response.data.name;
-						$scope.item[$scope.key] = item;
-						console.log("OK", response);
-					})
-					.catch(function(error) {
-						console.log("Error", error);
-					});
-			}
+	
+	//đây là code shownames
+	$scope.showName = function(key) {
+		var url = `${host}/history/${key}.json`;
+		$http.get(url).then(resp => {
+			$scope.items[key] = resp.data;
+			$scope.showname = $scope.items[key];
+			$scope.username = $scope.showname;
+		 	var usernameValue = $scope.username.username;
+			//console.log("Showname", $scope.showname);
+			console.log("Name", usernameValue);
+			if (usernameValue === "") {
+			$scope.users = []; // Đặt danh sách người dùng thành rỗng
+			return; // Không gọi API, dừng hàm tìm kiếm ở đây
 		}
+		// Gọi API để tìm kiếm người dùng
+		$http.get('/user/search/users?username=' + usernameValue)
+			.then(function(response) {
+				// Xử lý kết quả trả về từ API
+				$scope.users = response.data;
+				console.log("Tim kim thanh cong");
+				
+			})
+			.catch(function(error) {
+				console.log('Lỗi khi tìm kiếm người dùng:', error);
+			});
+		}).catch(function(error) {
+			console.log("showw Error", error);
+		});
 	};
+	
+	
 	$scope.LS = function() {
 		var item = angular.copy($scope.username);
 		var url = `${host}/history.json`;
@@ -107,27 +120,25 @@ app.controller('SearchController', function($scope, $http, $translate, $rootScop
 				.then(function(response) {
 					$scope.key = response.data.name;
 					$scope.item[$scope.key] = item;
+					
+					console.log("OK LS", response); 
 					$scope.reset();
-					console.log("OK", response);
 				})
 				.catch(function(error) {
-					console.log("Error", error);
+					console.log("Error LS", error);
 				});
 		}
 	};
 	$scope.reset = function() {
-			var url = `${host}/history.json`;
-			$http.get(url).
-				then(resp => {
-					$scope.items = resp.data;
-					console.log("Load OK", response);
-				}).catch(function(error) {
-					console.log("Load Error", error);
-				});
-		};
-	$scope.resetError = function() {
-		// Ẩn thông báo lỗi khi người dùng nhập lại
-		$scope.showError = false;
+		var url = `${host}/history.json`;
+		$http.get(url).
+			then(resp => {
+				$scope.items = resp.data;
+				console.log($scope.items);
+				console.log("Load OK RS", resp);
+			}).catch(function(error) {
+				console.log("Load Error RS", error);
+			});
 	};
 
 	$http.get('/ListFollowing')
