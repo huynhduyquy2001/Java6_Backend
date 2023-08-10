@@ -294,10 +294,6 @@ video {
 		<div class="" id="main-wrapper" data-layout="vertical"
 			data-navbarbg="skin6" >
 
-
-
-
-
 			<div class="body-wrapper">
 				<div class="container-fluid" style="margin-left: 0; padding-left: 0; margin-top: 0; padding-top: 0">
 
@@ -330,12 +326,12 @@ video {
 										</div>
 										<div class="text-center">
 											<i class="fas fa-users fa-sm"></i>
-											<h4 class="mb-0 fw-semibold lh-1">{{myAccount.followers}}</h4>
+											<h4 class="mb-0 fw-semibold lh-1">{{totalFollower}}</h4>
 											<p class="mb-0 fs-4">Người theo dõi</p>
 										</div>
 										<div class="text-center">
 											<i class="fa-solid fa-user-group-crown fa-sm"></i>
-											<h4 class="mb-0 fw-semibold lh-1">{{myAccount.following}}</h4>
+											<h4 class="mb-0 fw-semibold lh-1">{{totalFollowing}}</h4>
 											<p class="mb-0 fs-4">Theo dõi</p>
 										</div>
 									</div>
@@ -384,21 +380,21 @@ video {
 											</button></li>
 
 									</ul>
-									<!--  
+									  
 									<ul
 										class="list-unstyled d-flex align-items-center justify-content-end mx-2 gap-3"
-										ng-if=" myAccount.user.userId != UserInfo.userId">
+										ng-if="myAccount.user.userId != UserInfo.userId">
 										<button class="btn btn-outline-primary py-1 px-2 ms-auto"
-											ng-if="!isFollowing(myAccount.user.userId)"
-											ng-click="followUser(myAccount.user.userId)">
+											ng-if="!isFollowing(UserInfo.userId)"
+											ng-click="followUser(UserInfo.userId)">
 											<span>Follow</span>
 										</button>
 										<button class="btn btn-outline-danger py-1 px-2 ms-auto"
-											ng-if="isFollowing(myAccount.user.userId)"
-											ng-click="unfollowUser(myAccount.user.userId)">
+											ng-if="isFollowing(UserInfo.userId)"
+											ng-click="unfollowUser(UserInfo.userId)">
 
 											<span>Unfollow</span>
-										</button>-->
+										</button>
 									</ul>
 								</div>
 							</div>
@@ -572,7 +568,7 @@ video {
 														<ul class="dropdown-menu"
 															aria-labelledby="dropdownMenuLink"
 															ng-if="myPost.user.userId != myUserId ">
-															<li><a class="dropdown-item" href="#"
+															<li><a class="dropdown-item" 
 																ng-click="openModalBaoCao(myPost.postId)"
 																style="color: #E53F31; font-size: 13px">Báo cáo vi
 																	phạm</a></li>
@@ -684,7 +680,7 @@ video {
 								class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
 								<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
 									Người theo dõi <span
-										class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.followers}}</span>
+										class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{totalFollower}}</span>
 								</h3>
 							</div>
 							<div class="row">
@@ -702,7 +698,7 @@ video {
 													<b>Địa chỉ:</b> &nbsp; {{follower.address}}
 												</div>
 											</div>
-											<div ng-if="myAccount.user.userId == follower.userId">
+											
 											<button class="btn btn-outline-primary py-1 px-2 ms-auto"
 												ng-if="!isFollowing(follower.userId)"
 												ng-click="followUser(follower.userId)">
@@ -712,7 +708,7 @@ video {
 												ng-if="isFollowing(follower.userId)"
 												ng-click="unfollowUser(follower.userId)">
 												<span>Unfollow</span>
-											</button></div>
+											</button>
 
 										</div>
 									</div>
@@ -728,7 +724,7 @@ video {
 								class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
 								<h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
 									Theo dõi <span
-										class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{myAccount.following}}</span>
+										class="badge text-bg-secondary fs-2 rounded-4 py-1 px-2 ms-2">{{totalFollowing}}</span>
 								</h3>
 							</div>
 							<div class="row">
@@ -750,7 +746,7 @@ video {
 
 											</a>
 										</div>
-										<div ng-if="myAccount.user.userId == follower.userId">
+										<div >
 										<div
 											class="btn btn-outline-primary px-2 py-2 list-unstyled d-flex align-items-center justify-content-center mb-0 btnf"
 											style="background-color: #f6f9fc;"

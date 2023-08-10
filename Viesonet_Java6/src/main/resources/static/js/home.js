@@ -11,6 +11,8 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 	$scope.allNotification = [];
 	$scope.violations = [];
 	$scope.selectedPostId = '';
+	$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
+	$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 
 
 
@@ -25,8 +27,6 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 	}
 
 
-	$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
-	$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
 
 	$scope.changeLanguage = function(langKey) {
 		$translate.use(langKey);
@@ -467,6 +467,7 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 			})
 			return;
 		}
+		
 		$http.post('/addcomment/' + postId + '?myComment=' + myComment.trim())
 			.then(function(response) {
 				$scope.postComments.unshift(response.data);
@@ -549,6 +550,7 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 
 
 	$scope.sendReplyForComment = function(receiverId, commentId, replyContent) {
+		alert(commentId)
 		var requestData = {
 			receiverId: receiverId,
 			replyContent: replyContent,

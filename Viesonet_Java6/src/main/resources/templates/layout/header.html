@@ -9,31 +9,6 @@
 							class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 							<li class="nav-item dropdown"><a
 								class="nav-link nav-icon-hover" href="#" id="drop2"
-								data-bs-toggle="dropdown" aria-expanded="false"> <i
-									class="fa-regular fa-bell"></i>
-									<div class="circle mb-2"></div>
-							</a>
-								<div style="background: whitesmoke;"
-									class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
-									aria-labelledby="drop2">
-									<div class="message-body">
-										<a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item"> <i
-											class="ti ti-user fs-6"></i>
-											<p class="mb-0 fs-3">Thông báo 1</p>
-										</a> <a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item"> <i
-											class="ti ti-user fs-6"></i>
-											<p class="mb-0 fs-3">Thông báo 2</p>
-										</a> <a href="#"
-											class="d-flex align-items-center gap-2 dropdown-item"> <i
-											class="ti ti-user fs-6"></i>
-											<p class="mb-0 fs-3">Thông báo 3</p>
-										</a>
-									</div>
-								</div></li>
-							<li class="nav-item dropdown"><a
-								class="nav-link nav-icon-hover" href="#" id="drop2"
 								data-bs-toggle="dropdown" aria-expanded="false"> <img
 									th:src="@{'/images/' + ${acc.avatar}}" alt="" width="35"
 									height="35" class="rounded-circle">
@@ -45,7 +20,7 @@
 										<div class="px-7 pb-0">
 											<b class="mb-0 fs-3 fw-semibold" th:text="#{li.profile}">Hồ sơ</b>
 										</div>
-										<a href="#"
+										<a th:href="@{|#!/profile/${acc.userId}|}"
 											class="d-flex align-items-center gap-2 dropdown-item">
 											<div
 												class="d-flex align-items-center mx-7">
@@ -73,12 +48,12 @@
 										<div class="px-7 mt-1 mb-1">
 											<b class="mb-0 fs-3 fw-semibold" th:text="#{li.function}">Chức năng</b>
 										</div>
-										<a href="#"
+										<a href="/"
 											class="d-flex align-items-center gap-2 dropdown-item text-center">
 											&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-thin fa-house me-2 ms-3"></i>
 											<p class="mb-0 fs-3" th:text="#{a.home}">Trang chủ</p>
 										</a> 
-										<a href="#" class="btn btn-outline-primary mx-3 mt-2 d-block" th:text="#{btn.loguot}">
+										<a href="/logout" class="btn btn-outline-primary mx-3 mt-2 d-block" th:text="#{btn.loguot}">
 											Đăng xuất</a>
 									</div>
 								</div></li>

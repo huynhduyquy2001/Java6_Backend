@@ -2,11 +2,11 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 
 	if ($location.path().startsWith('/profile/')) {
 		setTimeout(function() {
-			var styleLinks = document.querySelectorAll('link[rel="stylesheet"][href="/css/style.css"]');
-			styleLinks.forEach(function(styleLink) {
+			var styleLink = document.querySelector('link[rel="stylesheet"][href="/css/style.css"]');
+			if (styleLink) {
 				styleLink.parentNode.removeChild(styleLink);
-			});
-		}, 10);
+			}
+		}, 100);
 	}
 
 	$scope.Posts = [];
@@ -25,6 +25,7 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 	$scope.notification = [];
 	$scope.allNotification = [];
 	$scope.AccInfo = {};
+
 	if ($routeParams.userId) {
 		$http.post('/getOtherUserId/' + $routeParams.userId)
 			.then(function(response) {
@@ -48,10 +49,69 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 					.catch(function(error) {
 						console.log(error);
 					});
+				$http.get('/findmyusers')
+					.then(function(response) {
+						var myInfo = response.data;
+						$scope.myInfo = myInfo;
+						$scope.myUserId = $scope.myInfo.userId;
+					})
+				$http.get('/findmyfollowers/' + $routeParams.userId)
+					.then(function(response) {
+						$scope.followers = response.data;
+						$scope.totalFollower = $scope.followers.length;
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
 
+				$http.get('/findmyfollowing/' + $routeParams.userId)
+					.then(function(response) {
+						$scope.followings = response.data;
+						$scope.totalFollowing = $scope.followings.length;
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+				$http.get('/findmyfollow')
+					.then(function(response) {
+						var myAccount = response.data;
+						$scope.myAccount = myAccount;
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+				$scope.isFollowing = function(followingId) {
+					// Lấy id của người dùng hiện tại
+
+					var currentUserId = $scope.myUserId;
+					// Kiểm tra xem người dùng hiện tại đã follow người dùng với id tương ứng (followingId) chưa
+					// Dựa vào danh sách các người dùng mà người dùng hiện tại đã follow
+					// Trong ví dụ này, danh sách này có thể được lưu trữ trong cơ sở dữ liệu hoặc được lấy từ API
+					var myListFollow = $scope.myListFollow;
+					for (var i = 0; i < myListFollow.length; i++) {
+						if (myListFollow[i].followingId === followingId && myListFollow[i].followerId === currentUserId) {
+							// Người dùng hiện tại đã follow người dùng với id tương ứng
+							return true;
+						}
+					}
+					// Người dùng hiện tại chưa follow người dùng với id tương ứng
+					return false;
+				}
+				$scope.refreshFollowList = function() {
+					$http.get('/getallfollow')
+						.then(function(response) {
+							$scope.myListFollow = response.data;
+						}, function(error) {
+							// Xử lý lỗi
+							console.log(error);
+						});
+				};
+			});
+		$http.get('/countmypost/' + $routeParams.userId)
+			.then(function(response) {
+				var sumPost = response.data;
+				$scope.sumPost = sumPost;
 			})
-
-
 	}
 
 	//Đa ngôn ngữ	
@@ -111,15 +171,6 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 			});
 		});
 	};
-	$http.get('/getListVideo')
-		.then(function(response) {
-			// Dữ liệu trả về từ API sẽ nằm trong response.data
-			$scope.videoList = response.data;
-			$scope.totalVideosCount = $scope.videoList.length;
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
 	//xem chi tiết thông báo
 	$scope.seen = function(notificationId) {
 		$scope.getPostDetails(notificationId);
@@ -188,9 +239,13 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 
 	// Hàm cập nhật thông tin người dùng
 	$scope.updateUserInfo = function() {
-		// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
+		// Tính ngày hiện tại trừ 18 năm để so sánh với ngày sinh
 		$scope.UpdateUser.birthday = $scope.birthday;
-		$http.post('/updateUserInfo', $scope.UpdateUser).then(function(response) {
+		var eighteenYearsAgo = new Date();
+		eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+		console.log(new Date($scope.UpdateUser.birthday));
+		if (new Date($scope.UpdateUser.birthday) > eighteenYearsAgo) {
+			// Ngày sinh không đủ 18 tuổi, hiển thị thông báo lỗi
 			const Toast = Swal.mixin({
 				toast: true,
 				position: 'top-end',
@@ -201,15 +256,36 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 					toast.addEventListener('mouseenter', Swal.stopTimer)
 					toast.addEventListener('mouseleave', Swal.resumeTimer)
 				}
-			})
+			});
 			Toast.fire({
-				icon: 'success',
-				title: 'Cập nhật thông tin thành công!'
-			})
-		}).catch(function(error) {
-			console.error('Error while updating user info:', error);
-		});
+				icon: 'error',
+				title: 'Ngày sinh phải đủ 18 tuổi.'
+			});
+		} else {
+			// Gửi dữ liệu từ biến $scope.UpdateUser đến server thông qua một HTTP request (POST request)
+
+			$http.post('/updateUserInfo', $scope.UpdateUser).then(function(response) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				});
+				Toast.fire({
+					icon: 'success',
+					title: 'Cập nhật thông tin thành công!'
+				});
+			}).catch(function(error) {
+				console.error('Error while updating user info:', error);
+			});
+		}
 	};
+
 
 
 	// Hàm gọi API để lấy thông tin người dùng và cập nhật vào biến $scope.UpdateUser
@@ -243,30 +319,33 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 				title: 'Cập nhật tài khoản thành công!'
 			})
 		}).catch(function(error) {
-			console.error('Error while updating account info:', error);
+			if (error.status === 500) {
+				// Lỗi do email đã tồn tại
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer);
+						toast.addEventListener('mouseleave', Swal.resumeTimer);
+					}
+				});
+				Toast.fire({
+					icon: 'error',
+					title: 'Email đã tồn tại trong hệ thống.'
+				});
+			} else {
+				console.error('Error while updating account info:', error);
+			}
 		});
 	};
 
 
 
 
-	$http.get('/findmyfollowers')
-		.then(function(response) {
-			$scope.followers = response.data;
-			//console.log($scope.followers); // Kiểm tra dữ liệu trong console log
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
 
-	$http.get('/findmyfollowing')
-		.then(function(response) {
-			$scope.followings = response.data;
-			//console.log($scope.followings); // Kiểm tra dữ liệu trong console log
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
 
 	$http.get('/findlikedposts')
 		.then(function(response) {
@@ -277,15 +356,7 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 			console.log(error);
 		});
 
-	$http.get('/findmyfollow')
-		.then(function(response) {
-			var myAccount = response.data;
-			$scope.myAccount = myAccount;
-			console.log($scope.myAccount);
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
+
 	$http.post('/getmypost/' + $routeParams.userId)
 		.then(function(response) {
 			var myPosts = response.data;
@@ -543,8 +614,62 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 				console.log(error);
 			});
 	};
+	//Lấy danh sách vi phạm
+	$http.get('/user/getviolations')
+		.then(function(response) {
+			$scope.violations = response.data;
 
-
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+	$scope.openModalBaoCao = function(postId) {
+		$scope.selectedPostId = postId;
+		$('#modalBaoCao').modal('show');
+	};
+		$scope.report = function(postId) {
+		if ($scope.selectedViolationType === null || $scope.selectedViolationType === undefined) {
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 1000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+					toast.addEventListener('mouseenter', Swal.stopTimer)
+					toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+			Toast.fire({
+				icon: 'warning',
+				title: 'Bạn phải chọn nội dung báo cáo'
+			})
+			return;
+		}
+		$http.post('/user/report/'+ postId + '/' + $scope.selectedViolationType)
+			.then(function(response) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 1000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				})
+				Toast.fire({
+					icon: 'success',
+					title: 'Báo cáo bài viết thành công'
+				})
+			})
+			.catch(function(error) {
+				// Xử lý lỗi
+				console.log(error);
+			});
+		$('#modalBaoCao').modal('hide');
+	};
 
 
 	$scope.sendReply = function(receiverId, replyContent, replyId, commentId) {
@@ -663,47 +788,31 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 			// Xử lý lỗi
 			console.log(error);
 		});
-	$scope.isFollowing = function(followingId) {
-		// Lấy id của người dùng hiện tại
-		var currentUserId = $scope.UserInfo.userId;
 
-		// Kiểm tra xem người dùng hiện tại đã follow người dùng với id tương ứng (followingId) chưa
-		// Dựa vào danh sách các người dùng mà người dùng hiện tại đã follow
-		// Trong ví dụ này, danh sách này có thể được lưu trữ trong cơ sở dữ liệu hoặc được lấy từ API
-		var myListFollow = $scope.myListFollow;
-		for (var i = 0; i < myListFollow.length; i++) {
-			if (myListFollow[i].followingId === followingId && myListFollow[i].followerId === currentUserId) {
-				// Người dùng hiện tại đã follow người dùng với id tương ứng
-				return true;
-			}
-		}
-		// Người dùng hiện tại chưa follow người dùng với id tương ứng
-		return false;
-	},
-		$scope.followUser = function(followingId) {
-			var currentUserId = $scope.UserInfo.userId;
-			var data = {
-				followerId: currentUserId,
-				followingId: followingId
-			};
-
-			$http.post('/followOther', data)
-				.then(function(response) {
-
-					// Thêm follow mới đã chuyển đổi vào myListFollow
-					$scope.myListFollow = response.data;
-
-					// Cập nhật trạng thái follow và cập nhật giao diện
-					$scope.updateFollowStatus();
-					$scope.refreshFollowList();
-				})
-				.catch(function(error) {
-					console.log(error);
-				});
+	$scope.followUser = function(followingId) {
+		var currentUserId = $scope.myUserId;
+		var data = {
+			followerId: currentUserId,
+			followingId: followingId
 		};
 
+		$http.post('/followOther', data)
+			.then(function(response) {
+
+				// Thêm follow mới đã chuyển đổi vào myListFollow
+				$scope.myListFollow = response.data;
+
+				// Cập nhật trạng thái follow và cập nhật giao diện
+				$scope.updateFollowStatus();
+				$scope.refreshFollowList();
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+	};
+
 	$scope.unfollowUser = function(followingId) {
-		var currentUserId = $scope.UserInfo.userId;
+		var currentUserId = $scope.myUserId;
 		var data = {
 			followerId: currentUserId,
 			followingId: followingId
@@ -725,21 +834,12 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 
 
 	$scope.updateFollowStatus = function() {
-		var currentUserId = $scope.UserInfo.userId;
 		for (var i = 0; i < $scope.myListFollow.length; i++) {
 			$scope.myListFollow[i].isFollowing = $scope.isFollowing($scope.myListFollow[i].followingId);
 		}
 	};
-	// Hàm làm mới danh sách follow
-	$scope.refreshFollowList = function() {
-		$http.get('/getallfollow')
-			.then(function(response) {
-				$scope.myListFollow = response.data;
-			}, function(error) {
-				// Xử lý lỗi
-				console.log(error);
-			});
-	};
+	// Hàm làm mới danh sách follow	
+
 
 
 	$scope.changeBackground = function() {
@@ -908,6 +1008,9 @@ app.controller('ProfileController', function($scope, $http, $translate, $locatio
 		})
 		.catch(function(error) {
 			console.log(error);
-		});
+		}
+
+		);
+
 });
 

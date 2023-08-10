@@ -17,7 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(accessTimeInterceptor).addPathPatterns("/**")
-		.excludePathPatterns("/login", "/register", "/dangnhap", "/dangky");;
+		.excludePathPatterns("/login", "/register", "/dangnhap", "/dangky", "dangky/guima", "/forgotpassword", "quenmatkhau/guima", "/quenmatkhau/xacnhan");;
 
 	}
 

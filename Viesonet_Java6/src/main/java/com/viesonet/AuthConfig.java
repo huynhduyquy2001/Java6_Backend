@@ -74,7 +74,7 @@ public class AuthConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.csrf().disable().authorizeRequests()
 				.requestMatchers("/login", "/forgotpassword", "/quenmatkhau/**", "/change_password", "/doimatkhau2",
-						"/register", "/dangky", "/login-fail", "/images/**", "/js/**", "/css/**")
+						"/register", "/dangky/**", "/login-fail", "/images/**", "/js/**", "/css/**")
 				.permitAll().requestMatchers("/staff/**").hasAnyRole("2", "1").requestMatchers("/admin/**").hasRole("1")
 				.anyRequest().authenticated().and().formLogin().loginPage("/login").loginProcessingUrl("/auth/login")
 				.defaultSuccessUrl("/", false) // Chuyển hướng đến URL "/" sau khi đăng nhập thành công
