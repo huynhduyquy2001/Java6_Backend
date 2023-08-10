@@ -102,16 +102,14 @@ public class ProfileController {
 		 return followService.getFollowingFollower(usersService.findUserById(account.getUserId()));
 	}
 	//Lấy thông tin chi tiết các followers
-	@GetMapping("/findmyfollowers")
-    public List<Users> getFollowersInfoByUserId(Authentication authentication) {
-		Accounts account = authConfig.getLoggedInAccount(authentication);
-        return followService.getFollowersInfoByUserId(account.getUserId());
+	@GetMapping("/findmyfollowers/{userId}")
+    public List<Users> getFollowersInfoByUserId(@PathVariable String userId) {
+        return followService.getFollowersInfoByUserId(userId);
     }
 	//Lấy thông tin chi tiết các followings
-	@GetMapping("/findmyfollowing")
-    public List<Users> getFollowingInfoByUserId(Authentication authentication) {
-		Accounts account = authConfig.getLoggedInAccount(authentication);
-        return followService.getFollowingInfoByUserId(account.getUserId());
+	@GetMapping("/findmyfollowing/{userId}")
+    public List<Users> getFollowingInfoByUserId(@PathVariable String userId) {
+        return followService.getFollowingInfoByUserId(userId);
     }
 	//Lấy thông tin chi tiết của người dùng trong bảng Users
 	@GetMapping("/findusers")
@@ -141,10 +139,9 @@ public class ProfileController {
 			return usersService.findUserById(account.getUserId());
 		}
 	//Đếm số bài viết của người dùng hiện tại
-	@GetMapping("/countmypost")
-	public int countMyPosts(Authentication authentication) {
-		Accounts account = authConfig.getLoggedInAccount(authentication);
-		return postsService.countPost(account.getUserId());
+	@GetMapping("/countmypost/{userId}")
+	public int countMyPosts(@PathVariable String userId) {
+		return postsService.countPost(userId);
 	}
 	// Phương thức này trả về thông tin người dùng (Users) dựa vào session attribute "id".
 	@GetMapping("/getUserInfo")
