@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,12 +43,21 @@ public class ChangePasswordController {
 	    String matKhau = (String) data.get("matKhau");
 	    String matKhauMoi = (String) data.get("matKhauMoi");
 	    String matKhauXacNhan = (String) data.get("matKhauXacNhan");
-	    Accounts accounts = accountsService.findByPhoneNumber(account.getPhoneNumber());
-	    if (matKhau.equalsIgnoreCase(accounts.getPassword())) {
-	        if (matKhauMoi.equalsIgnoreCase(accounts.getPassword())) {
+	    
+	    String hashedNewPassword = authConfig.passwordEncoder().encode(matKhauMoi);
+	    Accounts accounts = accountsService.findByPhoneNumber(account.getPhoneNumber());	    
+	    PasswordEncoder passwordEncoder = authConfig.passwordEncoder();
+	    
+	    if (passwordEncoder.matches(matKhau, accounts.getPassword())) {
+	        if (passwordEncoder.matches(matKhauMoi, accounts.getPassword())) {
 	            return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu mới không được giống mật khẩu cũ"));
-	        } else {
-	            return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu và mật khẩu xác nhận không khớp"));
+	        }if(!matKhauMoi.equalsIgnoreCase(matKhauXacNhan)) {
+	        	return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu và mật khẩu xác nhận không khớp"));
+	        }
+	        else {
+	        	account.setPassword(hashedNewPassword);
+	        	accountsService.save(accounts);     
+	        	return ResponseEntity.ok().build();
 	        }
 	    } else {
 	        return ResponseEntity.ok().body(Collections.singletonMap("message", "Mật khẩu cũ không trùng khớp"));

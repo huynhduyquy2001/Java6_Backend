@@ -1,19 +1,15 @@
 setTimeout(function() {
-	const currentURL = window.location.href;
 	const menuLinks = document.querySelectorAll("#sidebarnav .sidebar-link");
-	var check = false;
+
+	// Lặp qua danh sách liên kết
 	for (let i = 0; i < menuLinks.length; i++) {
 		const link = menuLinks[i];
-		const linkURL = link.getAttribute("href");
+		link.addEventListener("click", function() {
+			// Gỡ bỏ lớp "active-link" khỏi tất cả các liên kết
+			menuLinks.forEach(link => link.classList.remove("active"));
 
-		if (currentURL.includes(linkURL) && linkURL !== "/") {
+			// Thêm lớp "active-link" vào liên kết được nhấp vào
 			link.classList.add("active");
-			check = true;
-			break;
-			 // Thoát khỏi vòng lặp sau khi thêm lớp "active"
-		}
-	}
-	if(check==false){
-		menuLinks[0].classList.add("active");
+		});
 	}
 }, 100);

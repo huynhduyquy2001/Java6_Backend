@@ -6,16 +6,24 @@ app.controller('MessController', function($scope, $rootScope, $window, $http, $t
 	$scope.myAccount = {};
 	$scope.ListMess = [];
 	$scope.userMess = {};
+	var sound = new Howl({
+		src: ['/images/nhacchuong2.mp3']
+	});
 
-if (!$location.path().startsWith('/profile/')) {
-  // Tạo phần tử link stylesheet
-  var styleLink = document.createElement('link');
-  styleLink.rel = 'stylesheet';
-  styleLink.href = '/css/style.css';
-  
-  // Thêm phần tử link vào thẻ <head>
-  document.head.appendChild(styleLink);
-}
+	// Hàm để phát âm thanh
+	$scope.playNotificationSound = function() {
+		sound.play();
+	};
+
+	if (!$location.path().startsWith('/profile/')) {
+		// Tạo phần tử link stylesheet
+		var styleLink = document.createElement('link');
+		styleLink.rel = 'stylesheet';
+		styleLink.href = '/css/style.css';
+
+		// Thêm phần tử link vào thẻ <head>
+		document.head.appendChild(styleLink);
+	}
 
 	$scope.isEmptyObject = function(obj) {
 		return Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -35,8 +43,18 @@ if (!$location.path().startsWith('/profile/')) {
 			.catch(function(error) {
 				console.log(error);
 			});
-		
+
 	}
+
+	$scope.onDrop = function(event) {
+		event.preventDefault();
+		var file = event.dataTransfer.files[0]; // Lấy tệp ảnh từ sự kiện kéo và thả
+
+		if (file.type.startsWith("image")) {
+			// Gửi ảnh cho người kia
+			sendImageToRecipient(file);
+		}
+	};
 
 	$http.post('/seen/' + $routeParams.otherId)
 		.then(function(response) {
@@ -105,6 +123,7 @@ if (!$location.path().startsWith('/profile/')) {
 		// Lắng nghe các tin nhắn được gửi về cho người dùng
 		stompClient.subscribe('/user/' + $scope.myAccount.user.userId + '/queue/receiveMessage', function(message) {
 			try {
+				
 				var newMess = JSON.parse(message.body);
 				// Xử lý tin nhắn mới nhận được ở đây khi nhắn đúng người
 				var checkMess = $scope.ListMess.find(function(obj) {
@@ -120,6 +139,7 @@ if (!$location.path().startsWith('/profile/')) {
 				$http.get('/getusersmess')
 					.then(function(response) {
 						$scope.ListUsersMess = response.data;
+						$scope.playNotificationSound();
 					})
 					.catch(function(error) {
 						console.log(error);
@@ -128,7 +148,7 @@ if (!$location.path().startsWith('/profile/')) {
 				$timeout(function() {
 					$scope.scrollToBottom();
 				}, 10);
-
+				
 				$scope.$apply();
 			} catch (error) {
 				alert('Error handling received message:', error);
@@ -138,8 +158,14 @@ if (!$location.path().startsWith('/profile/')) {
 		console.error('Lỗi kết nối WebSocket:', error);
 	});
 
+	
+
+
 	// Hàm gửi tin nhắn
 	$scope.sendMessage = function(senderId, content, receiverId) {
+		if (content == '' || content.trim() === undefined) {
+			return;
+		}
 		var message = {
 			senderId: senderId,
 			receiverId: receiverId,

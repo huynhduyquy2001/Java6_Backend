@@ -11,20 +11,22 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 	$scope.allNotification = [];
 	$scope.violations = [];
 	$scope.selectedPostId = '';
-	
-	if (!$location.path().startsWith('/profile/')) {
-  // Tạo phần tử link stylesheet
-  var styleLink = document.createElement('link');
-  styleLink.rel = 'stylesheet';
-  styleLink.href = '/css/style.css';
-  
-  // Thêm phần tử link vào thẻ <head>
-  document.head.appendChild(styleLink);
-}
-
-
 	$scope.numOfCommentsToShow = 20; // Số lượng bình luận hiển thị ban đầu
 	$scope.commentsToShowMore = 10; // Số lượng bình luận hiển thị khi nhấp vào "hiển thị thêm"
+
+
+
+	if (!$location.path().startsWith('/profile/')) {
+		// Tạo phần tử link stylesheet
+		var styleLink = document.createElement('link');
+		styleLink.rel = 'stylesheet';
+		styleLink.href = '/css/style.css';
+
+		// Thêm phần tử link vào thẻ <head>
+		document.head.appendChild(styleLink);
+	}
+
+
 
 	$scope.changeLanguage = function(langKey) {
 		$translate.use(langKey);
@@ -323,6 +325,35 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 		var formData = new FormData();
 		var fileInput = document.getElementById('inputGroupFile01');
 
+		for (var i = 0; i < fileInput.files.length; i++) {
+			var file = fileInput.files[i];
+			var fileSizeMB = file.size / (1024 * 1024); // Kích thước tệp tin tính bằng megabyte (MB)
+
+			if (fileSizeMB > 1000) {
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer)
+						toast.addEventListener('mouseleave', Swal.resumeTimer)
+					}
+				});
+
+				Toast.fire({
+					icon: 'warning',
+					title: 'Kích thước tệp tin quá lớn (giới hạn 1GB)'
+				});
+
+				return; // Return without doing anything
+			}
+
+		}
+
+
+
 		// Check if no files are selected
 		if (fileInput.files.length === 0) {
 			const Toast = Swal.mixin({
@@ -436,6 +467,7 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 			})
 			return;
 		}
+		
 		$http.post('/addcomment/' + postId + '?myComment=' + myComment.trim())
 			.then(function(response) {
 				$scope.postComments.unshift(response.data);
@@ -518,6 +550,7 @@ app.controller('HomeController', function($scope, $http, $translate, $window, $r
 
 
 	$scope.sendReplyForComment = function(receiverId, commentId, replyContent) {
+		alert(commentId)
 		var requestData = {
 			receiverId: receiverId,
 			replyContent: replyContent,

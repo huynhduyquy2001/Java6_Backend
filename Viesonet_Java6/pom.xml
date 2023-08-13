@@ -108,7 +108,17 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-		
+		<dependency>
+    <groupId>org.jcodec</groupId>
+    <artifactId>jcodec</artifactId>
+    <version>0.2.3</version>
+</dependency>
+<dependency>
+    <groupId>org.bytedeco</groupId>
+    <artifactId>javacv</artifactId>
+    <version>1.5.6</version>
+</dependency>
+
 	</dependencies>
 
 	<build>

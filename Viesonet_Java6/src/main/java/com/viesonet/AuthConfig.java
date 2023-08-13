@@ -62,7 +62,6 @@ public class AuthConfig {
 
 				// Mã hóa mật khẩu trước khi trả về UserDetails
 				String hashedPassword = passwordEncoder().encode(account.getPassword());
-				System.out.println("hashedPassword: " + hashedPassword);
 				return User.builder().username(account.getPhoneNumber()).password(account.getPassword())
 						.roles(String.valueOf(account.getRole().getRoleId())).build();
 			}
@@ -75,14 +74,14 @@ public class AuthConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.csrf().disable().authorizeRequests()
 				.requestMatchers("/login", "/forgotpassword", "/quenmatkhau/**", "/change_password", "/doimatkhau2",
-						"/register", "/dangky", "/login-fail", "/images/**", "/js/**", "/css/**")
+						"/register", "/dangky/**", "/login-fail", "/images/**", "/js/**", "/css/**")
 				.permitAll().requestMatchers("/staff/**").hasAnyRole("2", "1").requestMatchers("/admin/**").hasRole("1")
 				.anyRequest().authenticated().and().formLogin().loginPage("/login").loginProcessingUrl("/auth/login")
 				.defaultSuccessUrl("/", false) // Chuyển hướng đến URL "/" sau khi đăng nhập thành công
 				.usernameParameter("username") // [username]
 				.passwordParameter("password") // [password]
-				.failureUrl("/login-fail").and().rememberMe().rememberMeParameter("remember").and().logout().logoutUrl("/logout")
-				.logoutSuccessUrl("/login").invalidateHttpSession(true).clearAuthentication(true)
+				.failureUrl("/login-fail").and().rememberMe().rememberMeParameter("remember").and().logout()
+				.logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true).clearAuthentication(true)
 				.deleteCookies("JSESSIONID").and().exceptionHandling() // Xử lý ngoại lệ khi người dùng chưa đăng nhập
 				.accessDeniedPage("/error").authenticationEntryPoint(authenticationEntryPoint()).and().build();
 	}

@@ -166,9 +166,8 @@ input.addEventListener("keyup", function(event) {
 										value="${item[0]}"
 										class="table-checkbox form-check-input hover-effect">
 									</td>
-									<td class="border-bottom-0">
-									<span class="fw-normal mb-0"
-										style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+									<td class="border-bottom-0" style="max-width: 250px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+									<span class="fw-normal mb-0">
 									${item[1]}
 									</span>
 									</td>

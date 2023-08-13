@@ -1,5 +1,7 @@
 package com.viesonet.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +9,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +25,20 @@ import com.viesonet.entity.Users;
 public class UsersService {
 	@Autowired
 	UsersDao usersDao;
+	
+	@Transactional
+    public void updateLoginTime(String userId) {
+        Users user = usersDao.getById(userId);
+        if (user != null) {
+        	// Lấy ngày và giờ hiện tại
+            LocalDateTime ngayGioDang = LocalDateTime.now();
+            // Chuyển đổi sang kiểu Timestamp
+            Timestamp timestamp = Timestamp.valueOf(ngayGioDang);
+            user.setAccessTime(timestamp);
+            usersDao.saveAndFlush(user);
+        }
+    }
+	
 
 	public Users findUserById(String userId) {
 		Optional<Users> user = usersDao.findById(userId);

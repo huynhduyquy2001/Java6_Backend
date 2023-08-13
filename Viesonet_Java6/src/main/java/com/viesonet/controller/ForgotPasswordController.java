@@ -36,6 +36,10 @@ public class ForgotPasswordController {
 	private SessionService sessionService;
 
 	private int[] randomNumbers;
+	
+	 // Khai báo biến thời gian gửi mã cuối cùng
+    private long lastSentTime = 0;
+    private static final long COOLDOWN_PERIOD = 60 * 1000; // 1 phút
 
 	public int[] getRandomNumbers() {
 		Random random = new Random();
@@ -58,13 +62,23 @@ public class ForgotPasswordController {
 		String email = (String) data.get("email");
 		String phone = (String) data.get("phone");
 		MimeMessage message = sender.createMimeMessage();
-		
+
 		Accounts accounts = accountsService.findByPhoneNumber(phone);
 		
+		 // Kiểm tra thời gian chờ giữa các lần gửi mã
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastSentTime < COOLDOWN_PERIOD) {
+            long remainingTime = (lastSentTime + COOLDOWN_PERIOD - currentTime) / 1000;
+            return ResponseEntity.ok().body(Collections.singletonMap("message", "Vui lòng đợi " + remainingTime + " giây trước khi gửi lại mã."));
+        }
+
+        // Cập nhật thời gian gửi mã cuối cùng
+        lastSentTime = currentTime;
+
 		if (!email.equalsIgnoreCase(accounts.getEmail())) {
-			return ResponseEntity.ok().body(Collections.singletonMap("message", "Email này không đúng với tài khoản đã đăng kí !"));
-		}
-		else if (accounts.getAccountStatus().getStatusId() == 4) {
+			return ResponseEntity.ok()
+					.body(Collections.singletonMap("message", "Email này không đúng với tài khoản đã đăng kí !"));
+		} else if (accounts.getAccountStatus().getStatusId() == 4) {
 			return ResponseEntity.ok().body(Collections.singletonMap("message", "Tài khoản này đã bị khóa !"));
 		} else {
 			Users users = usersService.getById(accounts.getUser().getUserId());
